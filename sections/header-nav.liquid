@@ -1,0 +1,175 @@
+{% comment %}
+  Simple Navigation Bar
+  Add to: sections/header.liquid
+{% endcomment %}
+
+<nav class="nav-bar" id="nav-bar-{{ section.id }}">
+  <div class="nav-bar__inner">
+    <ul class="nav-bar__list">
+      {% for block in section.blocks %}
+        {% if block.type == 'nav_link' %}
+          <li class="nav-bar__item" {{ block.shopify_attributes }}>
+            <a href="{{ block.settings.link_url }}" class="nav-bar__link{% if block.settings.is_bold %} nav-bar__link--bold{% endif %}">
+              {{ block.settings.link_text }}
+            </a>
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  </div>
+</nav>
+
+<style>
+  #nav-bar-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+    border-bottom: 1px solid {{ section.settings.border_color }};
+  }
+
+  #nav-bar-{{ section.id }} .nav-bar__inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 40px;
+    display: flex;
+    justify-content: center;
+  }
+
+  #nav-bar-{{ section.id }} .nav-bar__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  #nav-bar-{{ section.id }} .nav-bar__item {
+    position: relative;
+  }
+
+  #nav-bar-{{ section.id }} .nav-bar__item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1px;
+    height: 14px;
+    background-color: {{ section.settings.divider_color }};
+  }
+
+  #nav-bar-{{ section.id }} .nav-bar__link {
+    display: block;
+    padding: 12px 24px;
+    color: {{ section.settings.text_color }};
+    text-decoration: none;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    transition: color 0.2s ease, background-color 0.2s ease;
+  }
+
+  #nav-bar-{{ section.id }} .nav-bar__link:hover {
+    color: {{ section.settings.text_hover_color }};
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+
+  #nav-bar-{{ section.id }} .nav-bar__link--bold {
+    font-weight: 700;
+    color: {{ section.settings.text_hover_color }};
+  }
+
+  @media (max-width: 600px) {
+    #nav-bar-{{ section.id }} .nav-bar__inner {
+      padding: 0 12px;
+      overflow-x: auto;
+      justify-content: flex-start;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    #nav-bar-{{ section.id }} .nav-bar__list {
+      flex-wrap: nowrap;
+    }
+
+    #nav-bar-{{ section.id }} .nav-bar__link {
+      padding: 10px 16px;
+      white-space: nowrap;
+      font-size: 12px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Navigation Bar",
+  "class": "nav-bar-section",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#dcd0c8"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Link Color",
+      "default": "#3a3a3a"
+    },
+    {
+      "type": "color",
+      "id": "text_hover_color",
+      "label": "Link Hover / Bold Color",
+      "default": "#101a32"
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Divider Color",
+      "default": "#b0a698"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Bottom Border Color",
+      "default": "#cfc3b9"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "nav_link",
+      "name": "Nav Link",
+      "limit": 8,
+      "settings": [
+        {
+          "type": "text",
+          "id": "link_text",
+          "label": "Link Text",
+          "default": "Link"
+        },
+        {
+          "type": "url",
+          "id": "link_url",
+          "label": "Link URL",
+          "default": "/"
+        },
+        {
+          "type": "checkbox",
+          "id": "is_bold",
+          "label": "Bold",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Navigation Bar",
+      "blocks": [
+        { "type": "nav_link", "settings": { "link_text": "Home", "link_url": "/" } },
+        { "type": "nav_link", "settings": { "link_text": "Why Nuracom", "link_url": "/pages/why-nuracom" } },
+        { "type": "nav_link", "settings": { "link_text": "About Us", "link_url": "/pages/about" } },
+        { "type": "nav_link", "settings": { "link_text": "Contact Us", "link_url": "/pages/contact" } },
+        { "type": "nav_link", "settings": { "link_text": "Compare Models", "link_url": "/pages/compare", "is_bold": true } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,226 @@
+{% comment %}
+  Full-Width Overlay Banner Section
+  - Full-width background image
+  - Centered heading + description overlay
+  - Dark overlay for readability
+  - Great for feature callouts like "Eco-Off"
+  Add to: sections/fullwidth-overlay-banner.liquid
+{% endcomment %}
+
+<section id="fob-{{ section.id }}">
+  {% if section.settings.background_image != blank %}
+    {{ section.settings.background_image | image_url: width: 2400 | image_tag: class: 'fob-bg', loading: 'lazy', alt: section.settings.heading }}
+  {% else %}
+    <div class="fob-bg-fallback"></div>
+  {% endif %}
+
+  <div class="fob-overlay"></div>
+
+  <div class="fob-content">
+    {% if section.settings.heading != blank %}
+      <h2 class="fob-heading">{{ section.settings.heading }}</h2>
+    {% endif %}
+    {% if section.settings.description != blank %}
+      <div class="fob-desc">{{ section.settings.description }}</div>
+    {% endif %}
+    {% if section.settings.btn_label != blank %}
+      <a href="{{ section.settings.btn_url }}" class="fob-btn">
+        {{ section.settings.btn_label }}
+      </a>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  #fob-{{ section.id }} {
+    position: relative;
+    width: 100%;
+    min-height: {{ section.settings.min_height }}px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  #fob-{{ section.id }} .fob-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+  }
+
+  #fob-{{ section.id }} .fob-bg-fallback {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #2a3a5c, #101a32);
+    z-index: 0;
+  }
+
+  #fob-{{ section.id }} .fob-overlay {
+    position: absolute;
+    inset: 0;
+    background: {{ section.settings.overlay_color }};
+    opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+    z-index: 1;
+  }
+
+  #fob-{{ section.id }} .fob-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 60px 24px;
+    max-width: 750px;
+  }
+
+  #fob-{{ section.id }} .fob-heading {
+    font-size: 38px;
+    font-weight: 700;
+    color: {{ section.settings.text_color }};
+    margin: 0 0 18px;
+    line-height: 1.2;
+    font-style: italic;
+  }
+
+  #fob-{{ section.id }} .fob-desc {
+    font-size: 15px;
+    line-height: 1.75;
+    color: {{ section.settings.text_color }};
+    opacity: 0.9;
+    font-style: italic;
+  }
+
+  #fob-{{ section.id }} .fob-desc p {
+    margin: 0 0 12px;
+  }
+
+  #fob-{{ section.id }} .fob-desc p:last-child {
+    margin-bottom: 0;
+  }
+
+  #fob-{{ section.id }} .fob-btn {
+    display: inline-block;
+    margin-top: 24px;
+    padding: 13px 32px;
+    background: {{ section.settings.btn_bg_color }};
+    color: {{ section.settings.btn_text_color }};
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 6px;
+    transition: opacity 0.25s ease;
+  }
+
+  #fob-{{ section.id }} .fob-btn:hover {
+    opacity: 0.88;
+  }
+
+  @media (max-width: 768px) {
+    #fob-{{ section.id }} {
+      min-height: {{ section.settings.min_height | minus: 100 }}px;
+    }
+
+    #fob-{{ section.id }} .fob-heading {
+      font-size: 28px;
+    }
+
+    #fob-{{ section.id }} .fob-content {
+      padding: 40px 20px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Full-Width Overlay Banner",
+  "tag": "div",
+  "class": "fullwidth-overlay-banner-section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background Image"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Eco-Off"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>We understand the importance of safety and energy conservation. That's why we've designed NuraCom Stratos to turn off automatically after two hours of running time. Our automatic shut-off feature ensures that NuraCom Stratos won't be left running unnecessarily, saving you energy and money.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Button (optional)"
+    },
+    {
+      "type": "text",
+      "id": "btn_label",
+      "label": "Button Text"
+    },
+    {
+      "type": "url",
+      "id": "btn_url",
+      "label": "Button URL"
+    },
+    {
+      "type": "color",
+      "id": "btn_bg_color",
+      "label": "Button Background",
+      "default": "#866653"
+    },
+    {
+      "type": "color",
+      "id": "btn_text_color",
+      "label": "Button Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "range",
+      "id": "min_height",
+      "label": "Min Height",
+      "min": 200,
+      "max": 600,
+      "step": 20,
+      "default": 400,
+      "unit": "px"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay Opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 45,
+      "unit": "%"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Full-Width Overlay Banner"
+    }
+  ]
+}
+{% endschema %}

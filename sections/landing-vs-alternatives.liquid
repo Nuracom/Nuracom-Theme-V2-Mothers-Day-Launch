@@ -1,0 +1,204 @@
+{% comment %}
+  Nuracom Landing — Nuracom vs Clothesline vs Dryer
+  Three-column comparison that clearly shows advantages. No fake claims.
+  Install to: sections/landing-vs-alternatives.liquid
+{% endcomment %}
+
+<style>
+  #lp-vs-{{ section.id }} {
+    background: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+    padding: 90px 24px;
+  }
+
+  #lp-vs-{{ section.id }} .lp-vs__inner {
+    max-width: 1160px;
+    margin: 0 auto;
+  }
+
+  #lp-vs-{{ section.id }} .lp-vs__header {
+    text-align: center;
+    max-width: 720px;
+    margin: 0 auto 56px;
+  }
+
+  #lp-vs-{{ section.id }} .lp-vs__eyebrow {
+    font-size: 12px;
+    letter-spacing: 2.4px;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: {{ section.settings.accent_color }};
+    margin: 0 0 14px;
+  }
+
+  #lp-vs-{{ section.id }} .lp-vs__heading {
+    font-size: clamp(28px, 3.8vw, 44px);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.4px;
+    margin: 0 0 16px;
+  }
+
+  #lp-vs-{{ section.id }} .lp-vs__subheading {
+    font-size: 17px;
+    line-height: 1.6;
+    opacity: 0.75;
+    margin: 0;
+  }
+
+  #lp-vs-{{ section.id }} .lp-vs__table-wrap {
+    overflow-x: auto;
+    border-radius: 16px;
+    background: {{ section.settings.table_bg }};
+    box-shadow: 0 10px 40px rgba(16,26,50,0.06);
+  }
+
+  #lp-vs-{{ section.id }} .lp-vs__table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    min-width: 640px;
+  }
+
+  #lp-vs-{{ section.id }} .lp-vs__table th {
+    padding: 24px 22px;
+    text-align: left;
+    background: {{ section.settings.header_bg }};
+    color: {{ section.settings.header_text }};
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+  }
+
+  #lp-vs-{{ section.id }} .lp-vs__table th.lp-vs__col-ours {
+    background: {{ section.settings.accent_color }};
+    color: #fff;
+    font-size: 16px;
+  }
+
+  #lp-vs-{{ section.id }} .lp-vs__table td {
+    padding: 18px 22px;
+    border-bottom: 1px solid {{ section.settings.border_color }};
+    font-size: 14.5px;
+    line-height: 1.5;
+    vertical-align: top;
+    color: {{ section.settings.table_text_color }};
+  }
+
+  #lp-vs-{{ section.id }} .lp-vs__table tr:last-child td {
+    border-bottom: none;
+  }
+
+  #lp-vs-{{ section.id }} .lp-vs__col-ours {
+    font-weight: 600;
+    background: {{ section.settings.ours_col_bg }};
+  }
+
+  #lp-vs-{{ section.id }} .lp-vs__table td.lp-vs__col-ours {
+    color: {{ section.settings.table_text_color }};
+    font-weight: 700;
+  }
+
+  #lp-vs-{{ section.id }} .lp-vs__table td:first-child,
+  #lp-vs-{{ section.id }} .lp-vs__table td:nth-child(2) {
+    opacity: 0.72;
+  }
+
+  @media (max-width: 640px) {
+    #lp-vs-{{ section.id }} {
+      padding: 60px 18px;
+    }
+    #lp-vs-{{ section.id }} .lp-vs__table th,
+    #lp-vs-{{ section.id }} .lp-vs__table td {
+      padding: 14px 12px;
+      font-size: 13px;
+    }
+  }
+</style>
+
+<section id="lp-vs-{{ section.id }}">
+  <div class="lp-vs__inner">
+    <div class="lp-vs__header">
+      {% if section.settings.eyebrow != blank %}
+        <p class="lp-vs__eyebrow">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+      <h2 class="lp-vs__heading">{{ section.settings.heading }}</h2>
+      {% if section.settings.subheading != blank %}
+        <p class="lp-vs__subheading">{{ section.settings.subheading }}</p>
+      {% endif %}
+    </div>
+
+    <div class="lp-vs__table-wrap">
+      <table class="lp-vs__table">
+        <thead>
+          <tr>
+            <th>{{ section.settings.col_a_heading }}</th>
+            <th>{{ section.settings.col_b_heading }}</th>
+            <th class="lp-vs__col-ours">{{ section.settings.col_ours_heading }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for block in section.blocks %}
+            <tr {{ block.shopify_attributes }}>
+              <td>{{ block.settings.col_a }}</td>
+              <td>{{ block.settings.col_b }}</td>
+              <td class="lp-vs__col-ours">{{ block.settings.col_ours }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Landing — vs Alternatives",
+  "tag": "section",
+  "class": "landing-vs-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The honest comparison" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Why Nuracom beats the clothesline and the dryer" },
+    { "type": "textarea", "id": "subheading", "label": "Subheading", "default": "No fake claims — just a clear look at where each drying option wins and loses." },
+    { "type": "header", "content": "Column headings" },
+    { "type": "text", "id": "col_a_heading", "label": "Column A (left)", "default": "Clothesline" },
+    { "type": "text", "id": "col_b_heading", "label": "Column B (middle)", "default": "Dryer" },
+    { "type": "text", "id": "col_ours_heading", "label": "Column C (ours)", "default": "Nuracom" },
+    { "type": "header", "content": "Colours" },
+    { "type": "color", "id": "bg_color", "label": "Section background", "default": "#101a32" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#ffffff" },
+    { "type": "color", "id": "accent_color", "label": "Accent", "default": "#C69A7B" },
+    { "type": "color", "id": "table_bg", "label": "Table background", "default": "#ffffff" },
+    { "type": "color", "id": "header_bg", "label": "Table header bg", "default": "#f7f5f1" },
+    { "type": "color", "id": "header_text", "label": "Table header text", "default": "#101a32" },
+    { "type": "color", "id": "table_text_color", "label": "Table body text", "default": "#101a32" },
+    { "type": "color", "id": "ours_col_bg", "label": "Our-column background tint", "default": "#fdfaf5" },
+    { "type": "color", "id": "border_color", "label": "Row border", "default": "#eceae4" }
+  ],
+  "blocks": [
+    {
+      "type": "row",
+      "name": "Comparison row",
+      "settings": [
+        { "type": "text", "id": "col_a", "label": "Column A", "default": "Weather dependent" },
+        { "type": "text", "id": "col_b", "label": "Column B", "default": "Expensive to run" },
+        { "type": "text", "id": "col_ours", "label": "Column C (ours)", "default": "Indoor convenience" }
+      ]
+    }
+  ],
+  "max_blocks": 10,
+  "presets": [
+    {
+      "name": "Landing — vs Alternatives",
+      "blocks": [
+        { "type": "row", "settings": { "col_a": "Free — when the weather cooperates", "col_b": "$1.70–$2.10 per cycle", "col_ours": "Under $1 per full cycle" } },
+        { "type": "row", "settings": { "col_a": "Weather dependent", "col_b": "Convenient but power-hungry", "col_ours": "Indoor convenience, any weather" } },
+        { "type": "row", "settings": { "col_a": "Slow in humid weather", "col_b": "Can be harsh on fabrics", "col_ours": "Gentle heated airflow" } },
+        { "type": "row", "settings": { "col_a": "Takes outdoor space", "col_b": "Bulky and loud on the floor", "col_ours": "Ceiling-mounted, zero footprint" } },
+        { "type": "row", "settings": { "col_a": "Limited control", "col_b": "Heat-heavy, single speed", "col_ours": "Smart, premium functionality" } },
+        { "type": "row", "settings": { "col_a": "No lighting benefit", "col_b": "Single-purpose appliance", "col_ours": "Integrated premium lighting" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

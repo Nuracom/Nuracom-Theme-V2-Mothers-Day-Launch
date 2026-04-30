@@ -1,0 +1,407 @@
+{% comment %}
+  Nuracom — Terms & Conditions
+  Flexible legal page. Each clause is a block so you can reorder,
+  add, or remove sections without touching code.
+  Install to: sections/legal-terms.liquid
+{% endcomment %}
+
+<style>
+  #lt-{{ section.id }} {
+    background: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+    padding: 90px 24px;
+  }
+
+  #lt-{{ section.id }} .lt__inner {
+    max-width: 820px;
+    margin: 0 auto;
+  }
+
+  #lt-{{ section.id }} .lt__header {
+    text-align: center;
+    margin-bottom: 56px;
+  }
+
+  #lt-{{ section.id }} .lt__eyebrow {
+    font-size: 12px;
+    letter-spacing: 2.4px;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: {{ section.settings.accent_color }};
+    margin: 0 0 14px;
+  }
+
+  #lt-{{ section.id }} .lt__heading {
+    font-size: clamp(30px, 4vw, 46px);
+    font-weight: 800;
+    line-height: 1.12;
+    letter-spacing: -0.4px;
+    margin: 0 0 16px;
+  }
+
+  #lt-{{ section.id }} .lt__intro {
+    font-size: 16px;
+    line-height: 1.65;
+    opacity: 0.82;
+    max-width: 620px;
+    margin: 0 auto;
+  }
+
+  #lt-{{ section.id }} .lt__meta {
+    font-size: 12.5px;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    font-weight: 600;
+    opacity: 0.55;
+    margin-top: 22px;
+  }
+
+  /* Optional TOC */
+  #lt-{{ section.id }} .lt__toc {
+    background: {{ section.settings.card_bg }};
+    border: 1px solid {{ section.settings.card_border }};
+    border-radius: 14px;
+    padding: 22px 26px;
+    margin-bottom: 48px;
+  }
+
+  #lt-{{ section.id }} .lt__toc-title {
+    font-size: 12px;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: {{ section.settings.accent_color }};
+    margin: 0 0 14px;
+  }
+
+  #lt-{{ section.id }} .lt__toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px 22px;
+  }
+
+  #lt-{{ section.id }} .lt__toc-list a {
+    font-size: 14px;
+    color: {{ section.settings.text_color }};
+    text-decoration: none;
+    opacity: 0.82;
+    transition: color 0.2s, opacity 0.2s;
+    display: flex;
+    gap: 10px;
+    padding: 3px 0;
+  }
+
+  #lt-{{ section.id }} .lt__toc-list a:hover {
+    color: {{ section.settings.accent_color }};
+    opacity: 1;
+  }
+
+  #lt-{{ section.id }} .lt__toc-num {
+    flex-shrink: 0;
+    font-weight: 700;
+    color: {{ section.settings.accent_color }};
+    min-width: 24px;
+  }
+
+  /* Clauses */
+  #lt-{{ section.id }} .lt__clause {
+    margin-bottom: 40px;
+    scroll-margin-top: 80px;
+  }
+
+  #lt-{{ section.id }} .lt__clause:last-child {
+    margin-bottom: 0;
+  }
+
+  #lt-{{ section.id }} .lt__clause-title {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.2px;
+    margin: 0 0 14px;
+  }
+
+  #lt-{{ section.id }} .lt__clause-num {
+    flex-shrink: 0;
+    font-size: 14px;
+    font-weight: 700;
+    color: {{ section.settings.accent_color }};
+    letter-spacing: 1.4px;
+    min-width: 32px;
+  }
+
+  #lt-{{ section.id }} .lt__clause-body {
+    font-size: 15.5px;
+    line-height: 1.7;
+    opacity: 0.88;
+  }
+
+  #lt-{{ section.id }} .lt__clause-body p {
+    margin: 0 0 14px;
+  }
+
+  #lt-{{ section.id }} .lt__clause-body p:last-child {
+    margin-bottom: 0;
+  }
+
+  #lt-{{ section.id }} .lt__clause-body ul,
+  #lt-{{ section.id }} .lt__clause-body ol {
+    margin: 0 0 14px;
+    padding-left: 22px;
+  }
+
+  #lt-{{ section.id }} .lt__clause-body li {
+    margin-bottom: 6px;
+  }
+
+  #lt-{{ section.id }} .lt__clause-body a {
+    color: {{ section.settings.accent_color }};
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  #lt-{{ section.id }} .lt__clause-body strong {
+    font-weight: 700;
+  }
+
+  /* Footer of the page — contact */
+  #lt-{{ section.id }} .lt__contact {
+    margin-top: 64px;
+    padding: 28px 30px;
+    background: {{ section.settings.callout_bg }};
+    border-left: 4px solid {{ section.settings.accent_color }};
+    border-radius: 0 14px 14px 0;
+  }
+
+  #lt-{{ section.id }} .lt__contact h3 {
+    font-size: 17px;
+    font-weight: 700;
+    margin: 0 0 6px;
+  }
+
+  #lt-{{ section.id }} .lt__contact p {
+    font-size: 14.5px;
+    line-height: 1.6;
+    margin: 0;
+    opacity: 0.85;
+  }
+
+  #lt-{{ section.id }} .lt__contact a {
+    color: {{ section.settings.accent_color }};
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  @media (max-width: 620px) {
+    #lt-{{ section.id }} {
+      padding: 60px 18px;
+    }
+    #lt-{{ section.id }} .lt__toc-list {
+      grid-template-columns: 1fr;
+    }
+    #lt-{{ section.id }} .lt__clause-title {
+      font-size: 18px;
+      gap: 10px;
+    }
+  }
+</style>
+
+<section id="lt-{{ section.id }}">
+  <div class="lt__inner">
+
+    <div class="lt__header">
+      {% if section.settings.eyebrow != blank %}
+        <p class="lt__eyebrow">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+      <h1 class="lt__heading">{{ section.settings.heading }}</h1>
+      {% if section.settings.intro != blank %}
+        <div class="lt__intro">{{ section.settings.intro }}</div>
+      {% endif %}
+      {% if section.settings.last_updated != blank %}
+        <p class="lt__meta">Last updated {{ section.settings.last_updated }}</p>
+      {% endif %}
+    </div>
+
+    {% if section.settings.show_toc and section.blocks.size > 0 %}
+      <nav class="lt__toc" aria-label="Contents">
+        <p class="lt__toc-title">{{ section.settings.toc_title }}</p>
+        <ul class="lt__toc-list">
+          {% for block in section.blocks %}
+            {% if block.type == 'clause' %}
+              <li>
+                <a href="#lt-clause-{{ block.id }}">
+                  <span class="lt__toc-num">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+                  <span>{{ block.settings.title }}</span>
+                </a>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </nav>
+    {% endif %}
+
+    {% assign clause_index = 0 %}
+    {% for block in section.blocks %}
+      {% if block.type == 'clause' %}
+        {% assign clause_index = clause_index | plus: 1 %}
+        <article class="lt__clause" id="lt-clause-{{ block.id }}" {{ block.shopify_attributes }}>
+          <h2 class="lt__clause-title">
+            <span class="lt__clause-num">{{ clause_index | prepend: '0' | slice: -2, 2 }}</span>
+            <span>{{ block.settings.title }}</span>
+          </h2>
+          <div class="lt__clause-body">{{ block.settings.body }}</div>
+        </article>
+      {% endif %}
+    {% endfor %}
+
+    {% if section.settings.show_contact and section.settings.contact_text != blank %}
+      <div class="lt__contact">
+        {% if section.settings.contact_title != blank %}
+          <h3>{{ section.settings.contact_title }}</h3>
+        {% endif %}
+        <p>{{ section.settings.contact_text }}</p>
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Terms & Conditions",
+  "tag": "section",
+  "class": "legal-terms-section",
+  "settings": [
+    { "type": "header", "content": "Header" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The fine print" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Terms & Conditions" },
+    { "type": "richtext", "id": "intro", "label": "Intro", "default": "<p>These terms govern your use of the Nuracom website and any purchases you make from us. Please read them carefully — by ordering from us, you accept these terms.</p>" },
+    { "type": "text", "id": "last_updated", "label": "Last updated (text)", "default": "April 2026" },
+
+    { "type": "header", "content": "Table of contents" },
+    { "type": "checkbox", "id": "show_toc", "label": "Show table of contents", "default": true },
+    { "type": "text", "id": "toc_title", "label": "TOC label", "default": "Contents" },
+
+    { "type": "header", "content": "Contact box (bottom)" },
+    { "type": "checkbox", "id": "show_contact", "label": "Show contact box at bottom", "default": true },
+    { "type": "text", "id": "contact_title", "label": "Contact title", "default": "Questions about these terms?" },
+    { "type": "richtext", "id": "contact_text", "label": "Contact text", "default": "<p>Email us at <a href=\"mailto:hello@nuracom.com\">hello@nuracom.com</a> and we'll get back to you within one business day.</p>" },
+
+    { "type": "header", "content": "Colours" },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#ffffff" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#101a32" },
+    { "type": "color", "id": "accent_color", "label": "Accent", "default": "#866653" },
+    { "type": "color", "id": "card_bg", "label": "TOC background", "default": "#fafaf8" },
+    { "type": "color", "id": "card_border", "label": "TOC border", "default": "#ece9e2" },
+    { "type": "color", "id": "callout_bg", "label": "Contact box bg", "default": "#faf6f0" }
+  ],
+  "blocks": [
+    {
+      "type": "clause",
+      "name": "Clause",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "Clause title" },
+        { "type": "richtext", "id": "body", "label": "Body", "default": "<p>Clause body text goes here.</p>" }
+      ]
+    }
+  ],
+  "max_blocks": 25,
+  "presets": [
+    {
+      "name": "Terms & Conditions",
+      "blocks": [
+        {
+          "type": "clause",
+          "settings": {
+            "title": "Acceptance of Terms",
+            "body": "<p>By accessing this website, placing an order, or using Nuracom products, you agree to be bound by these Terms & Conditions and our <a href=\"/pages/privacy-policy\">Privacy Policy</a>. If you do not accept these terms, please do not use the site or purchase our products.</p>"
+          }
+        },
+        {
+          "type": "clause",
+          "settings": {
+            "title": "About Nuracom",
+            "body": "<p>Nuracom is an Australian-owned business supplying ceiling-mounted smart drying systems for residential use. All products are shipped from our Australian warehouse and supported by an Australian-based team.</p>"
+          }
+        },
+        {
+          "type": "clause",
+          "settings": {
+            "title": "Orders and Payment",
+            "body": "<p>All prices are in Australian dollars and include GST unless otherwise stated. Orders are processed only after payment is received in full. We reserve the right to refuse or cancel any order at our discretion, including where pricing or stock errors are identified.</p>"
+          }
+        },
+        {
+          "type": "clause",
+          "settings": {
+            "title": "Shipping and Delivery",
+            "body": "<p>Estimated delivery times are indicative and begin from the date of dispatch. Exact rates and timeframes are calculated at checkout based on your postcode and confirmed once your order is dispatched. Risk of loss passes to you on delivery.</p>"
+          }
+        },
+        {
+          "type": "clause",
+          "settings": {
+            "title": "Installation",
+            "body": "<p>Nuracom products are ceiling-mounted and hard-wired into mains power. Installation must be carried out by a licensed electrician or other qualified person in accordance with Australian electrical safety standards. Damage, injury, or warranty loss caused by incorrect installation is not the responsibility of Nuracom.</p>"
+          }
+        },
+        {
+          "type": "clause",
+          "settings": {
+            "title": "Warranty",
+            "body": "<p>Nuracom products are covered by a limited warranty: 1 year full (parts & labour), 2 years parts only, and up to 5 years on the motor. Full warranty terms, exclusions, and the claim process are set out in our <a href=\"/pages/warranty-returns-policy\">Warranty & Returns Policy</a>. This warranty applies to residential use only.</p>"
+          }
+        },
+        {
+          "type": "clause",
+          "settings": {
+            "title": "Returns and Refunds",
+            "body": "<p>We offer a 30-day returns window for unused products in original resellable condition. Return shipping is paid by the customer and refunds are issued after inspection. Full terms are set out in our <a href=\"/pages/warranty-returns-policy\">Warranty & Returns Policy</a>.</p><p>This does not affect your rights under the Australian Consumer Law.</p>"
+          }
+        },
+        {
+          "type": "clause",
+          "settings": {
+            "title": "Intellectual Property",
+            "body": "<p>All content on this website — including text, images, logos, product names, designs, and software — is owned by Nuracom or licensed to us. You may not copy, modify, distribute, or use it commercially without our written permission.</p>"
+          }
+        },
+        {
+          "type": "clause",
+          "settings": {
+            "title": "Limitation of Liability",
+            "body": "<p>To the maximum extent permitted by law, Nuracom is not liable for any indirect, incidental, or consequential loss or damage — including loss of property, profits, or time — arising from the use, installation, or malfunction of our products or this website.</p><p>Our total liability for any claim is limited to the amount paid by you for the affected product. Nothing in these terms excludes rights you have under the Australian Consumer Law.</p>"
+          }
+        },
+        {
+          "type": "clause",
+          "settings": {
+            "title": "Permitted Use",
+            "body": "<p>Nuracom products are designed and warranted for residential use only. Use in commercial, industrial, or high-humidity environments is not supported unless expressly agreed in writing. Do not attempt to modify, disassemble, or repair the unit yourself — this voids the warranty and may cause injury.</p>"
+          }
+        },
+        {
+          "type": "clause",
+          "settings": {
+            "title": "Changes to These Terms",
+            "body": "<p>We may update these Terms & Conditions from time to time to reflect changes to our products, operations, or legal requirements. The most current version is always published on this page, with the \"last updated\" date shown above.</p>"
+          }
+        },
+        {
+          "type": "clause",
+          "settings": {
+            "title": "Governing Law",
+            "body": "<p>These terms are governed by the laws of Queensland, Australia. Any dispute arising from these terms or your use of Nuracom products will be handled in the courts of Queensland.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

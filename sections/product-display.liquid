@@ -1,0 +1,1272 @@
+{% comment %}
+  Product Display Section
+  - Gallery with thumbnails on the left, product info on the right
+  - Color variant swatches, quantity selector, add to cart
+  - Bullet point features, WhatsApp CTA
+  Add to: sections/product-display.liquid
+{% endcomment %}
+
+<section id="pd-{{ section.id }}">
+  <div class="pd-container">
+
+    <!-- LEFT: Image Gallery -->
+    <div class="pd-gallery">
+      <div class="pd-gallery__main">
+        <button class="pd-gallery__zoom" aria-label="Zoom image">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            <line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/>
+          </svg>
+        </button>
+        {% for block in section.blocks %}
+          {% if block.type == 'gallery_image' %}
+            {% if block.settings.image != blank %}
+              {% liquid
+                assign img_class = 'pd-gallery__image'
+                if forloop.first
+                  assign img_class = img_class | append: ' pd-gallery__image--active'
+                endif
+              %}
+              {% comment %}theme-check-disable RemoteAsset{% endcomment %}
+              {{ block.settings.image | image_url: width: 1000 | image_tag: class: img_class, alt: block.settings.alt_text, data-index: forloop.index0, loading: 'lazy' }}
+              {% comment %}theme-check-enable RemoteAsset{% endcomment %}
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      <div class="pd-gallery__thumbs">
+        {% for block in section.blocks %}
+          {% if block.type == 'gallery_image' %}
+            {% if block.settings.image != blank %}
+              <button
+                type="button"
+                class="pd-gallery__thumb{% if forloop.first %} pd-gallery__thumb--active{% endif %}"
+                data-index="{{ forloop.index0 }}"
+                aria-label="View image {{ forloop.index }}"
+                {{ block.shopify_attributes }}
+              >
+                {{ block.settings.image | image_url: width: 150 | image_tag: alt: '', loading: 'lazy' }}
+              </button>
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- RIGHT: Product Info -->
+    <div class="pd-info">
+
+      {% if section.settings.title != blank %}
+        <h1 class="pd-info__title">{{ section.settings.title }}</h1>
+      {% endif %}
+
+      {% if section.settings.category != blank %}
+        <p class="pd-info__category">{{ section.settings.category }}</p>
+      {% endif %}
+
+      {% if section.settings.price != blank %}
+        <p class="pd-info__price">{{ section.settings.price }}</p>
+      {% endif %}
+
+      {% if section.settings.show_afterpay and section.settings.product != blank %}
+        {% assign ap_variant = section.settings.product.selected_or_first_available_variant %}
+        {% assign ap_instalment = ap_variant.price | divided_by: 4 %}
+        <div class="pd-afterpay" id="pd-afterpay-{{ section.id }}">
+          <span class="pd-afterpay__text">or 4 interest-free payments of <strong class="pd-afterpay__amount">{{ ap_instalment | money }}</strong> with</span>
+          <img src="https://static.afterpay.com/integration/product-page/logo-afterpay-colour.png" alt="Afterpay" class="pd-afterpay__logo" height="18">
+          <a href="https://www.afterpay.com/en-AU/how-it-works" target="_blank" rel="noopener" class="pd-afterpay__info" aria-label="Learn more about Afterpay">ⓘ</a>
+        </div>
+      {% endif %}
+
+      <!-- Color Swatches (from product variants) -->
+      {% assign selected_product = section.settings.product %}
+      {% if selected_product != blank and section.settings.color_label != blank %}
+        {% assign color_option_index = nil %}
+        {% for option in selected_product.options_with_values %}
+          {% assign option_name_down = option.name | downcase %}
+          {% if option_name_down == 'color' or option_name_down == 'colour' or option_name_down == 'color' %}
+            {% assign color_option_index = forloop.index0 %}
+          {% endif %}
+        {% endfor %}
+
+        {% if color_option_index != nil %}
+          <div class="pd-colors">
+            <span class="pd-colors__label">{{ section.settings.color_label }}</span>
+            <div class="pd-colors__swatches">
+              {% assign seen_colors = '' %}
+              {% for variant in selected_product.variants %}
+                {% assign variant_color = variant.options[color_option_index] %}
+                {% unless seen_colors contains variant_color %}
+                  {% assign seen_colors = seen_colors | append: variant_color | append: ',' %}
+                  {% assign color_handle = variant_color | downcase | replace: ' ', '' %}
+                  {% comment %} Map common colour names to hex {% endcomment %}
+                  {% case color_handle %}
+                    {% when 'black' %}{% assign swatch_hex = '#333333' %}
+                    {% when 'grey' or 'gray' %}{% assign swatch_hex = '#999999' %}
+                    {% when 'silver' %}{% assign swatch_hex = '#c0c0c0' %}
+                    {% when 'white' %}{% assign swatch_hex = '#f5f5f5' %}
+                    {% when 'navy' %}{% assign swatch_hex = '#101a32' %}
+                    {% when 'blue' %}{% assign swatch_hex = '#2a5db0' %}
+                    {% when 'red' %}{% assign swatch_hex = '#cc3333' %}
+                    {% when 'brown' %}{% assign swatch_hex = '#866653' %}
+                    {% when 'tan' %}{% assign swatch_hex = '#dcd0c8' %}
+                    {% when 'gold' %}{% assign swatch_hex = '#c9a84c' %}
+                    {% when 'spacegrey' or 'spacegray' %}{% assign swatch_hex = '#7a7a7a' %}
+                    {% when 'darkgrey' or 'darkgray' %}{% assign swatch_hex = '#555555' %}
+                    {% else %}{% assign swatch_hex = '#cccccc' %}
+                  {% endcase %}
+                  <button
+                    type="button"
+                    class="pd-color-swatch{% if forloop.first %} pd-color-swatch--active{% endif %}"
+                    style="background-color: {{ swatch_hex }};"
+                    data-variant-id="{{ variant.id }}"
+                    data-color-name="{{ variant_color }}"
+                    data-price="{{ variant.price | money }}"
+                    data-variant-image="{% if variant.featured_image %}{{ variant.featured_image | image_url: width: 1000 }}{% endif %}"
+                    aria-label="{{ variant_color }}"
+                    title="{{ variant_color }}"
+                  ></button>
+                {% endunless %}
+              {% endfor %}
+            </div>
+            <a href="#" class="pd-colors__clear">CLEAR</a>
+          </div>
+        {% endif %}
+      {% endif %}
+
+      <!-- Protection Options -->
+      {% if section.settings.show_protection and section.settings.protection_label != blank %}
+        <div class="pd-protection">
+          <p class="pd-protection__label">{{ section.settings.protection_label }}</p>
+          <div class="pd-protection__options">
+            {% if section.settings.protection_1_label != blank %}
+              <button
+                type="button"
+                class="pd-protection__btn"
+                data-protection-variant-id="{{ section.settings.protection_1_variant_id }}"
+                data-protection-price="{{ section.settings.protection_1_price }}"
+                data-selected="false"
+              >
+                {{ section.settings.protection_1_label }}<br><strong>{{ section.settings.protection_1_price }}</strong>
+              </button>
+            {% endif %}
+
+            {% if section.settings.protection_2_label != blank %}
+              <button
+                type="button"
+                class="pd-protection__btn"
+                data-protection-variant-id="{{ section.settings.protection_2_variant_id }}"
+                data-protection-price="{{ section.settings.protection_2_price }}"
+                data-selected="false"
+              >
+                {{ section.settings.protection_2_label }}<br><strong>{{ section.settings.protection_2_price }}</strong>
+              </button>
+            {% endif %}
+
+            <button
+              type="button"
+              class="pd-protection__btn pd-protection__btn--none"
+              data-protection-variant-id=""
+              data-protection-price="0"
+              data-selected="false"
+            >
+              {{ section.settings.protection_none_label | default: 'No Protection' }}
+            </button>
+          </div>
+        </div>
+      {% endif %}
+
+      <!-- Quantity + Add to Cart -->
+      {% assign selected_product = section.settings.product %}
+      {% if selected_product != blank %}
+        {% assign current_variant = selected_product.selected_or_first_available_variant %}
+        <form method="post" action="/cart/add" id="pd-form-{{ section.id }}" class="pd-cart-row">
+          <input type="hidden" name="id" value="{{ current_variant.id }}">
+          <div class="pd-qty">
+            <button type="button" class="pd-qty__btn" data-action="minus" aria-label="Decrease">-</button>
+            <input type="number" name="quantity" value="1" min="1" class="pd-qty__input" aria-label="Quantity">
+            <button type="button" class="pd-qty__btn" data-action="plus" aria-label="Increase">+</button>
+          </div>
+          <button type="submit" class="pd-add-to-cart"{% unless current_variant.available %} disabled{% endunless %}>
+            {% if current_variant.available %}
+              {{ section.settings.add_to_cart_text | default: 'Add to cart' }}
+            {% else %}
+              Sold out
+            {% endif %}
+          </button>
+          {% if section.settings.show_buy_now and current_variant.available %}
+            <button type="button" class="pd-buy-now" id="pd-buy-now-{{ section.id }}">
+              {{ section.settings.buy_now_text | default: 'Buy Now' }}
+            </button>
+          {% endif %}
+        </form>
+
+        {% if section.settings.show_dynamic_checkout and current_variant.available %}
+          {% form 'product', selected_product %}
+            <input type="hidden" name="id" value="{{ current_variant.id }}" class="pd-dynamic-variant-input">
+            <input type="hidden" name="quantity" value="1">
+            {{ form | payment_button }}
+          {% endform %}
+        {% endif %}
+
+      {% else %}
+        <div class="pd-cart-row">
+          <div class="pd-qty">
+            <button type="button" class="pd-qty__btn" data-action="minus" aria-label="Decrease">-</button>
+            <input type="number" value="1" min="1" class="pd-qty__input" aria-label="Quantity">
+            <button type="button" class="pd-qty__btn" data-action="plus" aria-label="Increase">+</button>
+          </div>
+          <button type="button" class="pd-add-to-cart" disabled>
+            {{ section.settings.add_to_cart_text | default: 'Add to cart' }}
+          </button>
+        </div>
+      {% endif %}
+
+      <!-- Description -->
+      {% if section.settings.description != blank %}
+        <div class="pd-description">{{ section.settings.description }}</div>
+      {% endif %}
+
+      <!-- Feature Bullets -->
+      <div class="pd-features">
+        {% for i in (1..8) %}
+          {% assign feat_id = 'feature_' | append: i %}
+          {% assign feat_val = section.settings[feat_id] %}
+          {% if feat_val != blank %}
+            <div class="pd-feature">
+              <span class="pd-feature__bullet"></span>
+              <span class="pd-feature__text">{{ feat_val }}</span>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      <!-- Sub-features -->
+      <div class="pd-sub-features">
+        {% for i in (1..6) %}
+          {% assign sub_id = 'sub_feature_' | append: i %}
+          {% assign sub_val = section.settings[sub_id] %}
+          {% if sub_val != blank %}
+            <div class="pd-sub-feature">
+              <span class="pd-sub-feature__bullet"></span>
+              <span>{{ sub_val }}</span>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      <!-- WhatsApp CTA -->
+      {% if section.settings.whatsapp_url != blank %}
+        <a href="{{ section.settings.whatsapp_url }}" class="pd-whatsapp" target="_blank" rel="noopener">
+          {{ section.settings.whatsapp_text | default: 'Need Help? Whatsapp Us' }}
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12c0 1.77.46 3.44 1.28 4.9L2 22l5.1-1.28C8.56 21.54 10.23 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm5.46 14.12c-.23.65-1.35 1.22-1.86 1.3-.48.07-.94.1-3.02-.63-2.5-.88-4.1-3.4-4.22-3.56-.13-.16-1.02-1.36-1.02-2.6 0-1.24.65-1.85.88-2.1.23-.25.5-.31.67-.31h.48c.16 0 .37-.06.57.44.21.51.72 1.76.78 1.89.06.13.1.28.02.44-.08.17-.12.27-.24.41-.12.15-.25.33-.36.44-.12.12-.24.26-.1.5.13.25.6 1 1.3 1.62.9.8 1.65 1.05 1.9 1.17.24.12.38.1.52-.06.14-.16.6-.7.76-.94.16-.25.32-.2.54-.12.22.08 1.4.66 1.64.78.24.12.4.18.46.28.06.1.06.56-.17 1.21z"/>
+          </svg>
+        </a>
+      {% endif %}
+
+    </div>
+  </div>
+</section>
+
+<style>
+  #pd-{{ section.id }} {
+    padding: {{ section.settings.padding_top }}px 20px 60px;
+    background-color: {{ section.settings.bg_color }};
+  }
+
+  #pd-{{ section.id }} .pd-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+
+  /* ── Gallery ── */
+  #pd-{{ section.id }} .pd-gallery__main {
+    position: relative;
+    background: #f8f8f8;
+    border-radius: 8px;
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+    margin-bottom: 12px;
+  }
+
+  #pd-{{ section.id }} .pd-gallery__image {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    object-fit: contain;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  #pd-{{ section.id }} .pd-gallery__image--active {
+    opacity: 1;
+  }
+
+  #pd-{{ section.id }} .pd-gallery__zoom {
+    position: absolute;
+    bottom: 12px; left: 12px;
+    z-index: 2;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: #fff;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #555;
+    transition: background 0.2s ease;
+  }
+
+  #pd-{{ section.id }} .pd-gallery__zoom:hover {
+    background: #f0f0f0;
+  }
+
+  #pd-{{ section.id }} .pd-gallery__thumbs {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  #pd-{{ section.id }} .pd-gallery__thumb {
+    width: 80px; height: 80px;
+    border: 2px solid transparent;
+    border-radius: 6px;
+    background: #f8f8f8;
+    padding: 4px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: border-color 0.2s ease;
+  }
+
+  #pd-{{ section.id }} .pd-gallery__thumb--active {
+    border-color: #101a32;
+  }
+
+  #pd-{{ section.id }} .pd-gallery__thumb img {
+    width: 100%; height: 100%;
+    object-fit: contain;
+  }
+
+  /* ── Product Info ── */
+  #pd-{{ section.id }} .pd-info__title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #101a32;
+    margin: 0 0 4px;
+    line-height: 1.2;
+  }
+
+  #pd-{{ section.id }} .pd-info__category {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #888;
+    margin: 0 0 8px;
+  }
+
+  #pd-{{ section.id }} .pd-info__price {
+    font-size: 26px;
+    font-weight: 700;
+    color: #101a32;
+    margin: 0 0 20px;
+  }
+
+  /* ── Afterpay ── */
+  #pd-{{ section.id }} .pd-afterpay {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-wrap: wrap;
+    margin: -12px 0 20px;
+    font-size: 13px;
+    color: #555;
+  }
+
+  #pd-{{ section.id }} .pd-afterpay__amount {
+    color: #101a32;
+  }
+
+  #pd-{{ section.id }} .pd-afterpay__logo {
+    height: 18px;
+    width: auto;
+    vertical-align: middle;
+  }
+
+  #pd-{{ section.id }} .pd-afterpay__info {
+    font-size: 15px;
+    color: #999;
+    text-decoration: none;
+    margin-left: 2px;
+  }
+
+  #pd-{{ section.id }} .pd-afterpay__info:hover {
+    color: #666;
+  }
+
+  /* ── Color Swatches ── */
+  #pd-{{ section.id }} .pd-colors {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  #pd-{{ section.id }} .pd-colors__label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+  }
+
+  #pd-{{ section.id }} .pd-colors__swatches {
+    display: flex;
+    gap: 8px;
+  }
+
+  #pd-{{ section.id }} .pd-color-swatch {
+    width: 36px; height: 36px;
+    border-radius: 6px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1);
+  }
+
+  #pd-{{ section.id }} .pd-color-swatch--active {
+    border-color: #101a32;
+  }
+
+  #pd-{{ section.id }} .pd-colors__clear {
+    font-size: 11px;
+    color: #999;
+    text-decoration: none;
+    letter-spacing: 0.5px;
+    margin-left: auto;
+  }
+
+  #pd-{{ section.id }} .pd-colors__clear:hover {
+    color: #666;
+  }
+
+  /* ── Protection Options ── */
+  #pd-{{ section.id }} .pd-protection {
+    margin-bottom: 20px;
+  }
+
+  #pd-{{ section.id }} .pd-protection__label {
+    font-size: 14px;
+    color: #555;
+    margin: 0 0 10px;
+  }
+
+  #pd-{{ section.id }} .pd-protection__options {
+    display: flex;
+    gap: 12px;
+  }
+
+  #pd-{{ section.id }} .pd-protection__btn {
+    flex: 1;
+    padding: 12px 16px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+    cursor: pointer;
+    text-align: center;
+    font-size: 13px;
+    color: #333;
+    line-height: 1.4;
+    transition: border-color 0.2s ease;
+  }
+
+  #pd-{{ section.id }} .pd-protection__btn strong {
+    font-size: 15px;
+    color: #101a32;
+  }
+
+  #pd-{{ section.id }} .pd-protection__btn--active {
+    border-color: #101a32;
+  }
+
+  /* ── Quantity + ATC ── */
+
+  #pd-{{ section.id }} .pd-qty {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  #pd-{{ section.id }} .pd-qty__btn {
+    width: 38px; height: 42px;
+    border: none;
+    background: #f8f8f8;
+    cursor: pointer;
+    font-size: 18px;
+    color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #pd-{{ section.id }} .pd-qty__btn:hover {
+    background: #eee;
+  }
+
+  #pd-{{ section.id }} .pd-qty__input {
+    width: 44px; height: 42px;
+    text-align: center;
+    border: none;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    font-size: 15px;
+    -moz-appearance: textfield;
+  }
+
+  #pd-{{ section.id }} .pd-qty__input::-webkit-inner-spin-button,
+  #pd-{{ section.id }} .pd-qty__input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+  }
+
+  #pd-{{ section.id }} .pd-add-to-cart {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 32px;
+    background: #101a32;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+    flex: 1;
+  }
+
+  #pd-{{ section.id }} .pd-add-to-cart:hover {
+    opacity: 0.9;
+  }
+
+  #pd-{{ section.id }} .pd-add-to-cart:disabled {
+    background: #999;
+    cursor: not-allowed;
+  }
+
+  #pd-{{ section.id }} .pd-cart-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+
+  /* ── Buy Now ── */
+  #pd-{{ section.id }} .pd-buy-now {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 32px;
+    background: {{ section.settings.buy_now_bg | default: '#6b1c2a' }};
+    color: {{ section.settings.buy_now_color | default: '#ffffff' }};
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+    flex: 1;
+  }
+
+  #pd-{{ section.id }} .pd-buy-now:hover {
+    opacity: 0.9;
+  }
+
+  #pd-{{ section.id }} .pd-buy-now:disabled {
+    background: #999;
+    cursor: not-allowed;
+  }
+
+  /* ── Dynamic Checkout (Apple Pay, Shop Pay, etc.) ── */
+  #pd-{{ section.id }} .shopify-payment-button {
+    margin-bottom: 8px;
+  }
+
+  #pd-{{ section.id }} .shopify-payment-button__button {
+    border-radius: 6px !important;
+    min-height: 48px;
+  }
+
+  /* ── Description ── */
+  #pd-{{ section.id }} .pd-description {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #444;
+    margin-bottom: 20px;
+    font-style: italic;
+  }
+
+  /* ── Features ── */
+  #pd-{{ section.id }} .pd-features {
+    margin-bottom: 16px;
+  }
+
+  #pd-{{ section.id }} .pd-feature {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 4px 0;
+    font-size: 14px;
+    color: #222;
+    font-weight: 600;
+  }
+
+  #pd-{{ section.id }} .pd-feature__bullet {
+    width: 6px; height: 6px;
+    background: #101a32;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  #pd-{{ section.id }} .pd-sub-features {
+    margin-bottom: 24px;
+    padding-left: 20px;
+  }
+
+  #pd-{{ section.id }} .pd-sub-feature {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 3px 0;
+    font-size: 13px;
+    color: #555;
+  }
+
+  #pd-{{ section.id }} .pd-sub-feature__bullet {
+    width: 5px; height: 5px;
+    background: #888;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* ── WhatsApp CTA ── */
+  #pd-{{ section.id }} .pd-whatsapp {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 14px 24px;
+    background: #25D366;
+    color: #fff;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 600;
+    transition: opacity 0.2s ease;
+  }
+
+  #pd-{{ section.id }} .pd-whatsapp:hover {
+    opacity: 0.9;
+    color: #fff;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    #pd-{{ section.id }} .pd-container {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    #pd-{{ section.id }} .pd-info__title {
+      font-size: 26px;
+    }
+
+    #pd-{{ section.id }} .pd-info__price {
+      font-size: 22px;
+    }
+
+    #pd-{{ section.id }} .pd-gallery__thumb {
+      width: 64px; height: 64px;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var section = document.getElementById('pd-{{ section.id }}');
+    if (!section) return;
+
+    // Gallery thumbnails
+    var thumbs = section.querySelectorAll('.pd-gallery__thumb');
+    var images = section.querySelectorAll('.pd-gallery__image');
+    thumbs.forEach(function (thumb) {
+      thumb.addEventListener('click', function () {
+        var idx = this.dataset.index;
+        thumbs.forEach(function (t) { t.classList.remove('pd-gallery__thumb--active'); });
+        images.forEach(function (img) { img.classList.remove('pd-gallery__image--active'); });
+        // Hide the variant image when a thumbnail is clicked
+        var variantImg = section.querySelector('.pd-gallery__image--variant');
+        if (variantImg) variantImg.classList.remove('pd-gallery__image--active');
+        this.classList.add('pd-gallery__thumb--active');
+        var target = section.querySelector('.pd-gallery__image[data-index="' + idx + '"]');
+        if (target) target.classList.add('pd-gallery__image--active');
+      });
+    });
+
+    // Color swatches — update active state + variant ID + price
+    var swatches = section.querySelectorAll('.pd-color-swatch');
+    var variantInput = section.querySelector('input[name="id"]');
+    var priceEl = section.querySelector('.pd-info__price');
+    var cartBtn = section.querySelector('.pd-add-to-cart');
+
+    var galleryMain = section.querySelector('.pd-gallery__main');
+
+    swatches.forEach(function (s) {
+      s.addEventListener('click', function () {
+        swatches.forEach(function (sw) { sw.classList.remove('pd-color-swatch--active'); });
+        this.classList.add('pd-color-swatch--active');
+
+        // Update the hidden variant ID in the cart form
+        var newVariantId = this.dataset.variantId;
+        if (variantInput && newVariantId) {
+          variantInput.value = newVariantId;
+        }
+
+        // Update displayed price
+        var newPrice = this.dataset.price;
+        if (priceEl && newPrice) {
+          priceEl.textContent = newPrice;
+        }
+
+        // Update base price and recalculate Afterpay (including any protection)
+        if (newPrice) {
+          var numericPrice = parseFloat(newPrice.replace(/[^0-9.]/g, ''));
+          if (!isNaN(numericPrice)) {
+            basePrice = numericPrice;
+            updateTotalDisplay();
+          }
+        }
+
+        // Swap gallery image to this variant's featured image
+        var variantImg = this.getAttribute('data-variant-image');
+        if (variantImg && galleryMain) {
+          // Hide all current gallery images
+          images.forEach(function (img) { img.classList.remove('pd-gallery__image--active'); });
+          thumbs.forEach(function (t) { t.classList.remove('pd-gallery__thumb--active'); });
+
+          // Check if a variant image already exists, otherwise create one
+          var existingVariantImg = galleryMain.querySelector('.pd-gallery__image--variant');
+          if (!existingVariantImg) {
+            existingVariantImg = document.createElement('img');
+            existingVariantImg.className = 'pd-gallery__image pd-gallery__image--variant';
+            existingVariantImg.loading = 'lazy';
+            galleryMain.appendChild(existingVariantImg);
+          }
+          existingVariantImg.src = variantImg;
+          existingVariantImg.alt = this.getAttribute('data-color-name') || '';
+          existingVariantImg.classList.add('pd-gallery__image--active');
+        }
+
+        // Update URL without reload
+        if (newVariantId && window.history.replaceState) {
+          var url = new URL(window.location.href);
+          url.searchParams.set('variant', newVariantId);
+          window.history.replaceState({}, '', url.toString());
+        }
+      });
+    });
+
+    // Clear button resets to first swatch
+    var clearBtn = section.querySelector('.pd-colors__clear');
+    if (clearBtn && swatches.length > 0) {
+      clearBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        swatches[0].click();
+      });
+    }
+
+    // Protection buttons — toggle selection (only one at a time)
+    var protBtns = section.querySelectorAll('.pd-protection__btn');
+    var basePrice = priceEl ? parseFloat(priceEl.textContent.replace(/[^0-9.]/g, '')) : 0;
+
+    function updateTotalDisplay() {
+      var protExtra = 0;
+      var selectedProt = section.querySelector('.pd-protection__btn[data-selected="true"]');
+      if (selectedProt) {
+        var rawProt = selectedProt.getAttribute('data-protection-price') || '0';
+        protExtra = parseFloat(rawProt.replace(/[^0-9.]/g, '')) || 0;
+      }
+
+      var total = basePrice + protExtra;
+
+      // Update Afterpay instalment
+      var apAmount = section.querySelector('.pd-afterpay__amount');
+      if (apAmount) {
+        var instalment = (total / 4).toFixed(2);
+        apAmount.textContent = '$' + instalment;
+      }
+    }
+
+    protBtns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var wasSelected = this.dataset.selected === 'true';
+
+        // Deselect all
+        protBtns.forEach(function (b) {
+          b.classList.remove('pd-protection__btn--active');
+          b.dataset.selected = 'false';
+        });
+
+        // Toggle clicked one (if it wasn't already selected)
+        if (!wasSelected) {
+          this.classList.add('pd-protection__btn--active');
+          this.dataset.selected = 'true';
+        }
+
+        updateTotalDisplay();
+      });
+    });
+
+    // Shared XHR add-to-cart helper
+    function xhrAdd(variantId, quantity) {
+      return new Promise(function (resolve, reject) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/cart/add.js', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onload = function () {
+          var resp;
+          try { resp = JSON.parse(xhr.responseText); } catch(e) { resp = xhr.responseText; }
+          if (xhr.status >= 200 && xhr.status < 300) {
+            resolve(resp);
+          } else {
+            reject({ status: xhr.status, body: resp, variantId: variantId });
+          }
+        };
+        xhr.onerror = function () {
+          reject({ status: 0, body: 'Network error', variantId: variantId });
+        };
+        xhr.send('id=' + variantId + '&quantity=' + quantity);
+      });
+    }
+
+    function getProtectionId() {
+      var selectedProt = section.querySelector('.pd-protection__btn[data-selected="true"]');
+      if (selectedProt) {
+        var rawProtId = selectedProt.getAttribute('data-protection-variant-id');
+        if (rawProtId && rawProtId.trim() !== '') return rawProtId.trim();
+      }
+      return null;
+    }
+
+    function handleAddToCart(redirectUrl, triggerBtn, originalText) {
+      var form = section.querySelector('form[id^="pd-form"]');
+      var variantIdInput = form ? form.querySelector('input[name="id"]') : null;
+      var qtyInput = form ? form.querySelector('input[name="quantity"]') : null;
+
+      if (!variantIdInput || !variantIdInput.value) {
+        alert('Please select a product variant.');
+        return;
+      }
+
+      var vid = variantIdInput.value.trim();
+      var qty = parseInt(qtyInput ? qtyInput.value : 1, 10) || 1;
+      var protId = getProtectionId();
+
+      triggerBtn.disabled = true;
+      triggerBtn.textContent = redirectUrl === '/checkout' ? 'Redirecting...' : 'Adding...';
+
+      xhrAdd(vid, qty).then(function () {
+        if (protId) {
+          return xhrAdd(protId, 1).catch(function (err) {
+            var msg = (err.body && err.body.description) ? err.body.description : JSON.stringify(err.body);
+            alert('Protection could not be added:\n' + msg + '\n\nThe main product was still added.');
+          });
+        }
+      }).then(function () {
+        window.location.href = redirectUrl;
+      }).catch(function (err) {
+        var msg = (err.body && err.body.description) ? err.body.description : JSON.stringify(err.body);
+        alert('Add to cart failed:\n' + msg);
+        triggerBtn.textContent = originalText;
+        triggerBtn.disabled = false;
+      });
+    }
+
+    // Add to Cart button
+    var form = section.querySelector('form[id^="pd-form"]');
+    if (form) {
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var btn = form.querySelector('.pd-add-to-cart');
+        handleAddToCart('/cart', btn, '{{ section.settings.add_to_cart_text | default: "Add to cart" | escape }}');
+      });
+    }
+
+    // Buy Now button
+    var buyNowBtn = section.querySelector('#pd-buy-now-{{ section.id }}');
+    if (buyNowBtn) {
+      buyNowBtn.addEventListener('click', function () {
+        handleAddToCart('/checkout', buyNowBtn, '{{ section.settings.buy_now_text | default: "Buy Now" | escape }}');
+      });
+    }
+
+    // Keep dynamic checkout form variant in sync with swatch changes
+    var dynamicInput = section.querySelector('.pd-dynamic-variant-input');
+    if (dynamicInput && swatches.length > 0) {
+      swatches.forEach(function (s) {
+        s.addEventListener('click', function () {
+          var vid = this.dataset.variantId;
+          if (vid) dynamicInput.value = vid;
+        });
+      });
+    }
+
+    // Quantity
+    section.querySelectorAll('.pd-qty__btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var input = this.parentElement.querySelector('.pd-qty__input');
+        var val = parseInt(input.value) || 1;
+        if (this.dataset.action === 'minus') input.value = Math.max(1, val - 1);
+        else input.value = val + 1;
+      });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Product Display",
+  "tag": "section",
+  "class": "product-display-section",
+  "settings": [
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top Padding",
+      "info": "Increase this if the section is hidden behind your header",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "default": 40,
+      "unit": "px"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Product Info"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Product Title",
+      "default": "NuraCom Stratos"
+    },
+    {
+      "type": "text",
+      "id": "category",
+      "label": "Category",
+      "default": "AUTOMATED LAUNDRY RACK"
+    },
+    {
+      "type": "text",
+      "id": "price",
+      "label": "Price",
+      "default": "$1,199.00"
+    },
+    {
+      "type": "header",
+      "content": "Afterpay"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_afterpay",
+      "label": "Show Afterpay message",
+      "default": true,
+      "info": "Displays 'or 4 interest-free payments of $X with Afterpay' below the price"
+    },
+    {
+      "type": "header",
+      "content": "Color Swatches"
+    },
+    {
+      "type": "text",
+      "id": "color_label",
+      "label": "Color Label",
+      "default": "Colour",
+      "info": "Swatches are auto-generated from the product's Color/Colour variant option"
+    },
+    {
+      "type": "header",
+      "content": "Product Protection"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_protection",
+      "label": "Show product protection",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "protection_label",
+      "label": "Protection Label",
+      "default": "Add product protection by anycover"
+    },
+    {
+      "type": "text",
+      "id": "protection_1_label",
+      "label": "Option 1 Label",
+      "default": "1 Year:"
+    },
+    {
+      "type": "text",
+      "id": "protection_1_price",
+      "label": "Option 1 Display Price",
+      "default": "$110"
+    },
+    {
+      "type": "text",
+      "id": "protection_1_variant_id",
+      "label": "Option 1 Variant ID",
+      "info": "Paste the Shopify variant ID for this protection tier. Find it in Products → Protection Plan → Variants → copy the numeric ID from the URL."
+    },
+    {
+      "type": "text",
+      "id": "protection_2_label",
+      "label": "Option 2 Label",
+      "default": "2 Year:"
+    },
+    {
+      "type": "text",
+      "id": "protection_2_price",
+      "label": "Option 2 Display Price",
+      "default": "$140"
+    },
+    {
+      "type": "text",
+      "id": "protection_2_variant_id",
+      "label": "Option 2 Variant ID",
+      "info": "Paste the Shopify variant ID for this protection tier. Find it in Products → Protection Plan → Variants → copy the numeric ID from the URL."
+    },
+    {
+      "type": "text",
+      "id": "protection_none_label",
+      "label": "No Protection Label",
+      "default": "No Protection"
+    },
+    {
+      "type": "header",
+      "content": "Cart"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product",
+      "info": "Select the product so the Add to Cart button works"
+    },
+    {
+      "type": "text",
+      "id": "add_to_cart_text",
+      "label": "Add to Cart Text",
+      "default": "Add to cart"
+    },
+    {
+      "type": "header",
+      "content": "Buy Now"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_buy_now",
+      "label": "Show Buy Now button",
+      "default": true,
+      "info": "Adds item to cart and goes straight to checkout"
+    },
+    {
+      "type": "text",
+      "id": "buy_now_text",
+      "label": "Buy Now Text",
+      "default": "Buy Now"
+    },
+    {
+      "type": "color",
+      "id": "buy_now_bg",
+      "label": "Buy Now Background",
+      "default": "#6b1c2a"
+    },
+    {
+      "type": "color",
+      "id": "buy_now_color",
+      "label": "Buy Now Text Colour",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Express Checkout"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dynamic_checkout",
+      "label": "Show Apple Pay / Shop Pay / Google Pay",
+      "default": false,
+      "info": "Shows Shopify dynamic checkout buttons. Requires payment methods to be enabled in Settings → Payments."
+    },
+    {
+      "type": "header",
+      "content": "Description"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Short Description",
+      "default": "NuraCom Stratos's cutting-edge technology redefines convenience with its industry-leading drying speed and efficiency."
+    },
+    {
+      "type": "header",
+      "content": "Feature Bullets"
+    },
+    {
+      "type": "text",
+      "id": "feature_1",
+      "label": "Feature 1",
+      "default": "5 Year Warranty"
+    },
+    {
+      "type": "text",
+      "id": "feature_2",
+      "label": "Feature 2",
+      "default": "Free Installation & Delivery"
+    },
+    {
+      "type": "text",
+      "id": "feature_3",
+      "label": "Feature 3"
+    },
+    {
+      "type": "text",
+      "id": "feature_4",
+      "label": "Feature 4"
+    },
+    {
+      "type": "text",
+      "id": "feature_5",
+      "label": "Feature 5"
+    },
+    {
+      "type": "text",
+      "id": "feature_6",
+      "label": "Feature 6"
+    },
+    {
+      "type": "text",
+      "id": "feature_7",
+      "label": "Feature 7"
+    },
+    {
+      "type": "text",
+      "id": "feature_8",
+      "label": "Feature 8"
+    },
+    {
+      "type": "header",
+      "content": "Sub-features (indented)"
+    },
+    {
+      "type": "text",
+      "id": "sub_feature_1",
+      "label": "Sub-feature 1",
+      "default": "6 Turbo Fans"
+    },
+    {
+      "type": "text",
+      "id": "sub_feature_2",
+      "label": "Sub-feature 2",
+      "default": "3 times the industry standard for faster and more efficient drying"
+    },
+    {
+      "type": "text",
+      "id": "sub_feature_3",
+      "label": "Sub-feature 3",
+      "default": "3 Lighting Modes"
+    },
+    {
+      "type": "text",
+      "id": "sub_feature_4",
+      "label": "Sub-feature 4",
+      "default": "Customise your laundry room's ambiance with adjustable lighting"
+    },
+    {
+      "type": "text",
+      "id": "sub_feature_5",
+      "label": "Sub-feature 5"
+    },
+    {
+      "type": "text",
+      "id": "sub_feature_6",
+      "label": "Sub-feature 6"
+    },
+    {
+      "type": "header",
+      "content": "WhatsApp CTA"
+    },
+    {
+      "type": "url",
+      "id": "whatsapp_url",
+      "label": "WhatsApp URL",
+      "info": "e.g. https://wa.me/6588860818"
+    },
+    {
+      "type": "text",
+      "id": "whatsapp_text",
+      "label": "WhatsApp Button Text",
+      "default": "Need Help? Whatsapp Us"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "gallery_image",
+      "name": "Gallery Image",
+      "limit": 8,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "alt_text",
+          "label": "Alt Text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Display",
+      "blocks": [
+        { "type": "gallery_image" },
+        { "type": "gallery_image" },
+        { "type": "gallery_image" },
+        { "type": "gallery_image" }
+      ]
+    }
+  ]
+}
+{% endschema %}

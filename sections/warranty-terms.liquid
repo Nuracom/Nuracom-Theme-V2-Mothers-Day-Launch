@@ -1,0 +1,668 @@
+{% comment %}
+  Nuracom — Warranty & Returns Policy
+  Full policy page content. Drop into a Shopify page template.
+  Covers: coverage tiers, what's covered, exclusions, claim process,
+  30-day returns, residential-use small print.
+  Install to: sections/warranty-terms.liquid
+{% endcomment %}
+
+<style>
+  #wt-{{ section.id }} {
+    background: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+    padding: 90px 24px;
+    font-family: inherit;
+  }
+
+  #wt-{{ section.id }} .wt__inner {
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  #wt-{{ section.id }} .wt__header {
+    text-align: center;
+    max-width: 720px;
+    margin: 0 auto 64px;
+  }
+
+  #wt-{{ section.id }} .wt__eyebrow {
+    font-size: 12px;
+    letter-spacing: 2.4px;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: {{ section.settings.accent_color }};
+    margin: 0 0 14px;
+  }
+
+  #wt-{{ section.id }} .wt__heading {
+    font-size: clamp(30px, 4vw, 46px);
+    font-weight: 800;
+    line-height: 1.12;
+    letter-spacing: -0.4px;
+    margin: 0 0 18px;
+  }
+
+  #wt-{{ section.id }} .wt__intro {
+    font-size: 17px;
+    line-height: 1.65;
+    opacity: 0.82;
+    margin: 0;
+  }
+
+  #wt-{{ section.id }} .wt__meta {
+    text-align: center;
+    font-size: 12.5px;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    font-weight: 600;
+    opacity: 0.55;
+    margin-top: 24px;
+  }
+
+  /* Coverage tiers */
+  #wt-{{ section.id }} .wt__tiers {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-bottom: 72px;
+  }
+
+  #wt-{{ section.id }} .wt__tier {
+    background: {{ section.settings.card_bg }};
+    border: 1.5px solid {{ section.settings.card_border }};
+    border-radius: 16px;
+    padding: 32px 28px;
+    text-align: center;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+  }
+
+  #wt-{{ section.id }} .wt__tier:hover {
+    border-color: {{ section.settings.accent_color }};
+    transform: translateY(-3px);
+  }
+
+  #wt-{{ section.id }} .wt__tier-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: {{ section.settings.accent_color }}15;
+    color: {{ section.settings.accent_color }};
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.4px;
+    margin: 0 auto 18px;
+    line-height: 1;
+  }
+
+  #wt-{{ section.id }} .wt__tier-years {
+    font-size: 22px;
+    font-weight: 800;
+    margin: 0 0 4px;
+    letter-spacing: -0.3px;
+  }
+
+  #wt-{{ section.id }} .wt__tier-label {
+    font-size: 13px;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: {{ section.settings.accent_color }};
+    margin: 0 0 12px;
+  }
+
+  #wt-{{ section.id }} .wt__tier-desc {
+    font-size: 14px;
+    line-height: 1.55;
+    opacity: 0.78;
+    margin: 0;
+  }
+
+  /* Section blocks */
+  #wt-{{ section.id }} .wt__section {
+    margin-bottom: 64px;
+  }
+
+  #wt-{{ section.id }} .wt__section:last-child {
+    margin-bottom: 0;
+  }
+
+  #wt-{{ section.id }} .wt__section-title {
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+    margin: 0 0 24px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid {{ section.settings.accent_color }};
+    display: inline-block;
+  }
+
+  #wt-{{ section.id }} .wt__section-sub {
+    font-size: 15px;
+    line-height: 1.6;
+    opacity: 0.78;
+    margin: 0 0 22px;
+    max-width: 620px;
+  }
+
+  /* Covered / Not-covered lists */
+  #wt-{{ section.id }} .wt__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px 22px;
+  }
+
+  #wt-{{ section.id }} .wt__list li {
+    display: flex;
+    align-items: start;
+    gap: 10px;
+    font-size: 14.5px;
+    line-height: 1.55;
+  }
+
+  #wt-{{ section.id }} .wt__list-icon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+  }
+
+  #wt-{{ section.id }} .wt__list-icon--ok {
+    background: #1f7a3f15;
+    color: #1f7a3f;
+  }
+
+  #wt-{{ section.id }} .wt__list-icon--no {
+    background: #9a334015;
+    color: #9a3340;
+  }
+
+  /* Claim process */
+  #wt-{{ section.id }} .wt__steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  #wt-{{ section.id }} .wt__step {
+    background: {{ section.settings.card_bg }};
+    border: 1px solid {{ section.settings.card_border }};
+    border-radius: 14px;
+    padding: 26px 22px;
+    position: relative;
+  }
+
+  #wt-{{ section.id }} .wt__step-num {
+    position: absolute;
+    top: -14px;
+    left: 22px;
+    background: {{ section.settings.accent_color }};
+    color: #fff;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 14px;
+  }
+
+  #wt-{{ section.id }} .wt__step-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin: 10px 0 6px;
+  }
+
+  #wt-{{ section.id }} .wt__step-desc {
+    font-size: 14px;
+    line-height: 1.55;
+    margin: 0;
+    opacity: 0.78;
+  }
+
+  /* Callout box */
+  #wt-{{ section.id }} .wt__callout {
+    background: {{ section.settings.callout_bg }};
+    border-left: 4px solid {{ section.settings.accent_color }};
+    border-radius: 0 12px 12px 0;
+    padding: 22px 26px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+
+  #wt-{{ section.id }} .wt__callout-text {
+    font-size: 15.5px;
+    line-height: 1.5;
+    margin: 0;
+    font-weight: 500;
+    flex: 1 1 260px;
+  }
+
+  #wt-{{ section.id }} .wt__callout-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: {{ section.settings.accent_color }};
+    color: #fff;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    text-decoration: none;
+    transition: opacity 0.2s;
+    white-space: nowrap;
+  }
+
+  #wt-{{ section.id }} .wt__callout-btn:hover {
+    opacity: 0.9;
+  }
+
+  /* Returns split */
+  #wt-{{ section.id }} .wt__returns-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  #wt-{{ section.id }} .wt__returns-col {
+    background: {{ section.settings.card_bg }};
+    border: 1px solid {{ section.settings.card_border }};
+    border-radius: 14px;
+    padding: 24px;
+  }
+
+  #wt-{{ section.id }} .wt__returns-col h4 {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 0 0 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  #wt-{{ section.id }} .wt__returns-col ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  #wt-{{ section.id }} .wt__returns-col li {
+    display: flex;
+    gap: 8px;
+    font-size: 14px;
+    line-height: 1.55;
+    margin-bottom: 8px;
+  }
+
+  #wt-{{ section.id }} .wt__returns-col li:last-child {
+    margin-bottom: 0;
+  }
+
+  #wt-{{ section.id }} .wt__returns-col li::before {
+    content: "";
+    flex-shrink: 0;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin-top: 8px;
+  }
+
+  #wt-{{ section.id }} .wt__returns-col--accepted li::before {
+    background: #1f7a3f;
+  }
+
+  #wt-{{ section.id }} .wt__returns-col--rejected li::before {
+    background: #9a3340;
+  }
+
+  #wt-{{ section.id }} .wt__returns-note {
+    font-size: 13px;
+    opacity: 0.7;
+    margin: 16px 0 0;
+    padding-top: 16px;
+    border-top: 1px solid {{ section.settings.card_border }};
+    line-height: 1.55;
+  }
+
+  /* Legal notes */
+  #wt-{{ section.id }} .wt__legal {
+    background: {{ section.settings.legal_bg }};
+    border-radius: 14px;
+    padding: 28px 30px;
+    font-size: 13.5px;
+    line-height: 1.65;
+    opacity: 0.85;
+  }
+
+  #wt-{{ section.id }} .wt__legal ul {
+    margin: 0;
+    padding-left: 20px;
+  }
+
+  #wt-{{ section.id }} .wt__legal li {
+    margin-bottom: 8px;
+  }
+
+  #wt-{{ section.id }} .wt__legal li:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Mobile */
+  @media (max-width: 820px) {
+    #wt-{{ section.id }} .wt__tiers {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    #wt-{{ section.id }} .wt__list {
+      grid-template-columns: 1fr;
+    }
+    #wt-{{ section.id }} .wt__steps {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    #wt-{{ section.id }} .wt__returns-split {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 560px) {
+    #wt-{{ section.id }} {
+      padding: 60px 18px;
+    }
+    #wt-{{ section.id }} .wt__tier {
+      padding: 26px 22px;
+    }
+    #wt-{{ section.id }} .wt__callout {
+      padding: 20px;
+    }
+    #wt-{{ section.id }} .wt__callout-btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>
+
+<section id="wt-{{ section.id }}">
+  <div class="wt__inner">
+
+    {%- comment -%} ===== Header ===== {%- endcomment -%}
+    <div class="wt__header">
+      {% if section.settings.eyebrow != blank %}
+        <p class="wt__eyebrow">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+      <h1 class="wt__heading">{{ section.settings.heading }}</h1>
+      {% if section.settings.intro != blank %}
+        <div class="wt__intro">{{ section.settings.intro }}</div>
+      {% endif %}
+      {% if section.settings.last_updated != blank %}
+        <p class="wt__meta">Last updated {{ section.settings.last_updated }}</p>
+      {% endif %}
+    </div>
+
+    {%- comment -%} ===== Coverage tiers ===== {%- endcomment -%}
+    {% if section.settings.show_tiers %}
+      <div class="wt__tiers">
+        <div class="wt__tier">
+          <span class="wt__tier-badge">1YR</span>
+          <p class="wt__tier-years">{{ section.settings.tier_1_title }}</p>
+          <p class="wt__tier-label">Parts + Labour</p>
+          <p class="wt__tier-desc">{{ section.settings.tier_1_desc }}</p>
+        </div>
+        <div class="wt__tier">
+          <span class="wt__tier-badge">2YR</span>
+          <p class="wt__tier-years">{{ section.settings.tier_2_title }}</p>
+          <p class="wt__tier-label">Parts Only</p>
+          <p class="wt__tier-desc">{{ section.settings.tier_2_desc }}</p>
+        </div>
+        <div class="wt__tier">
+          <span class="wt__tier-badge">5YR</span>
+          <p class="wt__tier-years">{{ section.settings.tier_3_title }}</p>
+          <p class="wt__tier-label">Motor Only</p>
+          <p class="wt__tier-desc">{{ section.settings.tier_3_desc }}</p>
+        </div>
+      </div>
+    {% endif %}
+
+    {%- comment -%} ===== What's Covered ===== {%- endcomment -%}
+    {% if section.settings.covered_richtext != blank %}
+      <div class="wt__section">
+        <h2 class="wt__section-title">{{ section.settings.covered_title }}</h2>
+        {% if section.settings.covered_sub != blank %}
+          <p class="wt__section-sub">{{ section.settings.covered_sub }}</p>
+        {% endif %}
+        <ul class="wt__list">
+          {% assign items = section.settings.covered_richtext | replace: '</p>', '|' | replace: '<p>', '' | replace: '</li>', '|' | replace: '<li>', '' | strip_html | split: '|' %}
+          {% for item in items %}
+            {% assign clean = item | strip %}
+            {% if clean != blank %}
+              <li>
+                <span class="wt__list-icon wt__list-icon--ok">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                </span>
+                {{ clean }}
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+    {%- comment -%} ===== What's NOT Covered ===== {%- endcomment -%}
+    {% if section.settings.excluded_richtext != blank %}
+      <div class="wt__section">
+        <h2 class="wt__section-title">{{ section.settings.excluded_title }}</h2>
+        {% if section.settings.excluded_sub != blank %}
+          <p class="wt__section-sub">{{ section.settings.excluded_sub }}</p>
+        {% endif %}
+        <ul class="wt__list">
+          {% assign items = section.settings.excluded_richtext | replace: '</p>', '|' | replace: '<p>', '' | replace: '</li>', '|' | replace: '<li>', '' | strip_html | split: '|' %}
+          {% for item in items %}
+            {% assign clean = item | strip %}
+            {% if clean != blank %}
+              <li>
+                <span class="wt__list-icon wt__list-icon--no">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <line x1="6" y1="6" x2="18" y2="18"/>
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                  </svg>
+                </span>
+                {{ clean }}
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+    {%- comment -%} ===== Claim Process ===== {%- endcomment -%}
+    {% if section.settings.show_claim %}
+      <div class="wt__section">
+        <h2 class="wt__section-title">{{ section.settings.claim_title }}</h2>
+        {% if section.settings.claim_sub != blank %}
+          <p class="wt__section-sub">{{ section.settings.claim_sub }}</p>
+        {% endif %}
+        <div class="wt__steps">
+          <div class="wt__step">
+            <span class="wt__step-num">1</span>
+            <h4 class="wt__step-title">{{ section.settings.step_1_title }}</h4>
+            <p class="wt__step-desc">{{ section.settings.step_1_desc }}</p>
+          </div>
+          <div class="wt__step">
+            <span class="wt__step-num">2</span>
+            <h4 class="wt__step-title">{{ section.settings.step_2_title }}</h4>
+            <p class="wt__step-desc">{{ section.settings.step_2_desc }}</p>
+          </div>
+          <div class="wt__step">
+            <span class="wt__step-num">3</span>
+            <h4 class="wt__step-title">{{ section.settings.step_3_title }}</h4>
+            <p class="wt__step-desc">{{ section.settings.step_3_desc }}</p>
+          </div>
+        </div>
+
+        {% if section.settings.callout_text != blank %}
+          <div class="wt__callout">
+            <p class="wt__callout-text">{{ section.settings.callout_text }}</p>
+            {% if section.settings.callout_btn_text != blank %}
+              <a href="{{ section.settings.callout_btn_url | default: '#' }}" class="wt__callout-btn">
+                {{ section.settings.callout_btn_text }}
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                  <polyline points="12 5 19 12 12 19"/>
+                </svg>
+              </a>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {%- comment -%} ===== Returns Policy ===== {%- endcomment -%}
+    {% if section.settings.show_returns %}
+      <div class="wt__section">
+        <h2 class="wt__section-title">{{ section.settings.returns_title }}</h2>
+        {% if section.settings.returns_sub != blank %}
+          <p class="wt__section-sub">{{ section.settings.returns_sub }}</p>
+        {% endif %}
+
+        <div class="wt__returns-split">
+          <div class="wt__returns-col wt__returns-col--accepted">
+            <h4>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1f7a3f" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              {{ section.settings.returns_accepted_title }}
+            </h4>
+            <ul>
+              {% assign accepted = section.settings.returns_accepted_richtext | replace: '</p>', '|' | replace: '<p>', '' | replace: '</li>', '|' | replace: '<li>', '' | strip_html | split: '|' %}
+              {% for item in accepted %}
+                {% assign clean = item | strip %}
+                {% if clean != blank %}<li>{{ clean }}</li>{% endif %}
+              {% endfor %}
+            </ul>
+          </div>
+
+          <div class="wt__returns-col wt__returns-col--rejected">
+            <h4>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9a3340" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="6" y1="6" x2="18" y2="18"/>
+                <line x1="18" y1="6" x2="6" y2="18"/>
+              </svg>
+              {{ section.settings.returns_rejected_title }}
+            </h4>
+            <ul>
+              {% assign rejected = section.settings.returns_rejected_richtext | replace: '</p>', '|' | replace: '<p>', '' | replace: '</li>', '|' | replace: '<li>', '' | strip_html | split: '|' %}
+              {% for item in rejected %}
+                {% assign clean = item | strip %}
+                {% if clean != blank %}<li>{{ clean }}</li>{% endif %}
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+
+        {% if section.settings.returns_note != blank %}
+          <p class="wt__returns-note">{{ section.settings.returns_note }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {%- comment -%} ===== Small print / legal ===== {%- endcomment -%}
+    {% if section.settings.legal_richtext != blank %}
+      <div class="wt__section">
+        <h2 class="wt__section-title">{{ section.settings.legal_title }}</h2>
+        <div class="wt__legal">{{ section.settings.legal_richtext }}</div>
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Warranty & Returns",
+  "tag": "section",
+  "class": "warranty-terms-section",
+  "settings": [
+    { "type": "header", "content": "Header" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Transparency matters" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Warranty & Returns Policy" },
+    { "type": "richtext", "id": "intro", "label": "Intro", "default": "<p>All Nuracom products are covered by a limited warranty, subject to the terms below. This page covers exactly what's included, what isn't, and how to make a claim — so there are no surprises.</p>" },
+    { "type": "text", "id": "last_updated", "label": "Last updated (text)", "default": "April 2026" },
+
+    { "type": "header", "content": "Coverage tiers" },
+    { "type": "checkbox", "id": "show_tiers", "label": "Show 3-tier coverage cards", "default": true },
+    { "type": "text", "id": "tier_1_title", "label": "Tier 1 title", "default": "1 Year Full Warranty" },
+    { "type": "textarea", "id": "tier_1_desc", "label": "Tier 1 description", "default": "Covers manufacturing defects on the complete unit, including parts and labour." },
+    { "type": "text", "id": "tier_2_title", "label": "Tier 2 title", "default": "2 Years Parts Warranty" },
+    { "type": "textarea", "id": "tier_2_desc", "label": "Tier 2 description", "default": "Covers replacement parts only. Labour not included after the first year." },
+    { "type": "text", "id": "tier_3_title", "label": "Tier 3 title", "default": "5 Years Motor Warranty" },
+    { "type": "textarea", "id": "tier_3_desc", "label": "Tier 3 description", "default": "Covers motor-related faults under normal residential use." },
+
+    { "type": "header", "content": "What's covered" },
+    { "type": "text", "id": "covered_title", "label": "Heading", "default": "What is covered" },
+    { "type": "textarea", "id": "covered_sub", "label": "Sub-text", "default": "Faults and defects that arise from normal residential use." },
+    { "type": "richtext", "id": "covered_richtext", "label": "Items (one per bullet/line)", "info": "Use bullet points — each item renders with a green tick.", "default": "<ul><li>Manufacturing defects</li><li>Faulty components under normal residential use</li><li>Electrical or mechanical failures not caused by external factors</li><li>Motor faults under normal use (up to 5 years)</li></ul>" },
+
+    { "type": "header", "content": "What's NOT covered" },
+    { "type": "text", "id": "excluded_title", "label": "Heading", "default": "What is NOT covered" },
+    { "type": "textarea", "id": "excluded_sub", "label": "Sub-text", "default": "Damage and scenarios that fall outside normal residential use." },
+    { "type": "richtext", "id": "excluded_richtext", "label": "Items (one per bullet/line)", "info": "Use bullet points — each item renders with a red cross.", "default": "<ul><li>Incorrect installation or improper use</li><li>Damage caused by moisture, water ingress, or environmental conditions</li><li>Physical damage, misuse, or neglect</li><li>Normal wear and tear</li><li>Unauthorised modifications or repairs</li><li>Power surges or external electrical issues</li><li>Commercial use (unless agreed in writing)</li></ul>" },
+
+    { "type": "header", "content": "Claim process" },
+    { "type": "checkbox", "id": "show_claim", "label": "Show claim process", "default": true },
+    { "type": "text", "id": "claim_title", "label": "Heading", "default": "How to make a warranty claim" },
+    { "type": "textarea", "id": "claim_sub", "label": "Sub-text", "default": "Three simple steps. Most claims are resolved within a few business days of submission." },
+    { "type": "text", "id": "step_1_title", "label": "Step 1 title", "default": "Provide proof of purchase" },
+    { "type": "textarea", "id": "step_1_desc", "label": "Step 1 description", "default": "Your original Nuracom order confirmation or invoice is all we need to verify coverage." },
+    { "type": "text", "id": "step_2_title", "label": "Step 2 title", "default": "Submit your claim online" },
+    { "type": "textarea", "id": "step_2_desc", "label": "Step 2 description", "default": "Log in to your account and complete the warranty claim form — takes under five minutes." },
+    { "type": "text", "id": "step_3_title", "label": "Step 3 title", "default": "Upload photos or a short video" },
+    { "type": "textarea", "id": "step_3_desc", "label": "Step 3 description", "default": "Show us what's happening. A 30-second video is often enough — we'll take it from there." },
+    { "type": "textarea", "id": "callout_text", "label": "Callout text", "default": "Simple online claim process — upload a short video and we'll take care of the rest." },
+    { "type": "text", "id": "callout_btn_text", "label": "Callout button text", "default": "Start a warranty claim" },
+    { "type": "url", "id": "callout_btn_url", "label": "Callout button URL (warranty claim page)" },
+
+    { "type": "header", "content": "Returns policy" },
+    { "type": "checkbox", "id": "show_returns", "label": "Show 30-day returns block", "default": true },
+    { "type": "text", "id": "returns_title", "label": "Heading", "default": "30-Day Returns Policy" },
+    { "type": "textarea", "id": "returns_sub", "label": "Sub-text", "default": "If Nuracom isn't right for your home, send it back within 30 days for a refund — conditions apply." },
+    { "type": "text", "id": "returns_accepted_title", "label": "\"Accepted\" column title", "default": "Returns accepted when" },
+    { "type": "richtext", "id": "returns_accepted_richtext", "label": "Accepted conditions", "default": "<ul><li>Product is unused</li><li>Packaging is intact and original</li><li>Item is in resellable condition</li><li>Request is made within 30 days of delivery</li></ul>" },
+    { "type": "text", "id": "returns_rejected_title", "label": "\"Not accepted\" column title", "default": "Returns NOT accepted if" },
+    { "type": "richtext", "id": "returns_rejected_richtext", "label": "Rejected conditions", "default": "<ul><li>Product has been installed or used</li><li>Packaging is damaged, missing, or not original</li><li>Item is not in resellable condition</li><li>Request is made after 30 days</li></ul>" },
+    { "type": "textarea", "id": "returns_note", "label": "Footer note", "default": "Return shipping is paid by the customer. Full refunds are issued after the returned item has been inspected and confirmed to meet the above conditions." },
+
+    { "type": "header", "content": "Legal small print" },
+    { "type": "text", "id": "legal_title", "label": "Heading", "default": "Important notes" },
+    { "type": "richtext", "id": "legal_richtext", "label": "Legal notes", "default": "<ul><li>Installation must be carried out correctly and, where required, by a licensed electrician.</li><li>This warranty applies to residential use only.</li><li>Nuracom is not liable for indirect, incidental, or consequential damages arising from product use or installation.</li><li>Nothing in this policy limits your rights under the Australian Consumer Law.</li></ul>" },
+
+    { "type": "header", "content": "Colours" },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#ffffff" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#101a32" },
+    { "type": "color", "id": "accent_color", "label": "Accent", "default": "#866653" },
+    { "type": "color", "id": "card_bg", "label": "Card background", "default": "#fafaf8" },
+    { "type": "color", "id": "card_border", "label": "Card border", "default": "#ece9e2" },
+    { "type": "color", "id": "callout_bg", "label": "Callout background", "default": "#faf6f0" },
+    { "type": "color", "id": "legal_bg", "label": "Legal block background", "default": "#f7f5f1" }
+  ],
+  "presets": [
+    { "name": "Warranty & Returns" }
+  ]
+}
+{% endschema %}

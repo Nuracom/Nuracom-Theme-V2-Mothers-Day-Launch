@@ -1,0 +1,375 @@
+{% comment %}
+  Split Feature + Cards Section
+  - Top: 50/50 split — text left, image right (or reversed)
+  - Bottom: 2-column cards — each with image + text below
+  - Italic headings and text, divider between top and bottom
+  Add to: sections/split-feature-cards.liquid
+{% endcomment %}
+
+<section id="sfc-{{ section.id }}">
+
+  <!-- TOP: Split Text + Image -->
+  <div class="sfc-split{% if section.settings.image_position == 'left' %} sfc-split--reversed{% endif %}">
+
+    <div class="sfc-split__text">
+      {% if section.settings.heading != blank %}
+        <h2 class="sfc-split__heading">{{ section.settings.heading }}</h2>
+      {% endif %}
+      {% if section.settings.description != blank %}
+        <div class="sfc-split__desc">{{ section.settings.description }}</div>
+      {% endif %}
+    </div>
+
+    <div class="sfc-split__image">
+      {% if section.settings.image != blank %}
+        <img
+          src="{{ section.settings.image | image_url: width: 1000 }}"
+          alt="{{ section.settings.heading | escape }}"
+          class="sfc-split__img"
+          loading="lazy"
+        >
+      {% else %}
+        <div class="sfc-split__placeholder"></div>
+      {% endif %}
+    </div>
+
+  </div>
+
+  <!-- BOTTOM: 2 Cards -->
+  <div class="sfc-cards">
+
+    <!-- Card 1 -->
+    <div class="sfc-card">
+      {% if section.settings.card_1_image != blank %}
+        <div class="sfc-card__image">
+          <img
+            src="{{ section.settings.card_1_image | image_url: width: 800 }}"
+            alt="{{ section.settings.card_1_heading | escape }}"
+            class="sfc-card__img"
+            loading="lazy"
+          >
+        </div>
+      {% endif %}
+      <div class="sfc-card__body">
+        {% if section.settings.card_1_heading != blank %}
+          <h3 class="sfc-card__heading">{{ section.settings.card_1_heading }}</h3>
+        {% endif %}
+        {% if section.settings.card_1_text != blank %}
+          <div class="sfc-card__text">{{ section.settings.card_1_text }}</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="sfc-card">
+      {% if section.settings.card_2_image != blank %}
+        <div class="sfc-card__image">
+          <img
+            src="{{ section.settings.card_2_image | image_url: width: 800 }}"
+            alt="{{ section.settings.card_2_heading | escape }}"
+            class="sfc-card__img"
+            loading="lazy"
+          >
+        </div>
+      {% endif %}
+      <div class="sfc-card__body">
+        {% if section.settings.card_2_heading != blank %}
+          <h3 class="sfc-card__heading">{{ section.settings.card_2_heading }}</h3>
+        {% endif %}
+        {% if section.settings.card_2_text != blank %}
+          <div class="sfc-card__text">{{ section.settings.card_2_text }}</div>
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+
+</section>
+
+<style>
+  #sfc-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+    padding: {{ section.settings.padding_top }}px 20px {{ section.settings.padding_bottom }}px;
+  }
+
+  /* ── Split Top ── */
+  #sfc-{{ section.id }} .sfc-split {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 40px;
+    margin-bottom: 40px;
+  }
+
+  #sfc-{{ section.id }} .sfc-split--reversed .sfc-split__text {
+    order: 2;
+  }
+
+  #sfc-{{ section.id }} .sfc-split--reversed .sfc-split__image {
+    order: 1;
+  }
+
+  #sfc-{{ section.id }} .sfc-split__text {
+    padding: 40px 40px 40px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  #sfc-{{ section.id }} .sfc-split__heading {
+    font-size: 28px;
+    font-weight: 700;
+    color: #101a32;
+    margin: 0 0 20px;
+    line-height: 1.25;
+    font-style: italic;
+  }
+
+  #sfc-{{ section.id }} .sfc-split__desc {
+    font-size: 15px;
+    line-height: 1.75;
+    color: #444;
+    font-style: italic;
+  }
+
+  #sfc-{{ section.id }} .sfc-split__desc p {
+    margin: 0 0 14px;
+  }
+
+  #sfc-{{ section.id }} .sfc-split__desc p:last-child {
+    margin-bottom: 0;
+  }
+
+  #sfc-{{ section.id }} .sfc-split__image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #sfc-{{ section.id }} .sfc-split__img {
+    display: block;
+    width: 100%;
+    max-width: 460px;
+    height: auto;
+    object-fit: contain;
+  }
+
+  #sfc-{{ section.id }} .sfc-split__placeholder {
+    width: 100%;
+    max-width: 460px;
+    aspect-ratio: 4 / 3;
+    background: linear-gradient(135deg, #e8e8e8, #f5f5f5);
+    border-radius: 8px;
+  }
+
+  /* ── Bottom Cards ── */
+  #sfc-{{ section.id }} .sfc-cards {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+
+  #sfc-{{ section.id }} .sfc-card {
+    display: flex;
+    flex-direction: column;
+  }
+
+  #sfc-{{ section.id }} .sfc-card__image {
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+
+  #sfc-{{ section.id }} .sfc-card__img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    aspect-ratio: 16 / 10;
+  }
+
+  #sfc-{{ section.id }} .sfc-card__body {
+    padding: 0 4px;
+  }
+
+  #sfc-{{ section.id }} .sfc-card__heading {
+    font-size: 24px;
+    font-weight: 700;
+    color: #101a32;
+    margin: 0 0 14px;
+    line-height: 1.25;
+    font-style: italic;
+  }
+
+  #sfc-{{ section.id }} .sfc-card__text {
+    font-size: 14px;
+    line-height: 1.75;
+    color: #444;
+    font-style: italic;
+  }
+
+  #sfc-{{ section.id }} .sfc-card__text p {
+    margin: 0 0 10px;
+  }
+
+  #sfc-{{ section.id }} .sfc-card__text p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    #sfc-{{ section.id }} .sfc-split {
+      grid-template-columns: 1fr;
+      padding-bottom: 28px;
+      margin-bottom: 28px;
+    }
+
+    #sfc-{{ section.id }} .sfc-split--reversed .sfc-split__text {
+      order: 1;
+    }
+
+    #sfc-{{ section.id }} .sfc-split--reversed .sfc-split__image {
+      order: 2;
+    }
+
+    #sfc-{{ section.id }} .sfc-split__text {
+      padding: 0 0 24px;
+    }
+
+    #sfc-{{ section.id }} .sfc-split__heading {
+      font-size: 24px;
+    }
+
+    #sfc-{{ section.id }} .sfc-cards {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+
+    #sfc-{{ section.id }} .sfc-card__heading {
+      font-size: 20px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Split Feature + Cards",
+  "tag": "div",
+  "class": "split-feature-cards-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Top — Split Feature"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "The Laundry Rack That Won't Let You Down"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>We take reliability seriously — which is why we've engineered a laundry rack that's stable, dynamic, and built to last. Our heavy-duty scissor-arm lifting frame minimises swing and maximises solidity, providing a smooth and sturdy manoeuvring experience every time.</p><p>But that's not all. Our #304 stainless steel wire rope boasts an impressive 2cm/19 strands for added durability and strength, while our double vortex winding system ensures a quiet and long-lasting operation that won't let you down.</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image Position",
+      "options": [
+        { "value": "right", "label": "Image Right" },
+        { "value": "left", "label": "Image Left" }
+      ],
+      "default": "right"
+    },
+    {
+      "type": "header",
+      "content": "Bottom Left Card"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_1_image",
+      "label": "Card 1 Image"
+    },
+    {
+      "type": "text",
+      "id": "card_1_heading",
+      "label": "Card 1 Heading",
+      "default": "We'll Lighten your Load"
+    },
+    {
+      "type": "richtext",
+      "id": "card_1_text",
+      "label": "Card 1 Text",
+      "default": "<p>Laundry day can be a heavy burden — but NuraCom Stratos will lighten your load. Our product is engineered to handle up to 40 kg of laundry, equivalent to 3 full loads of a large-capacity washing machine.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Bottom Right Card"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_2_image",
+      "label": "Card 2 Image"
+    },
+    {
+      "type": "text",
+      "id": "card_2_heading",
+      "label": "Card 2 Heading",
+      "default": "Meeting your Laundry Needs"
+    },
+    {
+      "type": "richtext",
+      "id": "card_2_text",
+      "label": "Card 2 Text",
+      "default": "<p>And with its expandable rack design that extends from 130 cm to 230cm, NuraCom Stratos is the perfect fit for any home. So toss in that extra towel or bulky comforter — NuraCom Stratos can handle it all with ease.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Section Settings"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 120,
+      "step": 10,
+      "default": 60,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 10,
+      "default": 60,
+      "unit": "px"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Split Feature + Cards"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,651 @@
+{% comment %}
+  Nuracom Landing — Social Proof / Trust
+  Testimonials, founder note, warranty badges, install photo grid, optional video.
+  Install to: sections/landing-social-proof.liquid
+{% endcomment %}
+
+<style>
+  #lp-social-{{ section.id }} {
+    background: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+    padding: 90px 24px;
+  }
+
+  #lp-social-{{ section.id }} .lp-social__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  #lp-social-{{ section.id }} .lp-social__header {
+    text-align: center;
+    max-width: 720px;
+    margin: 0 auto 56px;
+  }
+
+  #lp-social-{{ section.id }} .lp-social__eyebrow {
+    font-size: 12px;
+    letter-spacing: 2.4px;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: {{ section.settings.accent_color }};
+    margin: 0 0 14px;
+  }
+
+  #lp-social-{{ section.id }} .lp-social__heading {
+    font-size: clamp(28px, 3.8vw, 44px);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.4px;
+    margin: 0 0 16px;
+  }
+
+  #lp-social-{{ section.id }} .lp-social__sub {
+    font-size: 17px;
+    line-height: 1.6;
+    opacity: 0.75;
+    margin: 0;
+  }
+
+  /* Video block */
+  #lp-social-{{ section.id }} .lp-social__video {
+    position: relative;
+    aspect-ratio: 16/9;
+    border-radius: 18px;
+    overflow: hidden;
+    background: #000;
+    box-shadow: 0 20px 50px rgba(16,26,50,0.18);
+    margin-bottom: 60px;
+  }
+
+  #lp-social-{{ section.id }} .lp-social__video iframe,
+  #lp-social-{{ section.id }} .lp-social__video video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  #lp-social-{{ section.id }} .lp-social__video-poster {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    cursor: pointer;
+  }
+
+  #lp-social-{{ section.id }} .lp-social__play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 82px;
+    height: 82px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.92);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    pointer-events: none;
+  }
+
+  #lp-social-{{ section.id }} .lp-social__video:hover .lp-social__play {
+    transform: translate(-50%,-50%) scale(1.08);
+  }
+
+  #lp-social-{{ section.id }} .lp-social__play svg {
+    color: {{ section.settings.accent_color }};
+    margin-left: 4px;
+  }
+
+  /* Testimonials grid */
+  #lp-social-{{ section.id }} .lp-social__testimonials {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+    margin-bottom: 60px;
+  }
+
+  #lp-social-{{ section.id }} .lp-social__card {
+    background: {{ section.settings.card_bg }};
+    border: 1px solid {{ section.settings.border_color }};
+    border-radius: 16px;
+    padding: 28px 26px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 6px 22px rgba(16,26,50,0.05);
+  }
+
+  #lp-social-{{ section.id }} .lp-social__stars {
+    display: flex;
+    gap: 2px;
+    color: {{ section.settings.star_color }};
+    margin-bottom: 14px;
+  }
+
+  #lp-social-{{ section.id }} .lp-social__quote {
+    font-size: 15.5px;
+    line-height: 1.6;
+    margin: 0 0 20px;
+    flex-grow: 1;
+  }
+
+  #lp-social-{{ section.id }} .lp-social__attrib {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-top: 16px;
+    border-top: 1px solid {{ section.settings.border_color }};
+  }
+
+  #lp-social-{{ section.id }} .lp-social__avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: {{ section.settings.accent_color }};
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 15px;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  #lp-social-{{ section.id }} .lp-social__avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  #lp-social-{{ section.id }} .lp-social__name {
+    font-size: 14.5px;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  #lp-social-{{ section.id }} .lp-social__loc {
+    font-size: 13px;
+    opacity: 0.65;
+    margin: 2px 0 0;
+  }
+
+  /* Install photo grid */
+  #lp-social-{{ section.id }} .lp-social__photos {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 60px;
+  }
+
+  #lp-social-{{ section.id }} .lp-social__photo {
+    aspect-ratio: 1/1;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #ddd;
+  }
+
+  #lp-social-{{ section.id }} .lp-social__photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+
+  #lp-social-{{ section.id }} .lp-social__photo:hover img {
+    transform: scale(1.05);
+  }
+
+  /* Founder note */
+  #lp-social-{{ section.id }} .lp-social__founder {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 36px;
+    align-items: center;
+    background: {{ section.settings.founder_bg }};
+    border-radius: 20px;
+    padding: 36px;
+    margin-bottom: 60px;
+  }
+
+  #lp-social-{{ section.id }} .lp-social__founder-img {
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    overflow: hidden;
+    background: {{ section.settings.founder_img_bg }};
+  }
+
+  #lp-social-{{ section.id }} .lp-social__founder-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  #lp-social-{{ section.id }} .lp-social__founder-label {
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: {{ section.settings.accent_color }};
+    margin: 0 0 10px;
+  }
+
+  #lp-social-{{ section.id }} .lp-social__founder-quote {
+    font-size: 18px;
+    line-height: 1.6;
+    margin: 0 0 16px;
+    font-weight: 500;
+  }
+
+  #lp-social-{{ section.id }} .lp-social__founder-sig {
+    font-size: 14px;
+    margin: 0;
+    opacity: 0.8;
+  }
+
+  #lp-social-{{ section.id }} .lp-social__founder-sig strong {
+    display: block;
+    font-size: 15px;
+    font-weight: 700;
+    opacity: 1;
+    margin-bottom: 2px;
+  }
+
+  /* Warranty / trust row */
+  #lp-social-{{ section.id }} .lp-social__trust {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+  }
+
+  #lp-social-{{ section.id }} .lp-social__trust-item {
+    text-align: center;
+    padding: 24px 18px;
+    border: 1px solid {{ section.settings.border_color }};
+    border-radius: 14px;
+    background: {{ section.settings.card_bg }};
+  }
+
+  #lp-social-{{ section.id }} .lp-social__trust-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: {{ section.settings.accent_color }}1a;
+    color: {{ section.settings.accent_color }};
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+  }
+
+  #lp-social-{{ section.id }} .lp-social__trust-title {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 0 0 4px;
+  }
+
+  #lp-social-{{ section.id }} .lp-social__trust-desc {
+    font-size: 13px;
+    line-height: 1.45;
+    margin: 0;
+    opacity: 0.72;
+  }
+
+  #lp-social-{{ section.id }} .lp-social__trust-link {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 11.5px;
+    letter-spacing: 0.4px;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+    color: {{ section.settings.accent_color }};
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+  }
+
+  #lp-social-{{ section.id }} .lp-social__trust-link:hover {
+    opacity: 1;
+  }
+
+  @media (max-width: 1020px) {
+    #lp-social-{{ section.id }} .lp-social__testimonials {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    #lp-social-{{ section.id }} .lp-social__photos {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    #lp-social-{{ section.id }} .lp-social__trust {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    #lp-social-{{ section.id }} .lp-social__founder {
+      grid-template-columns: 140px 1fr;
+      gap: 24px;
+      padding: 28px;
+    }
+  }
+
+  @media (max-width: 560px) {
+    #lp-social-{{ section.id }} {
+      padding: 60px 18px;
+    }
+    #lp-social-{{ section.id }} .lp-social__testimonials {
+      grid-template-columns: 1fr;
+    }
+    #lp-social-{{ section.id }} .lp-social__photos {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    #lp-social-{{ section.id }} .lp-social__founder {
+      grid-template-columns: 1fr;
+      text-align: center;
+    }
+    #lp-social-{{ section.id }} .lp-social__founder-img {
+      width: 120px;
+      margin: 0 auto;
+    }
+  }
+</style>
+
+<section id="lp-social-{{ section.id }}">
+  <div class="lp-social__inner">
+    <div class="lp-social__header">
+      {% if section.settings.eyebrow != blank %}
+        <p class="lp-social__eyebrow">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+      <h2 class="lp-social__heading">{{ section.settings.heading }}</h2>
+      {% if section.settings.sub != blank %}
+        <p class="lp-social__sub">{{ section.settings.sub }}</p>
+      {% endif %}
+    </div>
+
+    {% if section.settings.show_video and section.settings.video_url != blank %}
+      <div class="lp-social__video" onclick="lpPlayVideo_{{ section.id | replace: '-', '_' }}()">
+        {% if section.settings.video_poster != blank %}
+          <img class="lp-social__video-poster" id="lp-social-poster-{{ section.id }}" src="{{ section.settings.video_poster | image_url: width: 1600 }}" alt="Play video">
+          <div class="lp-social__play">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+          </div>
+        {% else %}
+          <iframe src="{{ section.settings.video_url }}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+        {% endif %}
+      </div>
+      <script>
+        function lpPlayVideo_{{ section.id | replace: '-', '_' }}() {
+          var wrap = document.querySelector('#lp-social-{{ section.id }} .lp-social__video');
+          if (!wrap || wrap.dataset.played) return;
+          wrap.dataset.played = '1';
+          wrap.innerHTML = '<iframe src="{{ section.settings.video_url }}?autoplay=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+        }
+      </script>
+    {% endif %}
+
+    {% assign testimonial_blocks = section.blocks | where: "type", "testimonial" %}
+    {% if testimonial_blocks.size > 0 %}
+      <div class="lp-social__testimonials">
+        {% for block in testimonial_blocks %}
+          <div class="lp-social__card" {{ block.shopify_attributes }}>
+            {% if block.settings.show_stars %}
+              <div class="lp-social__stars" aria-label="5 star rating">
+                {% for i in (1..5) %}
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                  </svg>
+                {% endfor %}
+              </div>
+            {% endif %}
+            <p class="lp-social__quote">"{{ block.settings.quote }}"</p>
+            <div class="lp-social__attrib">
+              <div class="lp-social__avatar">
+                {% if block.settings.avatar != blank %}
+                  <img src="{{ block.settings.avatar | image_url: width: 120 }}" alt="{{ block.settings.name | escape }}" loading="lazy">
+                {% else %}
+                  {{ block.settings.name | slice: 0 }}
+                {% endif %}
+              </div>
+              <div>
+                <p class="lp-social__name">{{ block.settings.name }}</p>
+                {% if block.settings.location != blank %}
+                  <p class="lp-social__loc">{{ block.settings.location }}</p>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% assign photo_blocks = section.blocks | where: "type", "photo" %}
+    {% if photo_blocks.size > 0 %}
+      <div class="lp-social__photos">
+        {% for block in photo_blocks %}
+          <div class="lp-social__photo" {{ block.shopify_attributes }}>
+            {% if block.settings.image != blank %}
+              <img src="{{ block.settings.image | image_url: width: 600 }}" alt="{{ block.settings.alt | default: 'Install photo' | escape }}" loading="lazy">
+            {% else %}
+              {{ 'lifestyle-2' | placeholder_svg_tag }}
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% if section.settings.founder_quote != blank %}
+      <div class="lp-social__founder">
+        <div class="lp-social__founder-img">
+          {% if section.settings.founder_image != blank %}
+            <img src="{{ section.settings.founder_image | image_url: width: 400 }}" alt="{{ section.settings.founder_name | escape }}" loading="lazy">
+          {% endif %}
+        </div>
+        <div>
+          {% if section.settings.founder_label != blank %}
+            <p class="lp-social__founder-label">{{ section.settings.founder_label }}</p>
+          {% endif %}
+          <p class="lp-social__founder-quote">"{{ section.settings.founder_quote }}"</p>
+          <p class="lp-social__founder-sig">
+            <strong>{{ section.settings.founder_name }}</strong>
+            {{ section.settings.founder_title }}
+          </p>
+        </div>
+      </div>
+    {% endif %}
+
+    {% assign trust_blocks = section.blocks | where: "type", "trust" %}
+    {% if trust_blocks.size > 0 %}
+      <div class="lp-social__trust">
+        {% for block in trust_blocks %}
+          <div class="lp-social__trust-item" {{ block.shopify_attributes }}>
+            <div class="lp-social__trust-icon">
+              {% case block.settings.icon %}
+                {% when 'shield' %}
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                {% when 'truck' %}
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 3h15v13H1zM16 8h4l3 3v5h-7z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                {% when 'support' %}
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                {% when 'award' %}
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><path d="M8.21 13.89L7 23l5-3 5 3-1.21-9.12"/></svg>
+                {% when 'return' %}
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+                {% when 'lock' %}
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                {% else %}
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+              {% endcase %}
+            </div>
+            <h4 class="lp-social__trust-title">{{ block.settings.title }}</h4>
+            {% if block.settings.desc != blank %}
+              <p class="lp-social__trust-desc">{{ block.settings.desc }}</p>
+            {% endif %}
+            {% if block.settings.link_text != blank and block.settings.link_url != blank %}
+              <a href="{{ block.settings.link_url }}" class="lp-social__trust-link">{{ block.settings.link_text }}</a>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Landing — Social Proof",
+  "tag": "section",
+  "class": "landing-social-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Real homes. Real support." },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "A premium laundry upgrade backed by real support" },
+    { "type": "textarea", "id": "sub", "label": "Subheading", "default": "See how Australian families are using Nuracom — and why they keep telling their friends about it." },
+    { "type": "header", "content": "Video" },
+    { "type": "checkbox", "id": "show_video", "label": "Show video block", "default": true },
+    { "type": "text", "id": "video_url", "label": "Video embed URL (YouTube / Vimeo)", "default": "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+    { "type": "image_picker", "id": "video_poster", "label": "Video poster (click to play)" },
+    { "type": "header", "content": "Founder note" },
+    { "type": "image_picker", "id": "founder_image", "label": "Founder photo" },
+    { "type": "text", "id": "founder_label", "label": "Label above quote", "default": "A note from the founder" },
+    { "type": "textarea", "id": "founder_quote", "label": "Founder quote", "default": "We built Nuracom for Aussie homes that don't have the room — or the weather — for a traditional clothesline. Every unit ships from our Australian warehouse, and we stand behind it personally. If something ever isn't right, you'll hear back from a real person." },
+    { "type": "text", "id": "founder_name", "label": "Founder name", "default": "The Nuracom Team" },
+    { "type": "text", "id": "founder_title", "label": "Founder title", "default": "Founders, Nuracom Australia" },
+    { "type": "header", "content": "Colours" },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#ffffff" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#101a32" },
+    { "type": "color", "id": "accent_color", "label": "Accent", "default": "#866653" },
+    { "type": "color", "id": "card_bg", "label": "Card background", "default": "#fbfaf7" },
+    { "type": "color", "id": "founder_bg", "label": "Founder note background", "default": "#f7f5f1" },
+    { "type": "color", "id": "founder_img_bg", "label": "Founder photo circle background", "default": "#866653" },
+    { "type": "color", "id": "border_color", "label": "Border", "default": "#ece9e2" },
+    { "type": "color", "id": "star_color", "label": "Star colour", "default": "#E3A857" }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        { "type": "textarea", "id": "quote", "label": "Quote", "default": "Honestly the best upgrade we've done to our laundry. Out of the way, lights up the whole room, and actually dries our clothes faster than the dryer in winter." },
+        { "type": "text", "id": "name", "label": "Name", "default": "Sarah M." },
+        { "type": "text", "id": "location", "label": "Location / detail", "default": "Brisbane, QLD" },
+        { "type": "image_picker", "id": "avatar", "label": "Avatar (optional)" },
+        { "type": "checkbox", "id": "show_stars", "label": "Show 5 stars", "default": true }
+      ]
+    },
+    {
+      "type": "photo",
+      "name": "Install photo",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Photo" },
+        { "type": "text", "id": "alt", "label": "Alt text", "default": "Nuracom installed" }
+      ]
+    },
+    {
+      "type": "trust",
+      "name": "Trust badge",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "default": "shield",
+          "options": [
+            { "value": "shield", "label": "Shield (warranty)" },
+            { "value": "truck", "label": "Truck (shipping)" },
+            { "value": "support", "label": "Support (chat bubble)" },
+            { "value": "award", "label": "Award" },
+            { "value": "return", "label": "Return (refresh)" },
+            { "value": "lock", "label": "Lock (secure)" }
+          ]
+        },
+        { "type": "text", "id": "title", "label": "Title", "default": "2-Year Warranty" },
+        { "type": "textarea", "id": "desc", "label": "Description", "default": "Full replacement coverage on motors and electronics." },
+        { "type": "header", "content": "Fine-print link (optional)" },
+        { "type": "text", "id": "link_text", "label": "Link text", "default": "T&Cs apply", "info": "e.g. \"T&Cs apply\" or \"See policy\"" },
+        { "type": "url", "id": "link_url", "label": "Link URL (warranty / returns page)" }
+      ]
+    }
+  ],
+  "max_blocks": 24,
+  "presets": [
+    {
+      "name": "Landing — Social Proof",
+      "blocks": [
+        {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Honestly the best upgrade we've done to our laundry. Out of the way, lights up the whole room, and dries faster than our dryer in winter.",
+            "name": "Sarah M.",
+            "location": "Brisbane, QLD",
+            "show_stars": true
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "quote": "I live in a Sydney apartment with no balcony airflow. Nuracom solved the problem completely — and the remote control genuinely feels premium.",
+            "name": "David L.",
+            "location": "Sydney, NSW",
+            "show_stars": true
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Installation was quick — sparky had it up in about 45 minutes. Four school uniforms dry overnight without touching the dryer.",
+            "name": "Emma & Ryan T.",
+            "location": "Melbourne, VIC",
+            "show_stars": true
+          }
+        },
+        { "type": "photo", "settings": { "alt": "Nuracom in modern laundry" } },
+        { "type": "photo", "settings": { "alt": "Ceiling-mounted install" } },
+        { "type": "photo", "settings": { "alt": "Close-up detail" } },
+        { "type": "photo", "settings": { "alt": "Clothes drying indoors" } },
+        {
+          "type": "trust",
+          "settings": {
+            "icon": "shield",
+            "title": "Up to 5-Year Warranty",
+            "desc": "1yr full unit, 2yr parts, 5yr motor — Australian-backed.",
+            "link_text": "T&Cs apply",
+            "link_url": "/pages/warranty-returns-policy"
+          }
+        },
+        {
+          "type": "trust",
+          "settings": {
+            "icon": "truck",
+            "title": "Ships from Australia",
+            "desc": "Dispatched from our AU warehouse. No offshore wait times.",
+            "link_text": "",
+            "link_url": ""
+          }
+        },
+        {
+          "type": "trust",
+          "settings": {
+            "icon": "support",
+            "title": "Real Human Support",
+            "desc": "Talk to an Australian-based team by phone or email — not a bot.",
+            "link_text": "",
+            "link_url": ""
+          }
+        },
+        {
+          "type": "trust",
+          "settings": {
+            "icon": "return",
+            "title": "30-Day Returns",
+            "desc": "If it's not right for your home, send it back.",
+            "link_text": "T&Cs apply",
+            "link_url": "/pages/warranty-returns-policy"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

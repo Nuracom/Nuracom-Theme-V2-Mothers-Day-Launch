@@ -1,0 +1,1205 @@
+{% comment %}
+  Warranty Claim Section — Clean System
+  - Redirects to login if not authenticated (with return URL)
+  - Only shows orders belonging to the logged-in customer
+  - No manual order input — must have a valid order on account
+  - Structured email body for easy processing
+  - Photo prompt via pre-filled mailto link after submission
+  - Tagged "warranty-claim" for filtering in Shopify admin
+  Add to: sections/warranty-claim.liquid
+{% endcomment %}
+
+{% if customer == blank %}
+  <section id="wc-{{ section.id }}">
+    {%- unless request.design_mode -%}
+      <script>
+        window.location.href = '/account/login?return_url=' + encodeURIComponent(window.location.pathname);
+      </script>
+    {%- endunless -%}
+    <div class="wc-hero">
+      <h1 class="wc-hero__title">{{ section.settings.heading }}</h1>
+      {% if section.settings.subtext != blank %}
+        <p class="wc-hero__sub">{{ section.settings.subtext }}</p>
+      {% endif %}
+    </div>
+    <div class="wc-container" style="text-align:center;">
+      {% if request.design_mode %}
+        <div style="padding:40px 20px;background:#f8f8f8;border-radius:12px;border:1px dashed #ccc;">
+          <p style="font-size:15px;color:#555;margin:0 0 8px;"><strong>Theme Editor Preview</strong></p>
+          <p style="font-size:14px;color:#888;margin:0;">This section only displays when a customer is logged in. The live site will show the warranty claim form with their orders auto-loaded.</p>
+        </div>
+      {% else %}
+        <p style="font-size:16px;color:#555;padding:40px 20px;">Redirecting to login...<br><a href="/account/login?return_url={{ request.path | url_encode }}" style="color:#101a32;text-decoration:underline;">Click here if you are not redirected</a></p>
+      {% endif %}
+    </div>
+  </section>
+{% else %}
+
+<section id="wc-{{ section.id }}">
+
+  <!-- Hero -->
+  <div class="wc-hero">
+    <h1 class="wc-hero__title">{{ section.settings.heading }}</h1>
+    {% if section.settings.subtext != blank %}
+      <p class="wc-hero__sub">{{ section.settings.subtext }}</p>
+    {% endif %}
+  </div>
+
+  <div class="wc-container">
+
+    {% if customer.orders.size == 0 %}
+      <!-- No orders on this account -->
+      <div class="wc-empty">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <h2>No Orders Found</h2>
+        <p>We couldn't find any orders on your account (<strong>{{ customer.email }}</strong>).</p>
+        <p>If you purchased as a guest, please create an account using the same email address you ordered with, and your orders will sync automatically.</p>
+        <div class="wc-empty__actions">
+          <a href="/account" class="wc-btn wc-btn--outline">My Account</a>
+          <a href="{% if section.settings.contact_url != blank %}{{ section.settings.contact_url }}{% else %}/pages/contact{% endif %}" class="wc-btn">Contact Us Instead</a>
+        </div>
+      </div>
+
+    {% else %}
+      {% comment %} Shopify contact form — CSRF token and posted_successfully are handled automatically. No extra attributes: some themes (e.g. Horizon) reject them. Targeted via parent section selector. {% endcomment %}
+      {% form 'contact' %}
+
+      {% if form.posted_successfully? %}
+      <!-- Success -->
+      <div class="wc-success">
+        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#25D366" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+        <h2>Claim Submitted Successfully</h2>
+        <p>Thank you, {{ customer.first_name }}. We've received your warranty claim and our support team will get back to you within <strong>1–2 business days</strong> at <strong>{{ customer.email }}</strong>.</p>
+
+        <!-- Ticket summary (populated from sessionStorage) -->
+        <div class="wc-ticket" id="wc-ticket-{{ section.id }}">
+          <div class="wc-ticket__header">
+            <span class="wc-ticket__badge">Ticket Received</span>
+            <span class="wc-ticket__id" id="wc-ticket-id-{{ section.id }}"></span>
+          </div>
+          <div class="wc-ticket__rows" id="wc-ticket-rows-{{ section.id }}"></div>
+        </div>
+
+        <div class="wc-success__actions">
+          <a href="/account/orders" class="wc-btn">Back to Orders</a>
+        </div>
+      </div>
+
+      <script>
+        (function () {
+          try {
+            var raw = sessionStorage.getItem('wc_last_claim');
+            if (!raw) return;
+            var data = JSON.parse(raw);
+            var ticketId = 'WC-' + new Date(data.submittedAt).getTime().toString().slice(-6);
+
+            document.getElementById('wc-ticket-id-{{ section.id }}').textContent = '#' + ticketId;
+
+            var rows = document.getElementById('wc-ticket-rows-{{ section.id }}');
+            function addRow(label, value) {
+              if (!value) return;
+              var r = document.createElement('div');
+              r.className = 'wc-ticket__row';
+              r.innerHTML = '<span class="wc-ticket__label">' + label + '</span><span class="wc-ticket__value">' + value + '</span>';
+              rows.appendChild(r);
+            }
+            addRow('Submitted By', {{ customer.name | json }});
+            addRow('Email', {{ customer.email | json }});
+            if (data.order) addRow('Order', data.order);
+            if (data.product) addRow('Product', data.product);
+            if (data.issueType) addRow('Issue Type', data.issueType);
+            if (data.issueDate) addRow('Issue Started', data.issueDate);
+            if (data.media && data.media.length) addRow('Attachments', data.media.length + ' file' + (data.media.length > 1 ? 's' : ''));
+            addRow('Submitted', new Date(data.submittedAt).toLocaleString());
+
+            // Clear so it doesn't re-show on refresh
+            sessionStorage.removeItem('wc_last_claim');
+          } catch (err) {}
+        })();
+      </script>
+
+      {% else %}
+        <!-- Claim Form -->
+        {% if form.errors %}
+          <div class="wc-errors">
+            <strong>Please fix the following:</strong>
+            <ul>
+              {% for err in form.errors %}
+                <li>{{ form.errors.messages[err] }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+
+        <input type="hidden" name="contact[tags]" value="warranty-claim">
+
+        <!-- Account Info (locked) -->
+        <div class="wc-section-label">Your Account</div>
+        <div class="wc-form__row wc-form__row--2col">
+          <div class="wc-field">
+            <label class="wc-label">Name</label>
+            <input type="text" name="contact[name]" value="{{ customer.name }}" class="wc-input wc-input--locked" readonly tabindex="-1">
+          </div>
+          <div class="wc-field">
+            <label class="wc-label">Email</label>
+            <input type="email" name="contact[email]" value="{{ customer.email }}" class="wc-input wc-input--locked" readonly tabindex="-1">
+          </div>
+        </div>
+
+        {% if customer.phone != blank %}
+          <div class="wc-field">
+            <label class="wc-label">Phone</label>
+            <input type="text" value="{{ customer.phone }}" class="wc-input wc-input--locked" readonly tabindex="-1">
+            <input type="hidden" name="contact[phone]" value="{{ customer.phone }}">
+          </div>
+        {% else %}
+          <div class="wc-field">
+            <label class="wc-label">Phone Number <span class="wc-required">*</span></label>
+            <input type="tel" name="contact[phone]" class="wc-input" placeholder="+61 400 000 000" required>
+          </div>
+        {% endif %}
+
+        <!-- Order Selection (validated — only their orders) -->
+        <div class="wc-section-label">Order Details</div>
+        <div class="wc-field">
+          <label class="wc-label">Select Order <span class="wc-required">*</span></label>
+          <select id="wc-order-select-{{ section.id }}" class="wc-select" required>
+            <option value="" disabled selected>— Choose the order this claim is for —</option>
+            {% for order in customer.orders %}
+              <option value="{{ order.name }} | {{ order.created_at | date: '%d %b %Y' }} | {{ order.total_price | money }}{% for line in order.line_items %} | {{ line.title }}{% endfor %}">
+                {{ order.name }} — {{ order.created_at | date: '%d %b %Y' }}
+                {% for line in order.line_items %}
+                  {% if forloop.first %} — {{ line.title }}{% if order.line_items.size > 1 %} (+{{ order.line_items.size | minus: 1 }} more){% endif %}{% endif %}
+                {% endfor %}
+                — {{ order.total_price | money }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Product within order -->
+        <div class="wc-field" id="wc-product-field-{{ section.id }}" style="display:none;">
+          <label class="wc-label">Which product is affected? <span class="wc-required">*</span></label>
+          <select id="wc-product-select-{{ section.id }}" class="wc-select">
+            <option value="" disabled selected>— Select product —</option>
+          </select>
+        </div>
+
+        <!-- Issue Details -->
+        <div class="wc-section-label">Issue Details</div>
+        <div class="wc-field">
+          <label class="wc-label">Issue Type <span class="wc-required">*</span></label>
+          <select id="wc-issue-type-{{ section.id }}" class="wc-select" required>
+            <option value="" disabled selected>— Select issue type —</option>
+            {% assign issue_types = section.settings.issue_types | split: ',' %}
+            {% for issue in issue_types %}
+              {% assign trimmed = issue | strip %}
+              {% if trimmed != blank %}
+                <option value="{{ trimmed }}">{{ trimmed }}</option>
+              {% endif %}
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="wc-field">
+          <label class="wc-label">When did the issue start? <span class="wc-required">*</span></label>
+          <input type="date" id="wc-issue-date-{{ section.id }}" class="wc-input" required>
+        </div>
+
+        <div class="wc-field">
+          <label class="wc-label">Describe the Issue <span class="wc-required">*</span></label>
+          <textarea id="wc-description-{{ section.id }}" class="wc-textarea" rows="5" placeholder="{{ section.settings.desc_placeholder }}" required></textarea>
+        </div>
+
+        <div class="wc-field">
+          <label class="wc-label">Have you tried anything to fix it?</label>
+          <textarea id="wc-steps-taken-{{ section.id }}" class="wc-textarea" rows="3" placeholder="e.g. Restarted the unit, checked the remote batteries, etc."></textarea>
+        </div>
+
+        <!-- The real body field that Shopify reads — populated on submit (NOT required: filled by JS) -->
+        <textarea name="contact[body]" id="wc-real-body-{{ section.id }}" style="display:none;" aria-hidden="true" tabindex="-1"></textarea>
+
+        <!-- File Upload (Cloudinary — supports photos AND videos) -->
+        <div class="wc-section-label">Photos & Videos (Optional)</div>
+        <div class="wc-field">
+          <label class="wc-label">Upload photos or videos of the issue</label>
+          <div class="wc-upload-wrap">
+            <label class="wc-upload-btn" for="wc-real-file-{{ section.id }}">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
+              <span id="wc-upload-label-{{ section.id }}">Click to upload photos or videos</span>
+            </label>
+            <input type="file" id="wc-real-file-{{ section.id }}" accept="image/*,video/*" multiple>
+          </div>
+          <div class="wc-file-list" id="wc-file-list-{{ section.id }}"></div>
+          <p class="wc-upload-hint">Up to {{ section.settings.max_files | default: 5 }} files · Images up to 10MB · Videos up to {{ section.settings.max_video_mb | default: 100 }}MB · JPG, PNG, GIF, MP4, MOV, WEBM</p>
+          {% if section.settings.cloudinary_cloud_name == blank or section.settings.cloudinary_upload_preset == blank %}
+            <p class="wc-upload-hint" style="color:#cc3333;"><strong>⚠️ Media uploads disabled:</strong> Cloudinary is not configured. Open this section in the theme editor and fill in your Cloudinary Cloud Name + Upload Preset.</p>
+          {% endif %}
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="wc-submit">
+          {{ section.settings.submit_text | default: 'Submit Warranty Claim' }}
+        </button>
+
+        <p class="wc-disclaimer">{{ section.settings.disclaimer }}</p>
+      {% endif %}
+      {% endform %}
+    {% endif %}
+
+  </div>
+</section>
+
+{% endif %}
+
+<style>
+  #wc-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  /* ── Hero ── */
+  #wc-{{ section.id }} .wc-hero {
+    text-align: center;
+    padding: 50px 20px 30px;
+    background: {{ section.settings.hero_bg_color }};
+  }
+
+  #wc-{{ section.id }} .wc-hero__title {
+    font-size: 36px;
+    font-weight: 700;
+    color: {{ section.settings.hero_text_color }};
+    margin: 0 0 10px;
+  }
+
+  #wc-{{ section.id }} .wc-hero__sub {
+    font-size: 15px;
+    color: {{ section.settings.hero_text_color }};
+    opacity: 0.8;
+    margin: 0 auto;
+    max-width: 560px;
+    line-height: 1.6;
+  }
+
+  /* ── Container ── */
+  #wc-{{ section.id }} .wc-container {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 40px 20px 60px;
+  }
+
+  /* ── Section Labels ── */
+  #wc-{{ section.id }} .wc-section-label {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: #888;
+    margin: 32px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #eee;
+  }
+
+  #wc-{{ section.id }} .wc-section-label:first-child {
+    margin-top: 0;
+  }
+
+  /* ── Form Fields ── */
+  #wc-{{ section.id }} .wc-form__row--2col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  #wc-{{ section.id }} .wc-field {
+    margin-bottom: 18px;
+  }
+
+  #wc-{{ section.id }} .wc-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 6px;
+  }
+
+  #wc-{{ section.id }} .wc-required {
+    color: #cc3333;
+  }
+
+  #wc-{{ section.id }} .wc-input,
+  #wc-{{ section.id }} .wc-select,
+  #wc-{{ section.id }} .wc-textarea {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: inherit;
+    color: #333;
+    background: #fff;
+    transition: border-color 0.2s ease;
+    box-sizing: border-box;
+  }
+
+  #wc-{{ section.id }} .wc-input:focus,
+  #wc-{{ section.id }} .wc-select:focus,
+  #wc-{{ section.id }} .wc-textarea:focus {
+    outline: none;
+    border-color: {{ section.settings.accent_color }};
+  }
+
+  #wc-{{ section.id }} .wc-input--locked {
+    background: #f5f5f5;
+    color: #777;
+    cursor: not-allowed;
+    border-style: dashed;
+  }
+
+  #wc-{{ section.id }} .wc-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23666' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+  }
+
+  #wc-{{ section.id }} .wc-textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+
+  /* ── File Upload ── */
+  #wc-{{ section.id }} .wc-upload-wrap {
+    position: relative;
+  }
+
+  #wc-{{ section.id }} .wc-upload-wrap input[type="file"] {
+    position: absolute;
+    left: -9999px;
+    opacity: 0;
+  }
+
+  #wc-{{ section.id }} .wc-upload-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 24px 20px;
+    background: #f8f8f8;
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    color: #666;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+
+  #wc-{{ section.id }} .wc-upload-btn:hover {
+    border-color: {{ section.settings.accent_color }};
+    background: #f0f0f0;
+    color: {{ section.settings.accent_color }};
+  }
+
+  #wc-{{ section.id }} .wc-upload-btn svg {
+    flex-shrink: 0;
+  }
+
+  #wc-{{ section.id }} .wc-upload-hint {
+    font-size: 12px;
+    color: #999;
+    margin: 8px 0 0;
+    text-align: center;
+  }
+
+  #wc-{{ section.id }} .wc-file-list {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  #wc-{{ section.id }} .wc-file-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: #f5f5f5;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #333;
+  }
+
+  #wc-{{ section.id }} .wc-file-item__icon {
+    color: {{ section.settings.accent_color }};
+    flex-shrink: 0;
+  }
+
+  #wc-{{ section.id }} .wc-file-item__name {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 500;
+  }
+
+  #wc-{{ section.id }} .wc-file-item__size {
+    color: #888;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+
+  #wc-{{ section.id }} .wc-file-item__remove {
+    background: none;
+    border: none;
+    color: #cc3333;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    border-radius: 4px;
+  }
+
+  #wc-{{ section.id }} .wc-file-item__remove:hover {
+    background: rgba(204, 51, 51, 0.1);
+  }
+
+  #wc-{{ section.id }} .wc-file-item--error {
+    background: #fff0f0;
+    border: 1px solid #ffd0d0;
+    color: #cc3333;
+  }
+
+  #wc-{{ section.id }} .wc-file-item--uploading {
+    flex-wrap: wrap;
+  }
+
+  #wc-{{ section.id }} .wc-file-item--uploaded {
+    border-color: #c5e9d1;
+    background: #f3fbf6;
+  }
+
+  #wc-{{ section.id }} .wc-file-item__status {
+    font-size: 12px;
+    color: #666;
+    font-weight: 600;
+    margin-left: 8px;
+  }
+
+  #wc-{{ section.id }} .wc-file-item__status--done {
+    color: #22874b;
+  }
+
+  #wc-{{ section.id }} .wc-progress {
+    flex: 1 1 100%;
+    height: 6px;
+    background: #e8ecf3;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 8px;
+  }
+
+  #wc-{{ section.id }} .wc-progress__bar {
+    height: 100%;
+    background: {{ section.settings.accent_color }};
+    transition: width 0.2s ease;
+  }
+
+  /* ── Submit ── */
+  #wc-{{ section.id }} .wc-submit {
+    width: 100%;
+    padding: 14px 24px;
+    background: {{ section.settings.accent_color }};
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+    margin-top: 8px;
+  }
+
+  #wc-{{ section.id }} .wc-submit:hover {
+    opacity: 0.9;
+  }
+
+  #wc-{{ section.id }} .wc-submit:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  #wc-{{ section.id }} .wc-disclaimer {
+    font-size: 13px;
+    color: #aaa;
+    text-align: center;
+    margin: 14px 0 0;
+    line-height: 1.5;
+  }
+
+  /* ── Errors ── */
+  #wc-{{ section.id }} .wc-errors {
+    background: #fff0f0;
+    border: 1px solid #ffbaba;
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 0 0 20px;
+    color: #a83232;
+    font-size: 14px;
+  }
+  #wc-{{ section.id }} .wc-errors strong {
+    display: block;
+    margin-bottom: 6px;
+  }
+  #wc-{{ section.id }} .wc-errors ul {
+    margin: 0;
+    padding-left: 18px;
+  }
+
+  /* ── Success ── */
+  #wc-{{ section.id }} .wc-success {
+    text-align: center;
+    padding: 20px 0;
+  }
+
+  #wc-{{ section.id }} .wc-success h2 {
+    font-size: 24px;
+    color: #101a32;
+    margin: 20px 0 10px;
+  }
+
+  #wc-{{ section.id }} .wc-success > p {
+    font-size: 15px;
+    color: #555;
+    line-height: 1.6;
+    max-width: 480px;
+    margin: 0 auto 28px;
+  }
+
+  /* ── Ticket Summary ── */
+  #wc-{{ section.id }} .wc-ticket {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    padding: 0;
+    margin: 0 auto 28px;
+    max-width: 500px;
+    text-align: left;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  }
+
+  #wc-{{ section.id }} .wc-ticket__header {
+    background: {{ section.settings.accent_color }};
+    color: #fff;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  #wc-{{ section.id }} .wc-ticket__badge {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  #wc-{{ section.id }} .wc-ticket__id {
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'Courier New', monospace;
+    background: rgba(255,255,255,0.15);
+    padding: 4px 10px;
+    border-radius: 6px;
+  }
+
+  #wc-{{ section.id }} .wc-ticket__rows {
+    padding: 8px 20px 16px;
+  }
+
+  #wc-{{ section.id }} .wc-ticket__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 13px;
+  }
+
+  #wc-{{ section.id }} .wc-ticket__row:last-child {
+    border-bottom: none;
+  }
+
+  #wc-{{ section.id }} .wc-ticket__label {
+    color: #888;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+
+  #wc-{{ section.id }} .wc-ticket__value {
+    color: #333;
+    font-weight: 600;
+    text-align: right;
+    word-break: break-word;
+  }
+
+  #wc-{{ section.id }} .wc-success__actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  #wc-{{ section.id }} .wc-success__note {
+    font-size: 13px;
+    color: #888;
+    margin: 20px auto 0;
+    max-width: 440px;
+    line-height: 1.5;
+  }
+
+  /* ── Empty / No Orders ── */
+  #wc-{{ section.id }} .wc-empty {
+    text-align: center;
+    padding: 20px 0;
+  }
+
+  #wc-{{ section.id }} .wc-empty h2 {
+    font-size: 22px;
+    color: #101a32;
+    margin: 16px 0 10px;
+  }
+
+  #wc-{{ section.id }} .wc-empty p {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.6;
+    max-width: 440px;
+    margin: 0 auto 8px;
+  }
+
+  #wc-{{ section.id }} .wc-empty__actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 24px;
+  }
+
+  /* ── Buttons ── */
+  #wc-{{ section.id }} .wc-btn {
+    display: inline-block;
+    padding: 12px 28px;
+    background: {{ section.settings.accent_color }};
+    color: #fff;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 600;
+    transition: opacity 0.2s ease;
+  }
+
+  #wc-{{ section.id }} .wc-btn:hover {
+    opacity: 0.9;
+    color: #fff;
+  }
+
+  #wc-{{ section.id }} .wc-btn--outline {
+    background: transparent;
+    color: {{ section.settings.accent_color }};
+    border: 1px solid {{ section.settings.accent_color }};
+  }
+
+  #wc-{{ section.id }} .wc-btn--outline:hover {
+    background: {{ section.settings.accent_color }};
+    color: #fff;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 600px) {
+    #wc-{{ section.id }} .wc-form__row--2col {
+      grid-template-columns: 1fr;
+    }
+
+    #wc-{{ section.id }} .wc-hero__title {
+      font-size: 28px;
+    }
+
+    #wc-{{ section.id }} .wc-empty__actions {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var section = document.getElementById('wc-{{ section.id }}');
+    if (!section) return;
+
+    /* ── Order → Product selector ── */
+    var orderSelect = document.getElementById('wc-order-select-{{ section.id }}');
+    var productField = document.getElementById('wc-product-field-{{ section.id }}');
+    var productSelect = document.getElementById('wc-product-select-{{ section.id }}');
+
+    // Build order → products map from Liquid
+    var orderProducts = {};
+    {% for order in customer.orders %}
+      orderProducts[{{ order.name | json }}] = [
+        {% for line in order.line_items %}
+          {{ line.title | json }}{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ];
+    {% endfor %}
+
+    if (orderSelect && productField && productSelect) {
+      orderSelect.addEventListener('change', function () {
+        // Extract order name (first segment before |)
+        var val = this.value;
+        var orderName = val.split('|')[0].trim();
+
+        var products = orderProducts[orderName] || [];
+
+        if (products.length > 1) {
+          // Multiple products — show the product selector
+          productSelect.innerHTML = '<option value="" disabled selected>— Select product —</option>';
+          products.forEach(function (p) {
+            var opt = document.createElement('option');
+            opt.value = p;
+            opt.textContent = p;
+            productSelect.appendChild(opt);
+          });
+          productSelect.required = true;
+          productField.style.display = 'block';
+        } else if (products.length === 1) {
+          // Single product — auto-select and hide
+          productSelect.innerHTML = '<option value="' + products[0] + '" selected>' + products[0] + '</option>';
+          productSelect.required = false;
+          productField.style.display = 'none';
+        } else {
+          productField.style.display = 'none';
+        }
+      });
+    }
+
+    /* ── Grab the form early (used by upload UI to disable submit) ── */
+    var form = section.querySelector('form.contact-form') || section.querySelector('form');
+
+    /* ── Cloudinary Media Upload (supports photos + videos) ── */
+    var fileInput = document.getElementById('wc-real-file-{{ section.id }}');
+    var fileList = document.getElementById('wc-file-list-{{ section.id }}');
+    var uploadLabel = document.getElementById('wc-upload-label-{{ section.id }}');
+
+    var CLOUDINARY_CLOUD = {{ section.settings.cloudinary_cloud_name | default: '' | json }};
+    var CLOUDINARY_PRESET = {{ section.settings.cloudinary_upload_preset | default: '' | json }};
+    var MAX_FILES = {{ section.settings.max_files | default: 5 }};
+    var MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10MB
+    var MAX_VIDEO_SIZE = {{ section.settings.max_video_mb | default: 100 }} * 1024 * 1024;
+
+    // Uploaded media: [{ name, size, type, url, publicId }]
+    var uploadedMedia = [];
+    var activeUploads = 0;
+
+    function formatSize(bytes) {
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+      return (bytes / 1048576).toFixed(1) + ' MB';
+    }
+
+    function setUploading(isUploading) {
+      var submitBtn = form ? form.querySelector('.wc-submit') : null;
+      if (!submitBtn) return;
+      if (isUploading) {
+        submitBtn.disabled = true;
+        submitBtn.dataset.prevText = submitBtn.textContent;
+        submitBtn.textContent = 'Uploading media... please wait';
+      } else if (activeUploads === 0) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = submitBtn.dataset.prevText || submitBtn.textContent;
+      }
+    }
+
+    function renderFileList() {
+      fileList.innerHTML = '';
+      uploadedMedia.forEach(function (media, idx) {
+        var isVideo = media.type.indexOf('video/') === 0;
+        var item = document.createElement('div');
+        item.className = 'wc-file-item wc-file-item--uploaded';
+        item.innerHTML =
+          '<svg class="wc-file-item__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+          (isVideo
+            ? '<polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>'
+            : '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>') +
+          '</svg>' +
+          '<span class="wc-file-item__name">' + media.name + '</span>' +
+          '<span class="wc-file-item__size">' + formatSize(media.size) + '</span>' +
+          '<span class="wc-file-item__status wc-file-item__status--done">✓ Uploaded</span>' +
+          '<button type="button" class="wc-file-item__remove" data-idx="' + idx + '" aria-label="Remove file">' +
+          '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>' +
+          '</button>';
+        fileList.appendChild(item);
+      });
+      // Rebind remove handlers
+      fileList.querySelectorAll('.wc-file-item__remove').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var idx = parseInt(btn.getAttribute('data-idx'), 10);
+          uploadedMedia.splice(idx, 1);
+          renderFileList();
+        });
+      });
+      if (uploadLabel) {
+        uploadLabel.textContent = uploadedMedia.length
+          ? 'Add more files (' + uploadedMedia.length + '/' + MAX_FILES + ')'
+          : 'Click to upload photos or videos';
+      }
+    }
+
+    function addProgressItem(file) {
+      var item = document.createElement('div');
+      item.className = 'wc-file-item wc-file-item--uploading';
+      item.innerHTML =
+        '<svg class="wc-file-item__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+        '<path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>' +
+        '</svg>' +
+        '<span class="wc-file-item__name">' + file.name + '</span>' +
+        '<span class="wc-file-item__size">' + formatSize(file.size) + '</span>' +
+        '<div class="wc-progress"><div class="wc-progress__bar" style="width:0%"></div></div>' +
+        '<span class="wc-file-item__status">0%</span>';
+      fileList.appendChild(item);
+      return item;
+    }
+
+    function uploadToCloudinary(file, progressItem) {
+      return new Promise(function (resolve, reject) {
+        var xhr = new XMLHttpRequest();
+        var fd = new FormData();
+        fd.append('file', file);
+        fd.append('upload_preset', CLOUDINARY_PRESET);
+        fd.append('folder', 'nuracom-warranty');
+
+        // 'auto' resource type handles images AND videos
+        xhr.open('POST', 'https://api.cloudinary.com/v1_1/' + CLOUDINARY_CLOUD + '/auto/upload');
+
+        xhr.upload.addEventListener('progress', function (e) {
+          if (!e.lengthComputable) return;
+          var pct = Math.round((e.loaded / e.total) * 100);
+          var bar = progressItem.querySelector('.wc-progress__bar');
+          var label = progressItem.querySelector('.wc-file-item__status');
+          if (bar) bar.style.width = pct + '%';
+          if (label) label.textContent = pct + '%';
+        });
+
+        xhr.addEventListener('load', function () {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            try {
+              var res = JSON.parse(xhr.responseText);
+              resolve(res);
+            } catch (e) { reject(e); }
+          } else {
+            reject(new Error('Upload failed (' + xhr.status + '): ' + xhr.responseText));
+          }
+        });
+        xhr.addEventListener('error', function () { reject(new Error('Network error during upload')); });
+        xhr.send(fd);
+      });
+    }
+
+    function handleFileSelection(files) {
+      if (!CLOUDINARY_CLOUD || !CLOUDINARY_PRESET) {
+        alert('Media uploads are not configured yet. Please submit without attachments, or ask admin to set up Cloudinary.');
+        fileInput.value = '';
+        return;
+      }
+
+      var toUpload = [];
+      for (var i = 0; i < files.length; i++) {
+        var f = files[i];
+        if (uploadedMedia.length + toUpload.length >= MAX_FILES) {
+          alert('Maximum ' + MAX_FILES + ' files. Some files were skipped.');
+          break;
+        }
+        var isImage = f.type.indexOf('image/') === 0;
+        var isVideo = f.type.indexOf('video/') === 0;
+        if (!isImage && !isVideo) {
+          alert('"' + f.name + '" is not a supported file type. Images and videos only.');
+          continue;
+        }
+        var limit = isVideo ? MAX_VIDEO_SIZE : MAX_IMAGE_SIZE;
+        if (f.size > limit) {
+          alert('"' + f.name + '" is too large. ' + (isVideo ? 'Videos must be under ' + (MAX_VIDEO_SIZE / 1048576) + 'MB' : 'Images must be under 10MB') + '.');
+          continue;
+        }
+        toUpload.push(f);
+      }
+
+      // Upload each file
+      toUpload.forEach(function (file) {
+        activeUploads++;
+        setUploading(true);
+        var progressItem = addProgressItem(file);
+
+        uploadToCloudinary(file, progressItem)
+          .then(function (res) {
+            uploadedMedia.push({
+              name: file.name,
+              size: file.size,
+              type: file.type,
+              url: res.secure_url,
+              publicId: res.public_id
+            });
+            progressItem.remove();
+            renderFileList();
+          })
+          .catch(function (err) {
+            console.error('Cloudinary upload failed:', err);
+            progressItem.classList.add('wc-file-item--error');
+            var status = progressItem.querySelector('.wc-file-item__status');
+            if (status) status.textContent = 'Upload failed';
+            alert('Upload of "' + file.name + '" failed. Please try again or submit without this file.\n\n' + (err.message || ''));
+          })
+          .then(function () {
+            activeUploads--;
+            if (activeUploads === 0) setUploading(false);
+          });
+      });
+
+      // Clear the input so the same file can be re-selected if removed
+      fileInput.value = '';
+    }
+
+    if (fileInput) {
+      fileInput.addEventListener('change', function () {
+        handleFileSelection(fileInput.files);
+      });
+    }
+
+    /* ── Grab all form inputs by ID ── */
+    var orderSelect2 = document.getElementById('wc-order-select-{{ section.id }}');
+    var productSelect2 = document.getElementById('wc-product-select-{{ section.id }}');
+    var issueTypeSelect = document.getElementById('wc-issue-type-{{ section.id }}');
+    var issueDateInput = document.getElementById('wc-issue-date-{{ section.id }}');
+    var descriptionInput = document.getElementById('wc-description-{{ section.id }}');
+    var stepsTakenInput = document.getElementById('wc-steps-taken-{{ section.id }}');
+    var realBodyField = document.getElementById('wc-real-body-{{ section.id }}');
+
+    /* ── Build the structured body text from form fields ── */
+    function buildStructuredBody() {
+      var orderVal = orderSelect2 ? orderSelect2.value : '';
+      var orderName = orderVal ? orderVal.split('|')[0].trim() : '';
+
+      var structured = 'WARRANTY CLAIM SUBMISSION\n';
+      structured += '========================\n\n';
+      structured += 'NAME: {{ customer.name }}\n';
+      structured += 'EMAIL: {{ customer.email }}\n';
+      {% if customer.phone != blank %}
+      structured += 'PHONE: {{ customer.phone }}\n';
+      {% endif %}
+      if (orderName) structured += 'ORDER: ' + orderName + '\n';
+      if (productSelect2 && productSelect2.value) structured += 'PRODUCT: ' + productSelect2.value + '\n';
+      if (issueTypeSelect && issueTypeSelect.value) structured += 'ISSUE TYPE: ' + issueTypeSelect.value + '\n';
+      if (issueDateInput && issueDateInput.value) structured += 'ISSUE STARTED: ' + issueDateInput.value + '\n';
+      structured += '\n';
+      structured += 'DESCRIPTION:\n';
+      structured += (descriptionInput && descriptionInput.value ? descriptionInput.value : '(none provided)') + '\n';
+      if (stepsTakenInput && stepsTakenInput.value.trim()) {
+        structured += '\nSTEPS ALREADY TAKEN:\n' + stepsTakenInput.value + '\n';
+      }
+      if (uploadedMedia.length > 0) {
+        structured += '\n========================\n';
+        structured += 'ATTACHED MEDIA (' + uploadedMedia.length + ' file' + (uploadedMedia.length > 1 ? 's' : '') + ')\n';
+        structured += '========================\n';
+        uploadedMedia.forEach(function (m, i) {
+          var kind = m.type.indexOf('video/') === 0 ? '[VIDEO]' : '[PHOTO]';
+          structured += (i + 1) + '. ' + kind + ' ' + m.name + ' (' + formatSize(m.size) + ')\n';
+          structured += '   ' + m.url + '\n';
+        });
+      }
+      structured += '\n========================\n';
+      structured += 'Submitted via NuraCom Warranty Portal';
+      return structured;
+    }
+
+    /* ── On form submit: build body, save ticket data for success page ── */
+    if (form) {
+      form.addEventListener('submit', function (e) {
+        // Block submit if any uploads still in flight
+        if (activeUploads > 0) {
+          e.preventDefault();
+          alert('Please wait — your media is still uploading. Submit again when all uploads show "Uploaded".');
+          return;
+        }
+
+        var btn = form.querySelector('.wc-submit');
+        if (btn) {
+          btn.textContent = 'Submitting...';
+          btn.disabled = true;
+        }
+
+        // Populate the real body textarea that Shopify reads
+        if (realBodyField) {
+          realBodyField.value = buildStructuredBody();
+        }
+
+        // Save claim details to sessionStorage for the success page ticket
+        try {
+          sessionStorage.setItem('wc_last_claim', JSON.stringify({
+            order: orderSelect2 ? orderSelect2.value.split('|')[0].trim() : '',
+            product: productSelect2 ? productSelect2.value : '',
+            issueType: issueTypeSelect ? issueTypeSelect.value : '',
+            issueDate: issueDateInput ? issueDateInput.value : '',
+            media: uploadedMedia.map(function (m) {
+              return { name: m.name, type: m.type };
+            }),
+            submittedAt: new Date().toISOString()
+          }));
+        } catch (err) {}
+      });
+    }
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Warranty Claim",
+  "tag": "section",
+  "class": "warranty-claim-section",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent / Button Color",
+      "default": "#101a32"
+    },
+    {
+      "type": "header",
+      "content": "Hero"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Warranty & Support"
+    },
+    {
+      "type": "textarea",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "Having an issue with your NuraCom product? Submit a warranty claim below and our team will get back to you within 1–2 business days."
+    },
+    {
+      "type": "color",
+      "id": "hero_bg_color",
+      "label": "Hero Background",
+      "default": "#101a32"
+    },
+    {
+      "type": "color",
+      "id": "hero_text_color",
+      "label": "Hero Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Form Settings"
+    },
+    {
+      "type": "text",
+      "id": "support_email",
+      "label": "Support Email",
+      "default": "info@nuracom.com.au",
+      "info": "Used for the 'Email Photos' button after submission"
+    },
+    {
+      "type": "text",
+      "id": "desc_placeholder",
+      "label": "Description Placeholder",
+      "default": "Please describe the issue in detail — what happened, when it started, and what you've noticed."
+    },
+    {
+      "type": "text",
+      "id": "submit_text",
+      "label": "Submit Button Text",
+      "default": "Submit Warranty Claim"
+    },
+    {
+      "type": "text",
+      "id": "disclaimer",
+      "label": "Disclaimer Text",
+      "default": "We will review your claim and respond within 1–2 business days via email."
+    },
+    {
+      "type": "header",
+      "content": "Cloudinary Media Upload",
+      "info": "Free Cloudinary account required for photo + video uploads. See setup instructions."
+    },
+    {
+      "type": "text",
+      "id": "cloudinary_cloud_name",
+      "label": "Cloudinary Cloud Name",
+      "info": "Found on your Cloudinary dashboard (e.g. 'nuracom')"
+    },
+    {
+      "type": "text",
+      "id": "cloudinary_upload_preset",
+      "label": "Cloudinary Unsigned Upload Preset",
+      "info": "Create an UNSIGNED upload preset in Cloudinary Settings → Upload"
+    },
+    {
+      "type": "range",
+      "id": "max_files",
+      "label": "Max files per claim",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "range",
+      "id": "max_video_mb",
+      "label": "Max video size (MB)",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "No Orders State"
+    },
+    {
+      "type": "url",
+      "id": "contact_url",
+      "label": "Contact Us Page URL",
+      "info": "Fallback link for customers with no orders"
+    },
+    {
+      "type": "textarea",
+      "id": "issue_types",
+      "label": "Issue Types (comma separated)",
+      "default": "Product Defect, Motor / Mechanical Issue, Remote / Controls Not Working, UV Lamp Issue, LED Light Issue, Fan / Drying Issue, Noise / Vibration, Physical Damage on Arrival, Missing Parts / Accessories, Other",
+      "info": "Separate each issue type with a comma"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Warranty Claim"
+    }
+  ]
+}
+{% endschema %}

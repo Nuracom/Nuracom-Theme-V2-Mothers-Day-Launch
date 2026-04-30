@@ -1,0 +1,351 @@
+{% comment %}
+  NuraCom Promise Section
+  - Dark navy background with SVG wave dividers
+  - 3-column promise card grid with icons
+  - Optional CTA buttons
+{% endcomment %}
+
+{%- assign bg = section.settings.bg_color | default: '#101a32' -%}
+{%- assign pt = section.settings.padding_top | default: 60 -%}
+{%- assign pb = section.settings.padding_bottom | default: 60 -%}
+
+<style>
+  #nuracom-promise-{{ section.id }} {
+    background-color: {{ bg }};
+    position: relative;
+    overflow: hidden;
+  }
+
+  #nuracom-promise-{{ section.id }} .kp-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: {{ pt }}px 20px {{ pb }}px;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  #nuracom-promise-{{ section.id }} .kp-heading {
+    font-size: 36px;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 16px;
+    line-height: 1.2;
+  }
+
+  #nuracom-promise-{{ section.id }} .kp-intro {
+    font-size: 16px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.8);
+    max-width: 700px;
+    margin: 0 auto 48px;
+  }
+
+  #nuracom-promise-{{ section.id }} .kp-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    margin-bottom: 48px;
+  }
+
+  #nuracom-promise-{{ section.id }} .kp-card {
+    text-align: center;
+    padding: 20px;
+  }
+
+  #nuracom-promise-{{ section.id }} .kp-card-image {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    margin: 0 auto 20px;
+    display: block;
+  }
+
+  #nuracom-promise-{{ section.id }} .kp-card-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #ffffff;
+    margin: 0 0 12px;
+  }
+
+  #nuracom-promise-{{ section.id }} .kp-card-desc {
+    font-size: 14px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0;
+  }
+
+  #nuracom-promise-{{ section.id }} .kp-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  #nuracom-promise-{{ section.id }} .kp-btn {
+    display: inline-block;
+    padding: 14px 32px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: opacity 0.2s ease;
+  }
+
+  #nuracom-promise-{{ section.id }} .kp-btn:hover {
+    opacity: 0.85;
+  }
+
+  #nuracom-promise-{{ section.id }} .kp-btn--primary {
+    background-color: #dcd0c8;
+    color: #101a32;
+  }
+
+  #nuracom-promise-{{ section.id }} .kp-btn--secondary {
+    background-color: transparent;
+    color: #dcd0c8;
+    border: 2px solid #dcd0c8;
+  }
+
+  #nuracom-promise-{{ section.id }} .kp-wave {
+    display: block;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    z-index: 1;
+  }
+
+  #nuracom-promise-{{ section.id }} .kp-wave--top {
+    top: -1px;
+  }
+
+  #nuracom-promise-{{ section.id }} .kp-wave--bottom {
+    bottom: -1px;
+  }
+
+  @media (max-width: 768px) {
+    #nuracom-promise-{{ section.id }} .kp-grid {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+
+    #nuracom-promise-{{ section.id }} .kp-heading {
+      font-size: 28px;
+    }
+
+    #nuracom-promise-{{ section.id }} .kp-inner {
+      padding: {{ pt | divided_by: 2 }}px 16px {{ pb | divided_by: 2 }}px;
+    }
+  }
+</style>
+
+<section id="nuracom-promise-{{ section.id }}">
+  {% if section.settings.show_top_divider %}
+    <svg class="kp-wave kp-wave--top" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 80" preserveAspectRatio="none">
+      <path fill="#ffffff" d="M0,0 L0,40 Q360,80 720,40 Q1080,0 1440,40 L1440,0 Z"/>
+    </svg>
+  {% endif %}
+
+  <div class="kp-inner">
+    {% if section.settings.heading != blank %}
+      <h2 class="kp-heading">{{ section.settings.heading }}</h2>
+    {% endif %}
+
+    {% if section.settings.intro_text != blank %}
+      <p class="kp-intro">{{ section.settings.intro_text }}</p>
+    {% endif %}
+
+    {% if section.blocks.size > 0 %}
+      <div class="kp-grid">
+        {% for block in section.blocks %}
+          <div class="kp-card" {{ block.shopify_attributes }}>
+            {% if block.settings.image != blank %}
+              <img
+                class="kp-card-image"
+                src="{{ block.settings.image | image_url: width: 160 }}"
+                alt="{{ block.settings.title | escape }}"
+                width="80"
+                height="80"
+                loading="lazy"
+              >
+            {% endif %}
+
+            {% if block.settings.title != blank %}
+              <h3 class="kp-card-title">{{ block.settings.title }}</h3>
+            {% endif %}
+
+            {% if block.settings.description != blank %}
+              <p class="kp-card-desc">{{ block.settings.description }}</p>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% assign has_btn1 = false %}
+    {% assign has_btn2 = false %}
+    {% if section.settings.button_1_text != blank and section.settings.button_1_url != blank %}
+      {% assign has_btn1 = true %}
+    {% endif %}
+    {% if section.settings.button_2_text != blank and section.settings.button_2_url != blank %}
+      {% assign has_btn2 = true %}
+    {% endif %}
+
+    {% if has_btn1 or has_btn2 %}
+      <div class="kp-buttons">
+        {% if has_btn1 %}
+          <a href="{{ section.settings.button_1_url }}" class="kp-btn kp-btn--primary">
+            {{ section.settings.button_1_text }}
+          </a>
+        {% endif %}
+        {% if has_btn2 %}
+          <a href="{{ section.settings.button_2_url }}" class="kp-btn kp-btn--secondary">
+            {{ section.settings.button_2_text }}
+          </a>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+
+  {% if section.settings.show_bottom_divider %}
+    <svg class="kp-wave kp-wave--bottom" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 80" preserveAspectRatio="none">
+      <path fill="#ffffff" d="M0,80 L0,40 Q360,0 720,40 Q1080,80 1440,40 L1440,80 Z"/>
+    </svg>
+  {% endif %}
+</section>
+
+{% schema %}
+{
+  "name": "NuraCom Promise",
+  "tag": "section",
+  "class": "nuracom-promise-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Our NuraCom Promise"
+    },
+    {
+      "type": "textarea",
+      "id": "intro_text",
+      "label": "Intro Text",
+      "default": "Every NuraCom product is crafted with precision, engineered for performance, and backed by our commitment to quality you can trust."
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#101a32"
+    },
+    {
+      "type": "text",
+      "id": "button_1_text",
+      "label": "Button 1 Text",
+      "default": "Shop All NuraCom"
+    },
+    {
+      "type": "url",
+      "id": "button_1_url",
+      "label": "Button 1 URL"
+    },
+    {
+      "type": "text",
+      "id": "button_2_text",
+      "label": "Button 2 Text",
+      "default": "Compare NuraCom Models"
+    },
+    {
+      "type": "url",
+      "id": "button_2_url",
+      "label": "Button 2 URL"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_top_divider",
+      "label": "Show Top Wave Divider",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bottom_divider",
+      "label": "Show Bottom Wave Divider",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top (px)",
+      "min": 0,
+      "max": 120,
+      "step": 10,
+      "default": 60,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom (px)",
+      "min": 0,
+      "max": 120,
+      "step": 10,
+      "default": 60,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "promise_card",
+      "name": "Promise Card",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Icon / Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Promise Title"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Describe this promise or commitment to your customers."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "NuraCom Promise",
+      "blocks": [
+        {
+          "type": "promise_card",
+          "settings": {
+            "title": "Premium Quality",
+            "description": "Every NuraCom product meets the highest standards of craftsmanship and durability."
+          }
+        },
+        {
+          "type": "promise_card",
+          "settings": {
+            "title": "Precision Engineered",
+            "description": "German-engineered precision ensures consistent, professional-grade results every time."
+          }
+        },
+        {
+          "type": "promise_card",
+          "settings": {
+            "title": "Customer First",
+            "description": "Our dedicated support team is here to help you get the most out of your NuraCom products."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

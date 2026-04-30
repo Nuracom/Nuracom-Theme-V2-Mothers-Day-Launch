@@ -1,0 +1,230 @@
+{% comment %}
+  Nuracom Hero — Belief #1 activation (the problem is real, there's a solution)
+  Every colour + text editable via customiser.
+{% endcomment %}
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+  #shopify-section-{{ section.id }} {
+    --brand-deep: {{ section.settings.brand_deep }};
+    --brand-dark: {{ section.settings.brand_dark }};
+    --brand-accent: {{ section.settings.brand_accent }};
+    --navy: {{ section.settings.navy }};
+    --cream: {{ section.settings.cream }};
+    --warm-gray: {{ section.settings.warm_gray }};
+    --text-primary: {{ section.settings.text_primary }};
+    --text-secondary: {{ section.settings.text_secondary }};
+    --text-muted: {{ section.settings.text_muted }};
+    --white: {{ section.settings.white }};
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+    --shadow-md: 0 4px 20px rgba(0,0,0,0.1);
+    --shadow-lg: 0 12px 40px rgba(0,0,0,0.15);
+    --radius: 12px;
+    --radius-lg: 20px;
+    --max-width: 1120px;
+    --section-pad: clamp(44px, 6vw, 80px);
+  }
+  #shopify-section-{{ section.id }} * { box-sizing: border-box; }
+  #shopify-section-{{ section.id }} .nhero { padding: var(--section-pad) 0; background: linear-gradient(180deg, var(--cream) 0%, var(--white) 100%); position: relative; overflow: hidden; font-family: 'Inter', -apple-system, sans-serif; color: var(--text-primary); }
+  #shopify-section-{{ section.id }} .nhero::before { content: ''; position: absolute; top: -200px; right: -200px; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, {{ section.settings.brand_deep }}0a 0%, transparent 70%); pointer-events: none; }
+  #shopify-section-{{ section.id }} .nhero__container { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; position: relative; z-index: 2; }
+  #shopify-section-{{ section.id }} .nhero__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: stretch; }
+  #shopify-section-{{ section.id }} .nhero__content { display: flex; flex-direction: column; justify-content: center; }
+  #shopify-section-{{ section.id }} .nhero__badge { display: inline-flex; align-items: center; gap: 8px; background: var(--white); border: 1px solid var(--warm-gray); border-radius: 100px; padding: 6px 16px 6px 8px; font-size: 0.8rem; font-weight: 500; color: var(--text-secondary); margin-bottom: 24px; }
+  #shopify-section-{{ section.id }} .nhero__badge-dot { width: 8px; height: 8px; border-radius: 50%; background: {{ section.settings.badge_dot_color }}; animation: nhero-pulse 2s infinite; }
+  @keyframes nhero-pulse { 0%,100% { opacity: 1 } 50% { opacity: 0.5 } }
+  #shopify-section-{{ section.id }} .nhero__headline { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(2.6rem, 5.5vw, 4rem); font-weight: 700; line-height: 1.1; color: var(--navy); margin: 0 0 20px; }
+  #shopify-section-{{ section.id }} .nhero__headline em { font-style: italic; color: var(--brand-deep); }
+  #shopify-section-{{ section.id }} .nhero__headline p { margin: 0; }
+  #shopify-section-{{ section.id }} .nhero__sub { font-size: 1.15rem; color: var(--text-secondary); line-height: 1.7; margin: 0 0 32px; max-width: 500px; }
+  #shopify-section-{{ section.id }} .nhero__ctas { display: flex; gap: 16px; flex-wrap: wrap; }
+  #shopify-section-{{ section.id }} .nhero__btn { display: inline-flex; align-items: center; gap: 8px; padding: 18px 48px; font-size: 1.1rem; font-weight: 600; border-radius: 10px; cursor: pointer; border: 2px solid transparent; text-decoration: none; transition: all 0.3s ease; white-space: nowrap; font-family: inherit; }
+  #shopify-section-{{ section.id }} .nhero__btn--primary { background: var(--brand-deep); color: var(--white); }
+  #shopify-section-{{ section.id }} .nhero__btn--primary:hover { background: var(--brand-dark); transform: translateY(-2px); box-shadow: 0 8px 24px {{ section.settings.brand_deep }}4d; }
+  #shopify-section-{{ section.id }} .nhero__btn--outline { background: transparent; color: var(--brand-deep); border-color: var(--brand-deep); }
+  #shopify-section-{{ section.id }} .nhero__btn--outline:hover { background: var(--brand-deep); color: var(--white); }
+  #shopify-section-{{ section.id }} .nhero__btn-arrow { transition: transform 0.3s ease; }
+  #shopify-section-{{ section.id }} .nhero__btn:hover .nhero__btn-arrow { transform: translateX(4px); }
+  #shopify-section-{{ section.id }} .nhero__proof { display: flex; align-items: center; gap: 16px; margin-top: 32px; padding-top: 32px; border-top: 1px solid var(--warm-gray); }
+  #shopify-section-{{ section.id }} .nhero__avatars { display: flex; }
+  #shopify-section-{{ section.id }} .nhero__avatar { width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--white); margin-left: -10px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 600; color: var(--text-secondary); }
+  #shopify-section-{{ section.id }} .nhero__avatar:first-child { margin-left: 0; }
+  #shopify-section-{{ section.id }} .nhero__proof-text { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5; }
+  #shopify-section-{{ section.id }} .nhero__proof-text strong { color: var(--text-primary); }
+  #shopify-section-{{ section.id }} .nhero__visual { position: relative; display: flex; }
+  #shopify-section-{{ section.id }} .nhero__image-wrap { background: linear-gradient(135deg, var(--warm-gray) 0%, #d4cfc9 100%); border-radius: var(--radius-lg); width: 100%; min-height: 560px; overflow: hidden; box-shadow: var(--shadow-lg); }
+  #shopify-section-{{ section.id }} .nhero__image-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  #shopify-section-{{ section.id }} .nhero__image-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; padding: 40px; text-align: center; }
+  #shopify-section-{{ section.id }} .nhero__image-placeholder svg { width: 120px; height: 120px; opacity: 0.35; margin-bottom: 12px; }
+  #shopify-section-{{ section.id }} .nhero__image-placeholder p { font-size: 0.85rem; color: var(--text-muted); }
+  #shopify-section-{{ section.id }} .nhero__float-card { position: absolute; background: var(--white); border-radius: var(--radius); padding: 16px 20px; box-shadow: var(--shadow-md); }
+  #shopify-section-{{ section.id }} .nhero__float-card--cost { bottom: -16px; left: -16px; display: flex; align-items: center; gap: 12px; }
+  #shopify-section-{{ section.id }} .nhero__float-card--cost .icon { width: 40px; height: 40px; background: {{ section.settings.cost_icon_bg }}; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: {{ section.settings.cost_value_color }}; }
+  #shopify-section-{{ section.id }} .nhero__float-card--cost .label { font-size: 0.75rem; color: var(--text-muted); }
+  #shopify-section-{{ section.id }} .nhero__float-card--cost .value { font-size: 1.1rem; font-weight: 700; color: {{ section.settings.cost_value_color }}; }
+  #shopify-section-{{ section.id }} .nhero__float-card--rating { top: -12px; right: -12px; }
+  #shopify-section-{{ section.id }} .nhero__float-card--rating .stars { color: {{ section.settings.star_color }}; font-size: 0.9rem; letter-spacing: 2px; }
+  #shopify-section-{{ section.id }} .nhero__float-card--rating .label { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+  #shopify-section-{{ section.id }} .nhero__reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
+  #shopify-section-{{ section.id }} .nhero__reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 900px) {
+    #shopify-section-{{ section.id }} .nhero__grid { grid-template-columns: 1fr; gap: 40px; align-items: start; }
+    #shopify-section-{{ section.id }} .nhero__visual { order: -1; }
+    #shopify-section-{{ section.id }} .nhero__image-wrap { aspect-ratio: 4/5; min-height: 0; }
+    #shopify-section-{{ section.id }} .nhero__content { justify-content: flex-start; }
+  }
+  @media (max-width: 600px) {
+    #shopify-section-{{ section.id }} .nhero__ctas { flex-direction: column; }
+    #shopify-section-{{ section.id }} .nhero__btn { width: 100%; justify-content: center; padding: 16px 24px; }
+  }
+</style>
+
+<section class="nhero">
+  <div class="nhero__container">
+    <div class="nhero__grid">
+      <div class="nhero__content nhero__reveal">
+        {% if section.settings.badge_text != blank %}
+          <div class="nhero__badge">
+            <span class="nhero__badge-dot"></span>
+            {{ section.settings.badge_text }}
+          </div>
+        {% endif %}
+
+        <h1 class="nhero__headline">{{ section.settings.headline }}</h1>
+
+        {% if section.settings.subheadline != blank %}
+          <p class="nhero__sub">{{ section.settings.subheadline }}</p>
+        {% endif %}
+
+        <div class="nhero__ctas">
+          {% if section.settings.primary_btn_text != blank %}
+            <a href="{{ section.settings.primary_btn_url | default: '#' }}" class="nhero__btn nhero__btn--primary">
+              {{ section.settings.primary_btn_text }}
+              <span class="nhero__btn-arrow">&rarr;</span>
+            </a>
+          {% endif %}
+          {% if section.settings.secondary_btn_text != blank %}
+            <a href="{{ section.settings.secondary_btn_url | default: '#' }}" class="nhero__btn nhero__btn--outline">
+              {{ section.settings.secondary_btn_text }}
+            </a>
+          {% endif %}
+        </div>
+
+        {% if section.settings.show_proof %}
+          <div class="nhero__proof">
+            <div class="nhero__avatars">
+              <div class="nhero__avatar" style="background: {{ section.settings.avatar_1_bg }};">{{ section.settings.avatar_1_letter }}</div>
+              <div class="nhero__avatar" style="background: {{ section.settings.avatar_2_bg }};">{{ section.settings.avatar_2_letter }}</div>
+              <div class="nhero__avatar" style="background: {{ section.settings.avatar_3_bg }};">{{ section.settings.avatar_3_letter }}</div>
+              <div class="nhero__avatar" style="background: {{ section.settings.avatar_4_bg }};">{{ section.settings.avatar_4_letter }}</div>
+            </div>
+            <div class="nhero__proof-text">
+              <strong>{{ section.settings.proof_headline }}</strong><br>
+              {{ section.settings.proof_subtext }}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="nhero__visual nhero__reveal">
+        <div class="nhero__image-wrap">
+          {% if section.settings.hero_image != blank %}
+            <img src="{{ section.settings.hero_image | image_url: width: 1200 }}" alt="{{ section.settings.headline | strip_html | escape }}" loading="eager" fetchpriority="high">
+          {% else %}
+            <div class="nhero__image-placeholder">
+              <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="20" y="10" width="80" height="6" rx="3" fill="#888"/><rect x="25" y="20" width="4" height="50" rx="2" fill="#888"/><rect x="55" y="20" width="4" height="50" rx="2" fill="#888"/><rect x="85" y="20" width="4" height="50" rx="2" fill="#888"/><path d="M20 75 Q60 85 100 75" stroke="#888" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="60" cy="95" r="10" stroke="#888" stroke-width="2" fill="none"/><path d="M55 95 L60 90 L65 95" stroke="#888" stroke-width="2" fill="none"/></svg>
+              <p>Upload a hero image in the customiser</p>
+            </div>
+          {% endif %}
+        </div>
+
+        {% if section.settings.show_cost_card %}
+          <div class="nhero__float-card nhero__float-card--cost">
+            <div class="icon">&darr;</div>
+            <div>
+              <div class="label">{{ section.settings.cost_label }}</div>
+              <div class="value">{{ section.settings.cost_value }}</div>
+            </div>
+          </div>
+        {% endif %}
+
+        {% if section.settings.show_rating_card %}
+          <div class="nhero__float-card nhero__float-card--rating">
+            <div class="stars">&starf;&starf;&starf;&starf;&starf;</div>
+            <div class="label">{{ section.settings.rating_label }}</div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  (function() {
+    var root = document.getElementById('shopify-section-{{ section.id }}');
+    if (!root) return;
+    var els = root.querySelectorAll('.nhero__reveal');
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) { if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); } });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    els.forEach(function(el) { io.observe(el); });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Nuracom Hero",
+  "tag": "section",
+  "class": "nuracom-hero-section",
+  "settings": [
+    { "type": "header", "content": "Hero content" },
+    { "type": "text", "id": "badge_text", "label": "Badge text", "default": "Australia's #1 Smart Drying System" },
+    { "type": "richtext", "id": "headline", "label": "Headline (wrap words in <em> for italic brand-colour emphasis)", "default": "<p>Stop Letting the Weather Decide When You Do <em>Laundry.</em></p>" },
+    { "type": "textarea", "id": "subheadline", "label": "Sub-headline", "default": "Nuracom's smart drying technology dries your clothes indoors in hours, not days — using turbo-fan airflow that costs under $1 per use. No dryer. No weather app. No stress." },
+    { "type": "header", "content": "Call-to-action buttons" },
+    { "type": "text", "id": "primary_btn_text", "label": "Primary button text", "default": "See the Range" },
+    { "type": "url", "id": "primary_btn_url", "label": "Primary button URL" },
+    { "type": "text", "id": "secondary_btn_text", "label": "Secondary button text", "default": "How It Works" },
+    { "type": "url", "id": "secondary_btn_url", "label": "Secondary button URL" },
+    { "type": "header", "content": "Hero image" },
+    { "type": "image_picker", "id": "hero_image", "label": "Hero image" },
+    { "type": "header", "content": "Social-proof strip" },
+    { "type": "checkbox", "id": "show_proof", "label": "Show social-proof strip", "default": true },
+    { "type": "text", "id": "proof_headline", "label": "Proof headline", "default": "Trusted by Australian families" },
+    { "type": "text", "id": "proof_subtext", "label": "Proof subtext", "default": "Hundreds of 5-star reviews nationwide" },
+    { "type": "text", "id": "avatar_1_letter", "label": "Avatar 1 letter", "default": "J" },
+    { "type": "color", "id": "avatar_1_bg", "label": "Avatar 1 background", "default": "#e8d5d0" },
+    { "type": "text", "id": "avatar_2_letter", "label": "Avatar 2 letter", "default": "S" },
+    { "type": "color", "id": "avatar_2_bg", "label": "Avatar 2 background", "default": "#d0dbe8" },
+    { "type": "text", "id": "avatar_3_letter", "label": "Avatar 3 letter", "default": "M" },
+    { "type": "color", "id": "avatar_3_bg", "label": "Avatar 3 background", "default": "#d5e8d0" },
+    { "type": "text", "id": "avatar_4_letter", "label": "Avatar 4 letter", "default": "K" },
+    { "type": "color", "id": "avatar_4_bg", "label": "Avatar 4 background", "default": "#e8e0d0" },
+    { "type": "header", "content": "Floating cost card" },
+    { "type": "checkbox", "id": "show_cost_card", "label": "Show cost card", "default": true },
+    { "type": "text", "id": "cost_label", "label": "Cost label", "default": "Cost per use" },
+    { "type": "text", "id": "cost_value", "label": "Cost value", "default": "Under $1" },
+    { "type": "color", "id": "cost_icon_bg", "label": "Cost icon background", "default": "#dcfce7" },
+    { "type": "color", "id": "cost_value_color", "label": "Cost value colour", "default": "#16a34a" },
+    { "type": "header", "content": "Floating rating card" },
+    { "type": "checkbox", "id": "show_rating_card", "label": "Show rating card", "default": true },
+    { "type": "text", "id": "rating_label", "label": "Rating label", "default": "4.9 avg. rating" },
+    { "type": "color", "id": "star_color", "label": "Star colour", "default": "#f59e0b" },
+    { "type": "header", "content": "Brand colour palette" },
+    { "type": "color", "id": "brand_deep", "label": "Brand deep (CTAs, accents)", "default": "#5E0404" },
+    { "type": "color", "id": "brand_dark", "label": "Brand dark (CTA hover)", "default": "#801f0a" },
+    { "type": "color", "id": "brand_accent", "label": "Brand accent", "default": "#a8321a" },
+    { "type": "color", "id": "navy", "label": "Navy (headlines)", "default": "#101a32" },
+    { "type": "color", "id": "cream", "label": "Cream (bg warmth)", "default": "#f8f5f1" },
+    { "type": "color", "id": "warm_gray", "label": "Warm gray (borders)", "default": "#e8e3dd" },
+    { "type": "color", "id": "text_primary", "label": "Text primary", "default": "#1a1a1a" },
+    { "type": "color", "id": "text_secondary", "label": "Text secondary", "default": "#555555" },
+    { "type": "color", "id": "text_muted", "label": "Text muted", "default": "#888888" },
+    { "type": "color", "id": "white", "label": "White", "default": "#ffffff" },
+    { "type": "color", "id": "badge_dot_color", "label": "Badge pulse dot", "default": "#22c55e" }
+  ],
+  "presets": [ { "name": "Nuracom Hero" } ]
+}
+{% endschema %}

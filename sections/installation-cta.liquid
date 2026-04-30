@@ -1,0 +1,154 @@
+{% comment %}
+  Installation CTA Section
+  - Simple banner encouraging customers to view the installation page
+  - Fully configurable via the Shopify customizer
+  Add to: sections/installation-cta.liquid
+{% endcomment %}
+
+<section id="icta-{{ section.id }}">
+  <div class="icta-inner">
+    {% if section.settings.heading != blank %}
+      <h2 class="icta-heading">{{ section.settings.heading }}</h2>
+    {% endif %}
+    {% if section.settings.subtext != blank %}
+      <p class="icta-subtext">{{ section.settings.subtext }}</p>
+    {% endif %}
+    {% if section.settings.btn_text != blank and section.settings.btn_url != blank %}
+      <a href="{{ section.settings.btn_url }}" class="icta-btn">{{ section.settings.btn_text }}</a>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  #icta-{{ section.id }} {
+    background: {{ section.settings.bg_color }};
+    padding: {{ section.settings.padding_y }}px 20px;
+    text-align: center;
+  }
+
+  #icta-{{ section.id }} .icta-inner {
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  #icta-{{ section.id }} .icta-heading {
+    font-size: 32px;
+    font-weight: 700;
+    color: {{ section.settings.heading_color }};
+    margin: 0 0 12px;
+    line-height: 1.25;
+  }
+
+  #icta-{{ section.id }} .icta-subtext {
+    font-size: 16px;
+    line-height: 1.65;
+    color: {{ section.settings.subtext_color }};
+    margin: 0 0 28px;
+  }
+
+  #icta-{{ section.id }} .icta-btn {
+    display: inline-block;
+    padding: 14px 36px;
+    background: {{ section.settings.btn_bg }};
+    color: {{ section.settings.btn_color }};
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+  }
+
+  #icta-{{ section.id }} .icta-btn:hover {
+    opacity: 0.88;
+  }
+
+  @media (max-width: 768px) {
+    #icta-{{ section.id }} .icta-heading {
+      font-size: 26px;
+    }
+
+    #icta-{{ section.id }} {
+      padding: 40px 20px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Installation CTA",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Want to See How It's Installed?"
+    },
+    {
+      "type": "textarea",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "Installation is extremely simple — no tradesperson needed. Set it up yourself at home in minutes with just a few basic tools."
+    },
+    {
+      "type": "text",
+      "id": "btn_text",
+      "label": "Button Text",
+      "default": "View Installation Guide"
+    },
+    {
+      "type": "url",
+      "id": "btn_url",
+      "label": "Button URL"
+    },
+    {
+      "type": "header",
+      "content": "Colours"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#f8f5f1"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Colour",
+      "default": "#101a32"
+    },
+    {
+      "type": "color",
+      "id": "subtext_color",
+      "label": "Subtext Colour",
+      "default": "#444444"
+    },
+    {
+      "type": "color",
+      "id": "btn_bg",
+      "label": "Button Background",
+      "default": "#101a32"
+    },
+    {
+      "type": "color",
+      "id": "btn_color",
+      "label": "Button Text Colour",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "padding_y",
+      "label": "Vertical Padding",
+      "min": 20,
+      "max": 120,
+      "step": 5,
+      "default": 60,
+      "unit": "px"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Installation CTA"
+    }
+  ]
+}
+{% endschema %}

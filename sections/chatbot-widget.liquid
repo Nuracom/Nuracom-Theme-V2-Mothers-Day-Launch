@@ -1,0 +1,708 @@
+{% comment %}
+  NuraCom Chatbot Widget
+  - FAQ-driven chatbot with suggested flows + keyword matching
+  - Floating bottom-right bubble
+  - FAQs defined directly in JS (edit the faqs array below)
+  - Colors/messages configurable via customizer
+  Add to: sections/chatbot-widget.liquid
+  Then add {% section 'chatbot-widget' %} before </body> in theme.liquid
+{% endcomment %}
+
+<!-- Chat Bubble -->
+<div id="ncb-{{ section.id }}" class="ncb-wrap">
+  <button class="ncb-bubble" aria-label="Open chat" type="button">
+    <svg class="ncb-bubble__icon ncb-bubble__icon--chat" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+    </svg>
+    <svg class="ncb-bubble__icon ncb-bubble__icon--close" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+      <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+    </svg>
+  </button>
+
+  <!-- Chat Window -->
+  <div class="ncb-window" style="display:none;">
+    <div class="ncb-header">
+      <div class="ncb-header__info">
+        {% if section.settings.avatar != blank %}
+          {{ section.settings.avatar | image_url: width: 80 | image_tag: class: 'ncb-header__avatar', alt: 'Chat', loading: 'lazy' }}
+        {% else %}
+          <div class="ncb-header__avatar ncb-header__avatar--default">N</div>
+        {% endif %}
+        <div>
+          <p class="ncb-header__name">{{ section.settings.bot_name | default: 'NuraCom' }}</p>
+          <p class="ncb-header__status">{{ section.settings.status_text | default: 'Typically replies instantly' }}</p>
+        </div>
+      </div>
+      <button class="ncb-header__close" type="button" aria-label="Close chat">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="ncb-messages" id="ncb-messages-{{ section.id }}"></div>
+
+    <div class="ncb-input-row">
+      <input type="text" class="ncb-input" placeholder="{{ section.settings.input_placeholder | default: 'Type your question...' }}" autocomplete="off">
+      <button type="button" class="ncb-send" aria-label="Send">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  #ncb-{{ section.id }} {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 99999;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  #ncb-{{ section.id }} .ncb-bubble {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: {{ section.settings.bubble_color | default: '#101a32' }};
+    color: {{ section.settings.bubble_icon_color | default: '#ffffff' }};
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  #ncb-{{ section.id }} .ncb-bubble:hover {
+    transform: scale(1.08);
+    box-shadow: 0 6px 24px rgba(0,0,0,0.25);
+  }
+
+  #ncb-{{ section.id }} .ncb-window {
+    position: absolute;
+    bottom: 76px;
+    right: 0;
+    width: 380px;
+    max-height: 560px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  #ncb-{{ section.id }} .ncb-header {
+    background: {{ section.settings.header_color | default: '#101a32' }};
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+
+  #ncb-{{ section.id }} .ncb-header__info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  #ncb-{{ section.id }} .ncb-header__avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
+  #ncb-{{ section.id }} .ncb-header__avatar--default {
+    background: rgba(255,255,255,0.2);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 18px;
+  }
+
+  #ncb-{{ section.id }} .ncb-header__name {
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+  }
+
+  #ncb-{{ section.id }} .ncb-header__status {
+    font-size: 12px;
+    color: rgba(255,255,255,0.75);
+    margin: 2px 0 0;
+  }
+
+  #ncb-{{ section.id }} .ncb-header__close {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.8);
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+  }
+
+  #ncb-{{ section.id }} .ncb-header__close:hover {
+    color: #fff;
+  }
+
+  #ncb-{{ section.id }} .ncb-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 300px;
+    max-height: 380px;
+    background: #f7f7f8;
+  }
+
+  #ncb-{{ section.id }} .ncb-msg {
+    max-width: 88%;
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 13.5px;
+    line-height: 1.45;
+    word-wrap: break-word;
+  }
+
+  #ncb-{{ section.id }} .ncb-msg--bot {
+    background: #fff;
+    color: #333;
+    align-self: flex-start;
+    border: 1px solid #e8e8e8;
+    border-bottom-left-radius: 4px;
+  }
+
+  #ncb-{{ section.id }} .ncb-msg--user {
+    background: {{ section.settings.header_color | default: '#101a32' }};
+    color: #fff;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+  }
+
+  #ncb-{{ section.id }} .ncb-msg a {
+    color: #25D366;
+    text-decoration: underline;
+    font-weight: 600;
+  }
+
+  #ncb-{{ section.id }} .ncb-quick-replies {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 6px;
+    padding: 4px 0;
+  }
+
+  #ncb-{{ section.id }} .ncb-qr-btn {
+    background: #fff;
+    color: {{ section.settings.header_color | default: '#101a32' }};
+    border: 1.5px solid {{ section.settings.header_color | default: '#101a32' }};
+    border-radius: 20px;
+    padding: 7px 14px;
+    font-size: 12.5px;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+    font-family: inherit;
+    line-height: 1.3;
+    white-space: nowrap;
+  }
+
+  #ncb-{{ section.id }} .ncb-qr-btn:hover {
+    background: {{ section.settings.header_color | default: '#101a32' }};
+    color: #fff;
+  }
+
+  #ncb-{{ section.id }} .ncb-typing {
+    display: flex;
+    gap: 4px;
+    padding: 10px 14px;
+    align-self: flex-start;
+  }
+
+  #ncb-{{ section.id }} .ncb-typing span {
+    width: 8px;
+    height: 8px;
+    background: #bbb;
+    border-radius: 50%;
+    animation: ncbBounce 1.2s infinite;
+  }
+
+  #ncb-{{ section.id }} .ncb-typing span:nth-child(2) { animation-delay: 0.2s; }
+  #ncb-{{ section.id }} .ncb-typing span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes ncbBounce {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-6px); }
+  }
+
+  #ncb-{{ section.id }} .ncb-input-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 14px;
+    border-top: 1px solid #eee;
+    background: #fff;
+    flex-shrink: 0;
+  }
+
+  #ncb-{{ section.id }} .ncb-input {
+    flex: 1;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    padding: 10px 16px;
+    font-size: 14px;
+    outline: none;
+    font-family: inherit;
+    transition: border-color 0.2s ease;
+  }
+
+  #ncb-{{ section.id }} .ncb-input:focus {
+    border-color: {{ section.settings.header_color | default: '#101a32' }};
+  }
+
+  #ncb-{{ section.id }} .ncb-send {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: {{ section.settings.header_color | default: '#101a32' }};
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  #ncb-{{ section.id }} .ncb-send:hover {
+    opacity: 0.9;
+  }
+
+  @media (max-width: 440px) {
+    #ncb-{{ section.id }} .ncb-window {
+      width: calc(100vw - 32px);
+      right: -8px;
+      bottom: 70px;
+      max-height: 70vh;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var wrap = document.getElementById('ncb-{{ section.id }}');
+    if (!wrap) return;
+
+    var bubble = wrap.querySelector('.ncb-bubble');
+    var chatIcon = wrap.querySelector('.ncb-bubble__icon--chat');
+    var closeIcon = wrap.querySelector('.ncb-bubble__icon--close');
+    var win = wrap.querySelector('.ncb-window');
+    var headerClose = wrap.querySelector('.ncb-header__close');
+    var messagesEl = wrap.querySelector('.ncb-messages');
+    var input = wrap.querySelector('.ncb-input');
+    var sendBtn = wrap.querySelector('.ncb-send');
+    var isOpen = false;
+    var hasGreeted = false;
+
+    /* ══════════════════════════════════════════════════
+       EDIT YOUR FAQs HERE
+       Each FAQ has:
+       - question: Button text shown to customer
+       - answer: Bot response (supports \n for line breaks)
+       - keywords: Comma-separated words for free-text matching
+       - followups: Array of FAQ indices to show as follow-up buttons (0-based)
+       - link_text / link_url: Optional CTA link in the answer
+       ══════════════════════════════════════════════════ */
+    var faqs = [
+      {
+        question: "What models do you have?",
+        answer: "We currently have 3 models:\n\n🔹 <strong>Stratos</strong> ($1,699) — Our premium model with UV sanitation, voice control, and 6 turbo fans.\n🔹 <strong>Aero</strong> ($1,299) — Great mid-range option with powerful drying and smart features.\n🔹 <strong>Breeze</strong> ($999) — Perfect entry-level rack with all the essentials.\n\nAll models come with free delivery in metro areas and a comprehensive warranty (1yr unit, 2yr parts, 5yr motor).",
+        keywords: "models,products,range,which one,options,what do you sell,how many,stratos,aero,breeze",
+        followups: [4, 1],
+        link_text: "Shop all models",
+        link_url: "/collections/all"
+      },
+      {
+        question: "Do you offer free delivery?",
+        answer: "Yes! We offer <strong>FREE delivery</strong> on all metro orders. For regional and remote areas, a small shipping fee may apply based on your postcode.\n\nYour NuraCom rack will be delivered right to your door!",
+        keywords: "delivery,shipping,ship,deliver,free delivery,how long,when arrive,postage,freight,cost to ship",
+        followups: [2],
+        link_text: "",
+        link_url: ""
+      },
+      {
+        question: "How does installation work?",
+        answer: "Installation guidance is included <strong>free</strong> with every purchase! We provide:\n\n✅ Detailed written instructions\n✅ Video walkthrough\n✅ Phone support if you get stuck\n\nMost customers install it themselves in under an hour. If you need professional installation, we can connect you with a trusted installer.",
+        keywords: "install,installation,setup,set up,mount,mounting,how to install,fit,ceiling,drill,hard to install",
+        followups: [3, 5],
+        link_text: "",
+        link_url: ""
+      },
+      {
+        question: "What's your warranty?",
+        answer: "Every NuraCom rack comes with a comprehensive standard warranty:\n\n🛡️ <strong>1 year</strong> — Basic warranty on the unit\n🛡️ <strong>2 years</strong> — Cover on all parts\n🛡️ <strong>5 years</strong> — Cover on the motor\n\nWant extra peace of mind? We also offer <strong>extended / upgraded warranty</strong> through our coverage partner <strong>AnyCover</strong> — available at checkout.\n\nIf anything goes wrong, our support team will sort it out quickly.",
+        keywords: "warranty,guarantee,protection,covered,break,broken,repair,fault,defect,how long warranty,years,anycover,motor warranty,parts warranty",
+        followups: [8, 5, 0],
+        link_text: "",
+        link_url: ""
+      },
+      {
+        question: "Help me choose a model",
+        answer: "Here's a quick comparison to help:\n\n🔹 <strong>Stratos</strong> ($1,699) — 6 turbo fans, UV sanitation, voice control, ioniser, 30kg capacity. Best for larger households.\n\n🔹 <strong>Aero</strong> ($1,299) — 4 turbo fans, UV sanitation, voice control, 25kg capacity. Great all-rounder.\n\n🔹 <strong>Breeze</strong> ($999) — 2 turbo fans, LED lighting, 20kg capacity. Perfect for apartments or smaller loads.\n\nAll models feature telescopic poles, aluminium alloy build, and a comprehensive standard warranty (1yr unit, 2yr parts, 5yr motor).",
+        keywords: "compare,comparison,difference,which is better,vs,versus,best,recommend,choose,which one should,help me pick,not sure which",
+        followups: [0, 3],
+        link_text: "View full comparison",
+        link_url: "/collections/all"
+      },
+      {
+        question: "Talk to someone",
+        answer: "No worries! Our team is available <strong>Mon–Fri, 8AM–6PM</strong> and <strong>Sat–Sun, 10AM–6PM</strong>.\n\nFor the fastest response, WhatsApp us — we usually reply within minutes!",
+        keywords: "talk,speak,human,person,agent,help,support,contact,call,phone,whatsapp,someone,real person,chat with",
+        followups: [],
+        link_text: "",
+        link_url: ""
+      },
+      {
+        question: "What's included in the box?",
+        answer: "Every NuraCom rack comes with:\n\n📦 Main rack unit\n📦 Mounting hardware & ceiling brackets\n📦 Remote control\n📦 Power adapter\n📦 Installation guide\n📦 Telescopic drying poles\n\nEverything you need to get set up — no extra purchases required!",
+        keywords: "what's included,in the box,come with,accessories,remote,parts,what do i get,contents",
+        followups: [2, 0],
+        link_text: "",
+        link_url: ""
+      },
+      {
+        question: "Do you ship Australia-wide?",
+        answer: "Yes! We ship to <strong>all of Australia</strong> 🇦🇺\n\n📍 Metro areas (Sydney, Melbourne, Brisbane, Adelaide, Perth) — FREE delivery\n📍 Regional areas — small shipping fee\n📍 Remote/rural — shipping fee based on postcode\n\nExact shipping cost is calculated at checkout based on your postcode.",
+        keywords: "australia,ship australia,where ship,perth,melbourne,sydney,brisbane,adelaide,tasmania,darwin,regional,rural,remote,wa,nt,qld,nsw,vic,sa,tas",
+        followups: [1, 5],
+        link_text: "",
+        link_url: ""
+      },
+      {
+        question: "File a warranty claim",
+        answer: "Sorry to hear you're having trouble! 😔\n\nYou can file a warranty claim in just a couple of minutes:\n\n✅ Log in to your account\n✅ Select the order the issue relates to\n✅ Describe the problem\n✅ Our team responds within 1–2 business days\n\nClick the button below to get started.",
+        keywords: "file claim,warranty claim,make claim,submit claim,broken,faulty,not working,damaged,issue with,problem with,help with product,defective,return,refund,fix my",
+        followups: [3, 5],
+        link_text: "Open warranty claim form →",
+        link_url: "/pages/nuracom-products-warranty"
+      }
+    ];
+
+    var welcomeMsg = {{ section.settings.welcome_message | default: "Hey there! 👋 Welcome to NuraCom. How can I help you today?" | json }};
+    var fallbackMsg = {{ section.settings.fallback_message | default: "I'm not sure I have the answer to that one! Our team would love to help you directly." | json }};
+    var fallbackWhatsapp = {{ section.settings.fallback_whatsapp | default: "https://wa.me/6588860818" | json }};
+    var fallbackEmail = {{ section.settings.fallback_email | default: "hello@nuracom.com.au" | json }};
+    var menuLabel = "Back to menu";
+
+    /* ── Helpers ── */
+    function scrollBottom() {
+      setTimeout(function () { messagesEl.scrollTop = messagesEl.scrollHeight; }, 50);
+    }
+
+    function addMsg(text, type) {
+      var div = document.createElement('div');
+      div.className = 'ncb-msg ncb-msg--' + type;
+      div.innerHTML = text.replace(/\n/g, '<br>');
+      messagesEl.appendChild(div);
+      scrollBottom();
+    }
+
+    function addTyping() {
+      var div = document.createElement('div');
+      div.className = 'ncb-typing';
+      div.id = 'ncb-typing-indicator';
+      div.innerHTML = '<span></span><span></span><span></span>';
+      messagesEl.appendChild(div);
+      scrollBottom();
+    }
+
+    function removeTyping() {
+      var t = document.getElementById('ncb-typing-indicator');
+      if (t) t.remove();
+    }
+
+    function botReply(text, delay) {
+      delay = delay || 600;
+      addTyping();
+      setTimeout(function () {
+        removeTyping();
+        addMsg(text, 'bot');
+      }, delay);
+      return delay;
+    }
+
+    function addQuickReplies(buttons, delay) {
+      delay = delay || 0;
+      setTimeout(function () {
+        var container = document.createElement('div');
+        container.className = 'ncb-quick-replies';
+        buttons.forEach(function (btn) {
+          var b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'ncb-qr-btn';
+          b.textContent = btn.label;
+          b.addEventListener('click', function () {
+            wrap.querySelectorAll('.ncb-quick-replies').forEach(function (qr) { qr.remove(); });
+            btn.action();
+          });
+          container.appendChild(b);
+        });
+        messagesEl.appendChild(container);
+        scrollBottom();
+      }, delay);
+    }
+
+    function showMainMenu(delay) {
+      var buttons = [];
+      faqs.forEach(function (faq, idx) {
+        buttons.push({
+          label: faq.question,
+          action: function () { handleFaqClick(idx); }
+        });
+      });
+      addQuickReplies(buttons, delay);
+    }
+
+    function handleFaqClick(idx) {
+      var faq = faqs[idx];
+      addMsg(faq.question, 'user');
+
+      var answerHtml = faq.answer;
+      if (faq.link_text && faq.link_url) {
+        answerHtml += '<br><br><a href="' + faq.link_url + '" target="_blank">' + faq.link_text + '</a>';
+      }
+
+      var d = botReply(answerHtml, 800);
+
+      // Build follow-up buttons
+      var followBtns = [];
+      if (faq.followups && faq.followups.length > 0) {
+        faq.followups.forEach(function (fi) {
+          if (faqs[fi]) {
+            followBtns.push({
+              label: faqs[fi].question,
+              action: function () { handleFaqClick(fi); }
+            });
+          }
+        });
+      }
+
+      // Always add "Back to menu"
+      followBtns.push({
+        label: menuLabel,
+        action: function () {
+          addMsg(menuLabel, 'user');
+          var d2 = botReply('No worries! Here are some other things I can help with:', 500);
+          showMainMenu(d2 + 100);
+        }
+      });
+
+      addQuickReplies(followBtns, d + 200);
+    }
+
+    function matchKeywords(userMsg) {
+      var msg = userMsg.toLowerCase().trim();
+      var bestMatch = null;
+      var bestScore = 0;
+
+      faqs.forEach(function (faq, idx) {
+        if (!faq.keywords) return;
+        var kws = faq.keywords.split(',');
+        var score = 0;
+        kws.forEach(function (kw) {
+          var trimmed = kw.trim().toLowerCase();
+          if (trimmed && msg.indexOf(trimmed) > -1) {
+            score++;
+          }
+        });
+        if (score > bestScore) {
+          bestScore = score;
+          bestMatch = idx;
+        }
+      });
+
+      return bestScore > 0 ? bestMatch : null;
+    }
+
+    function buildFallback() {
+      var html = fallbackMsg;
+      var links = [];
+      if (fallbackWhatsapp) links.push('<a href="' + fallbackWhatsapp + '" target="_blank">WhatsApp us</a>');
+      if (fallbackEmail) links.push('<a href="mailto:' + fallbackEmail + '">' + fallbackEmail + '</a>');
+      if (links.length > 0) html += '<br><br>' + links.join(' &middot; ');
+      return html;
+    }
+
+    function handleUserInput(text) {
+      if (!text || text.trim() === '') return;
+      addMsg(text, 'user');
+      input.value = '';
+
+      wrap.querySelectorAll('.ncb-quick-replies').forEach(function (qr) { qr.remove(); });
+
+      var matchIdx = matchKeywords(text);
+
+      if (matchIdx !== null) {
+        var faq = faqs[matchIdx];
+        var answerHtml = faq.answer;
+        if (faq.link_text && faq.link_url) {
+          answerHtml += '<br><br><a href="' + faq.link_url + '" target="_blank">' + faq.link_text + '</a>';
+        }
+        var d = botReply(answerHtml, 800);
+
+        // Show follow-ups + back to menu
+        var btns = [];
+        if (faq.followups && faq.followups.length > 0) {
+          faq.followups.forEach(function (fi) {
+            if (faqs[fi]) {
+              btns.push({ label: faqs[fi].question, action: function () { handleFaqClick(fi); } });
+            }
+          });
+        }
+        btns.push({
+          label: menuLabel,
+          action: function () {
+            addMsg(menuLabel, 'user');
+            var d2 = botReply('Here are some other things I can help with:', 500);
+            showMainMenu(d2 + 100);
+          }
+        });
+        addQuickReplies(btns, d + 200);
+      } else {
+        var d = botReply(buildFallback(), 1000);
+        showMainMenu(d + 200);
+      }
+    }
+
+    /* ── Toggle ── */
+    function toggleChat() {
+      isOpen = !isOpen;
+      win.style.display = isOpen ? 'flex' : 'none';
+      chatIcon.style.display = isOpen ? 'none' : 'block';
+      closeIcon.style.display = isOpen ? 'block' : 'none';
+
+      if (isOpen && !hasGreeted) {
+        hasGreeted = true;
+        var d = botReply(welcomeMsg, 400);
+        showMainMenu(d + 200);
+      }
+
+      if (isOpen) {
+        setTimeout(function () { input.focus(); }, 100);
+      }
+    }
+
+    bubble.addEventListener('click', toggleChat);
+    headerClose.addEventListener('click', toggleChat);
+
+    sendBtn.addEventListener('click', function () { handleUserInput(input.value); });
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') { e.preventDefault(); handleUserInput(input.value); }
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Chatbot Widget",
+  "tag": "div",
+  "class": "ncb-chatbot-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Bot Identity"
+    },
+    {
+      "type": "text",
+      "id": "bot_name",
+      "label": "Bot Name",
+      "default": "NuraCom"
+    },
+    {
+      "type": "text",
+      "id": "status_text",
+      "label": "Status Text",
+      "default": "Typically replies instantly"
+    },
+    {
+      "type": "image_picker",
+      "id": "avatar",
+      "label": "Bot Avatar"
+    },
+    {
+      "type": "header",
+      "content": "Messages"
+    },
+    {
+      "type": "textarea",
+      "id": "welcome_message",
+      "label": "Welcome Message",
+      "default": "Hey there! 👋 Welcome to NuraCom. How can I help you today?"
+    },
+    {
+      "type": "textarea",
+      "id": "fallback_message",
+      "label": "Fallback Message",
+      "default": "I'm not sure I have the answer to that one! Our team would love to help you directly."
+    },
+    {
+      "type": "text",
+      "id": "fallback_whatsapp",
+      "label": "Fallback WhatsApp URL",
+      "default": "https://wa.me/"
+    },
+    {
+      "type": "text",
+      "id": "fallback_email",
+      "label": "Fallback Email",
+      "default": "hello@nuracom.com.au"
+    },
+    {
+      "type": "text",
+      "id": "input_placeholder",
+      "label": "Input Placeholder",
+      "default": "Type your question..."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bubble_color",
+      "label": "Bubble Background",
+      "default": "#101a32"
+    },
+    {
+      "type": "color",
+      "id": "bubble_icon_color",
+      "label": "Bubble Icon Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "header_color",
+      "label": "Header / Accent Color",
+      "default": "#101a32"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Chatbot Widget"
+    }
+  ]
+}
+{% endschema %}

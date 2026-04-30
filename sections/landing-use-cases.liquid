@@ -1,0 +1,221 @@
+{% comment %}
+  Nuracom Landing — Real-life Use Cases
+  Helps prospects picture themselves owning it. Short scenario cards.
+  Install to: sections/landing-use-cases.liquid
+{% endcomment %}
+
+<style>
+  #lp-uc-{{ section.id }} {
+    background: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+    padding: 90px 24px;
+  }
+
+  #lp-uc-{{ section.id }} .lp-uc__inner {
+    max-width: 1240px;
+    margin: 0 auto;
+  }
+
+  #lp-uc-{{ section.id }} .lp-uc__header {
+    text-align: center;
+    max-width: 720px;
+    margin: 0 auto 56px;
+  }
+
+  #lp-uc-{{ section.id }} .lp-uc__eyebrow {
+    font-size: 12px;
+    letter-spacing: 2.4px;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: {{ section.settings.accent_color }};
+    margin: 0 0 14px;
+  }
+
+  #lp-uc-{{ section.id }} .lp-uc__heading {
+    font-size: clamp(28px, 3.8vw, 44px);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.4px;
+    margin: 0 0 16px;
+  }
+
+  #lp-uc-{{ section.id }} .lp-uc__sub {
+    font-size: 17px;
+    line-height: 1.6;
+    opacity: 0.75;
+    margin: 0;
+  }
+
+  #lp-uc-{{ section.id }} .lp-uc__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 22px;
+  }
+
+  #lp-uc-{{ section.id }} .lp-uc__card {
+    position: relative;
+    aspect-ratio: 3/4;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #222;
+    cursor: default;
+    transition: transform 0.25s ease;
+  }
+
+  #lp-uc-{{ section.id }} .lp-uc__card:hover {
+    transform: translateY(-4px);
+  }
+
+  #lp-uc-{{ section.id }} .lp-uc__card img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+
+  #lp-uc-{{ section.id }} .lp-uc__card:hover img {
+    transform: scale(1.06);
+  }
+
+  #lp-uc-{{ section.id }} .lp-uc__card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 40%, rgba(0,0,0,0.7) 100%);
+    z-index: 1;
+  }
+
+  #lp-uc-{{ section.id }} .lp-uc__content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 24px;
+    z-index: 2;
+    color: #fff;
+  }
+
+  #lp-uc-{{ section.id }} .lp-uc__tag {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 1.6px;
+    font-weight: 700;
+    text-transform: uppercase;
+    background: {{ section.settings.accent_color }};
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+  }
+
+  #lp-uc-{{ section.id }} .lp-uc__title {
+    font-size: 19px;
+    font-weight: 700;
+    line-height: 1.25;
+    margin: 0 0 6px;
+  }
+
+  #lp-uc-{{ section.id }} .lp-uc__desc {
+    font-size: 13.5px;
+    line-height: 1.5;
+    margin: 0;
+    opacity: 0.92;
+  }
+
+  @media (max-width: 1020px) {
+    #lp-uc-{{ section.id }} .lp-uc__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 560px) {
+    #lp-uc-{{ section.id }} {
+      padding: 60px 18px;
+    }
+    #lp-uc-{{ section.id }} .lp-uc__grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    #lp-uc-{{ section.id }} .lp-uc__card {
+      aspect-ratio: 16/10;
+    }
+  }
+</style>
+
+<section id="lp-uc-{{ section.id }}">
+  <div class="lp-uc__inner">
+    <div class="lp-uc__header">
+      {% if section.settings.eyebrow != blank %}
+        <p class="lp-uc__eyebrow">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+      <h2 class="lp-uc__heading">{{ section.settings.heading }}</h2>
+      {% if section.settings.sub != blank %}
+        <p class="lp-uc__sub">{{ section.settings.sub }}</p>
+      {% endif %}
+    </div>
+
+    <div class="lp-uc__grid">
+      {% for block in section.blocks %}
+        <div class="lp-uc__card" {{ block.shopify_attributes }}>
+          {% if block.settings.image != blank %}
+            <img src="{{ block.settings.image | image_url: width: 700 }}" alt="{{ block.settings.title | escape }}" loading="lazy">
+          {% else %}
+            {{ 'lifestyle-2' | placeholder_svg_tag }}
+          {% endif %}
+          <div class="lp-uc__content">
+            {% if block.settings.tag != blank %}
+              <span class="lp-uc__tag">{{ block.settings.tag }}</span>
+            {% endif %}
+            <h3 class="lp-uc__title">{{ block.settings.title }}</h3>
+            {% if block.settings.desc != blank %}
+              <p class="lp-uc__desc">{{ block.settings.desc }}</p>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Landing — Use Cases",
+  "tag": "section",
+  "class": "landing-usecases-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Real homes, real use" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Built for the way Australians actually dry clothes" },
+    { "type": "textarea", "id": "sub", "label": "Subheading", "default": "See which home Nuracom was built for. If yours is on this list, we've already solved your laundry problem." },
+    { "type": "header", "content": "Colours" },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#f7f5f1" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#101a32" },
+    { "type": "color", "id": "accent_color", "label": "Accent (tag bg)", "default": "#866653" }
+  ],
+  "blocks": [
+    {
+      "type": "usecase",
+      "name": "Use case",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Scene photo" },
+        { "type": "text", "id": "tag", "label": "Tag", "default": "Apartments" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Apartment and townhouse living" },
+        { "type": "textarea", "id": "desc", "label": "Description", "default": "No clothesline? No problem. Mount overhead and reclaim your balcony." }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Landing — Use Cases",
+      "blocks": [
+        { "type": "usecase", "settings": { "tag": "Apartments", "title": "Apartments and townhouses", "desc": "No yard, no clothesline, no compromise. Dry indoors without giving up the balcony." } },
+        { "type": "usecase", "settings": { "tag": "Limited Space", "title": "Homes with limited outdoor drying", "desc": "Small laundry? Shared walls? Ceiling-mounted means zero floor footprint." } },
+        { "type": "usecase", "settings": { "tag": "Wet Climate", "title": "Wet weather and humid periods", "desc": "Brisbane summer, Melbourne winter, Sydney rain — you dry on your schedule, not the weather's." } },
+        { "type": "usecase", "settings": { "tag": "Families", "title": "Families doing frequent laundry", "desc": "Four school uniforms, two sets of sheets, weekend towels — Nuracom handles it without the dryer's power bill." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,425 @@
+{% comment %}
+  Nuracom Landing — Energy Cost / "Under $1 Per Cycle"
+  Premium, data-driven selling point. Positions Nuracom as engineered efficiency,
+  not a budget alternative. Shows real cost figures and benchmarks against a dryer.
+  Install to: sections/landing-energy-cost.liquid
+{% endcomment %}
+
+<style>
+  #lp-energy-{{ section.id }} {
+    background: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+    padding: 100px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #lp-energy-{{ section.id }} .lp-energy__grain {
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent 0%, {{ section.settings.accent_color }}33 50%, transparent 100%);
+  }
+
+  #lp-energy-{{ section.id }} .lp-energy__inner {
+    max-width: 1160px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  #lp-energy-{{ section.id }} .lp-energy__header {
+    text-align: center;
+    max-width: 720px;
+    margin: 0 auto 56px;
+  }
+
+  #lp-energy-{{ section.id }} .lp-energy__eyebrow {
+    font-size: 12px;
+    letter-spacing: 2.4px;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: {{ section.settings.accent_color }};
+    margin: 0 0 14px;
+  }
+
+  #lp-energy-{{ section.id }} .lp-energy__heading {
+    font-size: clamp(30px, 4.2vw, 48px);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+    margin: 0 0 18px;
+  }
+
+  #lp-energy-{{ section.id }} .lp-energy__heading .lp-energy__highlight {
+    color: {{ section.settings.accent_color }};
+    font-style: normal;
+  }
+
+  #lp-energy-{{ section.id }} .lp-energy__sub {
+    font-size: 17px;
+    line-height: 1.65;
+    opacity: 0.82;
+    margin: 0;
+  }
+
+  /* Hero number */
+  #lp-energy-{{ section.id }} .lp-energy__hero {
+    text-align: center;
+    margin: 0 auto 60px;
+    padding: 40px 20px;
+    background: {{ section.settings.hero_card_bg }};
+    border: 1px solid {{ section.settings.border_color }};
+    border-radius: 20px;
+    max-width: 620px;
+    position: relative;
+  }
+
+  #lp-energy-{{ section.id }} .lp-energy__hero-label {
+    font-size: 12.5px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: {{ section.settings.accent_color }};
+    margin: 0 0 8px;
+  }
+
+  #lp-energy-{{ section.id }} .lp-energy__hero-number {
+    font-size: clamp(56px, 9vw, 96px);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -2.5px;
+    margin: 0;
+    color: {{ section.settings.text_color }};
+  }
+
+  #lp-energy-{{ section.id }} .lp-energy__hero-sub {
+    font-size: 15px;
+    margin: 14px 0 0;
+    opacity: 0.78;
+  }
+
+  /* Model cost cards */
+  #lp-energy-{{ section.id }} .lp-energy__models {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-bottom: 48px;
+  }
+
+  #lp-energy-{{ section.id }} .lp-energy__model {
+    background: {{ section.settings.card_bg }};
+    border: 1px solid {{ section.settings.border_color }};
+    border-radius: 14px;
+    padding: 28px 24px;
+    text-align: center;
+    transition: transform 0.25s ease, border-color 0.2s ease;
+  }
+
+  #lp-energy-{{ section.id }} .lp-energy__model:hover {
+    transform: translateY(-3px);
+    border-color: {{ section.settings.accent_color }}77;
+  }
+
+  #lp-energy-{{ section.id }} .lp-energy__model-name {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    margin: 0 0 10px;
+    color: {{ section.settings.accent_color }};
+  }
+
+  #lp-energy-{{ section.id }} .lp-energy__model-watt {
+    font-size: 13px;
+    opacity: 0.65;
+    margin: 0 0 14px;
+    letter-spacing: 0.2px;
+  }
+
+  #lp-energy-{{ section.id }} .lp-energy__model-cost {
+    font-size: 36px;
+    font-weight: 800;
+    line-height: 1;
+    margin: 0 0 6px;
+    letter-spacing: -0.8px;
+  }
+
+  #lp-energy-{{ section.id }} .lp-energy__model-per {
+    font-size: 12.5px;
+    opacity: 0.7;
+    margin: 0;
+    letter-spacing: 0.3px;
+  }
+
+  /* Comparison bar */
+  #lp-energy-{{ section.id }} .lp-energy__compare {
+    background: {{ section.settings.compare_bg }};
+    border-radius: 16px;
+    padding: 36px 32px;
+    margin-bottom: 32px;
+  }
+
+  #lp-energy-{{ section.id }} .lp-energy__compare-title {
+    text-align: center;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    margin: 0 0 24px;
+    color: {{ section.settings.accent_color }};
+  }
+
+  #lp-energy-{{ section.id }} .lp-energy__bar {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 18px;
+  }
+
+  #lp-energy-{{ section.id }} .lp-energy__bar:last-child {
+    margin-bottom: 0;
+  }
+
+  #lp-energy-{{ section.id }} .lp-energy__bar-label {
+    flex: 0 0 140px;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  #lp-energy-{{ section.id }} .lp-energy__bar-track {
+    flex: 1;
+    height: 38px;
+    background: {{ section.settings.bar_track_bg }};
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #lp-energy-{{ section.id }} .lp-energy__bar-fill {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    font-weight: 700;
+    font-size: 14.5px;
+    color: #fff;
+    border-radius: 10px;
+    white-space: nowrap;
+    transition: width 0.6s ease;
+  }
+
+  #lp-energy-{{ section.id }} .lp-energy__bar-fill--ours {
+    background: {{ section.settings.accent_color }};
+    width: 30%;
+  }
+
+  #lp-energy-{{ section.id }} .lp-energy__bar-fill--dryer {
+    background: {{ section.settings.dryer_bar_color }};
+    width: 92%;
+  }
+
+  #lp-energy-{{ section.id }} .lp-energy__callout {
+    display: inline-block;
+    margin-top: 22px;
+    padding: 10px 18px;
+    background: {{ section.settings.accent_color }};
+    color: #fff;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+  }
+
+  #lp-energy-{{ section.id }} .lp-energy__compare-wrap {
+    text-align: center;
+  }
+
+  /* Footnote */
+  #lp-energy-{{ section.id }} .lp-energy__note {
+    text-align: center;
+    font-size: 12.5px;
+    line-height: 1.6;
+    opacity: 0.58;
+    margin: 0 auto;
+    max-width: 720px;
+  }
+
+  @media (max-width: 820px) {
+    #lp-energy-{{ section.id }} .lp-energy__models {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    #lp-energy-{{ section.id }} .lp-energy__bar {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 8px;
+    }
+    #lp-energy-{{ section.id }} .lp-energy__bar-label {
+      flex: none;
+      font-size: 13.5px;
+    }
+    #lp-energy-{{ section.id }} .lp-energy__compare {
+      padding: 26px 20px;
+    }
+  }
+
+  @media (max-width: 560px) {
+    #lp-energy-{{ section.id }} {
+      padding: 70px 18px;
+    }
+    #lp-energy-{{ section.id }} .lp-energy__hero {
+      padding: 28px 16px;
+    }
+  }
+</style>
+
+<section id="lp-energy-{{ section.id }}">
+  <div class="lp-energy__grain"></div>
+  <div class="lp-energy__inner">
+
+    <div class="lp-energy__header">
+      {% if section.settings.eyebrow != blank %}
+        <p class="lp-energy__eyebrow">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+      <h2 class="lp-energy__heading">{{ section.settings.heading }}</h2>
+      {% if section.settings.sub != blank %}
+        <p class="lp-energy__sub">{{ section.settings.sub }}</p>
+      {% endif %}
+    </div>
+
+    <div class="lp-energy__hero">
+      <p class="lp-energy__hero-label">{{ section.settings.hero_label }}</p>
+      <p class="lp-energy__hero-number">{{ section.settings.hero_number }}</p>
+      <p class="lp-energy__hero-sub">{{ section.settings.hero_sub }}</p>
+    </div>
+
+    <div class="lp-energy__models">
+      {% for block in section.blocks %}
+        {% if block.type == 'model_cost' %}
+          <div class="lp-energy__model" {{ block.shopify_attributes }}>
+            <p class="lp-energy__model-name">{{ block.settings.name }}</p>
+            <p class="lp-energy__model-watt">{{ block.settings.wattage }}</p>
+            <p class="lp-energy__model-cost">{{ block.settings.cost }}</p>
+            <p class="lp-energy__model-per">{{ block.settings.per }}</p>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    {% if section.settings.show_comparison %}
+      <div class="lp-energy__compare">
+        <p class="lp-energy__compare-title">{{ section.settings.compare_title }}</p>
+
+        <div class="lp-energy__bar">
+          <div class="lp-energy__bar-label">{{ section.settings.bar_ours_label }}</div>
+          <div class="lp-energy__bar-track">
+            <div class="lp-energy__bar-fill lp-energy__bar-fill--ours">{{ section.settings.bar_ours_value }}</div>
+          </div>
+        </div>
+
+        <div class="lp-energy__bar">
+          <div class="lp-energy__bar-label">{{ section.settings.bar_dryer_label }}</div>
+          <div class="lp-energy__bar-track">
+            <div class="lp-energy__bar-fill lp-energy__bar-fill--dryer">{{ section.settings.bar_dryer_value }}</div>
+          </div>
+        </div>
+
+        {% if section.settings.callout != blank %}
+          <div class="lp-energy__compare-wrap">
+            <span class="lp-energy__callout">{{ section.settings.callout }}</span>
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if section.settings.footnote != blank %}
+      <p class="lp-energy__note">{{ section.settings.footnote }}</p>
+    {% endif %}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Landing — Energy Cost",
+  "tag": "section",
+  "class": "landing-energy-section",
+  "settings": [
+    { "type": "header", "content": "Heading" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Engineered Efficiency" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Dry a full load for under <em class='lp-energy__highlight'>$1</em>" },
+    { "type": "textarea", "id": "sub", "label": "Subheading", "default": "Premium indoor drying, engineered to cost less than your morning coffee. Every Nuracom model uses roughly a third of the energy of a traditional electric tumble dryer — so upgrading your laundry doesn't show up on your power bill." },
+    { "type": "header", "content": "Hero number" },
+    { "type": "text", "id": "hero_label", "label": "Hero label", "default": "Every model, every cycle" },
+    { "type": "text", "id": "hero_number", "label": "Hero number", "default": "Under $1" },
+    { "type": "text", "id": "hero_sub", "label": "Hero sub", "default": "Full 2-hour drying cycle. All three models. Real number — not a marketing claim." },
+    { "type": "header", "content": "Comparison bar" },
+    { "type": "checkbox", "id": "show_comparison", "label": "Show comparison bar", "default": true },
+    { "type": "text", "id": "compare_title", "label": "Section title", "default": "Nuracom vs Electric Tumble Dryer" },
+    { "type": "text", "id": "bar_ours_label", "label": "Our bar label", "default": "Nuracom" },
+    { "type": "text", "id": "bar_ours_value", "label": "Our bar value", "default": "$0.57–$0.64 per cycle" },
+    { "type": "text", "id": "bar_dryer_label", "label": "Dryer bar label", "default": "Tumble Dryer" },
+    { "type": "text", "id": "bar_dryer_value", "label": "Dryer bar value", "default": "~$1.70–$2.10 per cycle" },
+    { "type": "text", "id": "callout", "label": "Callout pill", "default": "Roughly 3× cheaper per load" },
+    { "type": "header", "content": "Footnote" },
+    { "type": "textarea", "id": "footnote", "label": "Fine-print footnote", "default": "Figures based on a 2-hour drying cycle at the current average Australian residential electricity rate of $0.3557/kWh. Tumble dryer comparison uses a typical 2400–3000W electric resistance model. Your actual cost will vary with your plan and load size — but not by much." },
+    { "type": "header", "content": "Colours" },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#101a32" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#ffffff" },
+    { "type": "color", "id": "accent_color", "label": "Accent", "default": "#C69A7B" },
+    { "type": "color", "id": "border_color", "label": "Border", "default": "#2a3455" },
+    { "type": "color", "id": "hero_card_bg", "label": "Hero card bg", "default": "#0a1125" },
+    { "type": "color", "id": "card_bg", "label": "Model card bg", "default": "#0a1125" },
+    { "type": "color", "id": "compare_bg", "label": "Comparison block bg", "default": "#0a1125" },
+    { "type": "color", "id": "bar_track_bg", "label": "Bar track bg", "default": "#1c2745" },
+    { "type": "color", "id": "dryer_bar_color", "label": "Dryer bar colour", "default": "#5a3030" }
+  ],
+  "blocks": [
+    {
+      "type": "model_cost",
+      "name": "Model cost",
+      "limit": 3,
+      "settings": [
+        { "type": "text", "id": "name", "label": "Model name", "default": "Breeze" },
+        { "type": "text", "id": "wattage", "label": "Wattage line", "default": "800W motor" },
+        { "type": "text", "id": "cost", "label": "Cost", "default": "$0.57" },
+        { "type": "text", "id": "per", "label": "Cost suffix", "default": "per 2-hour cycle" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Landing — Energy Cost",
+      "blocks": [
+        {
+          "type": "model_cost",
+          "settings": {
+            "name": "Breeze",
+            "wattage": "800W motor",
+            "cost": "$0.57",
+            "per": "per 2-hour cycle"
+          }
+        },
+        {
+          "type": "model_cost",
+          "settings": {
+            "name": "Aero",
+            "wattage": "800W motor",
+            "cost": "$0.57",
+            "per": "per 2-hour cycle"
+          }
+        },
+        {
+          "type": "model_cost",
+          "settings": {
+            "name": "Stratos",
+            "wattage": "900W motor",
+            "cost": "$0.64",
+            "per": "per 2-hour cycle"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

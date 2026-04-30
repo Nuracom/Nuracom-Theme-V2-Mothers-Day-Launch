@@ -1,0 +1,175 @@
+{% comment %}
+  Nuracom Social Proof — Belief #6 (people like me love this)
+  Stats first (establishes scale), then testimonials (individual stories).
+{% endcomment %}
+
+<style>
+  #shopify-section-{{ section.id }} {
+    --brand-deep: {{ section.settings.brand_deep }};
+    --brand-accent: {{ section.settings.brand_accent }};
+    --navy: {{ section.settings.navy }};
+    --cream: {{ section.settings.cream }};
+    --warm-gray: {{ section.settings.warm_gray }};
+    --text-primary: {{ section.settings.text_primary }};
+    --text-secondary: {{ section.settings.text_secondary }};
+    --text-muted: {{ section.settings.text_muted }};
+    --white: {{ section.settings.white }};
+    --star-color: {{ section.settings.star_color }};
+    --radius: 12px;
+    --max-width: 1120px;
+    --section-pad: clamp(44px, 6vw, 80px);
+  }
+  #shopify-section-{{ section.id }} * { box-sizing: border-box; }
+  #shopify-section-{{ section.id }} .nproof { padding: var(--section-pad) 0; background: {{ section.settings.bg_color }}; font-family: 'Inter', -apple-system, sans-serif; }
+  #shopify-section-{{ section.id }} .nproof__container { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; }
+  #shopify-section-{{ section.id }} .nproof__header { text-align: center; max-width: 600px; margin: 0 auto 50px; }
+  #shopify-section-{{ section.id }} .nproof__kicker { font-size: 0.75rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--brand-accent); margin-bottom: 12px; display: block; }
+  #shopify-section-{{ section.id }} .nproof__headline { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; line-height: 1.2; color: var(--navy); margin: 0; }
+  #shopify-section-{{ section.id }} .nproof__stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 60px; }
+  #shopify-section-{{ section.id }} .nproof__stat { text-align: center; padding: 24px; }
+  #shopify-section-{{ section.id }} .nproof__stat-number { font-family: 'Playfair Display', Georgia, serif; font-size: 2.5rem; font-weight: 700; color: var(--brand-deep); line-height: 1; margin: 0 0 4px; }
+  #shopify-section-{{ section.id }} .nproof__stat-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin: 0; }
+  #shopify-section-{{ section.id }} .nproof__testimonials { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  #shopify-section-{{ section.id }} .nproof__testimonial { background: var(--cream); border-radius: var(--radius); padding: 32px 28px; display: flex; flex-direction: column; }
+  #shopify-section-{{ section.id }} .nproof__testimonial-stars { color: var(--star-color); font-size: 0.9rem; letter-spacing: 2px; margin-bottom: 16px; }
+  #shopify-section-{{ section.id }} .nproof__testimonial-text { font-size: 0.95rem; color: var(--text-secondary); line-height: 1.7; margin: 0 0 20px; flex: 1; font-style: italic; }
+  #shopify-section-{{ section.id }} .nproof__testimonial-author { display: flex; align-items: center; gap: 12px; padding-top: 16px; border-top: 1px solid var(--warm-gray); }
+  #shopify-section-{{ section.id }} .nproof__testimonial-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--warm-gray); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); overflow: hidden; }
+  #shopify-section-{{ section.id }} .nproof__testimonial-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  #shopify-section-{{ section.id }} .nproof__testimonial-name { font-size: 0.9rem; font-weight: 600; color: var(--text-primary); margin: 0; }
+  #shopify-section-{{ section.id }} .nproof__testimonial-location { font-size: 0.8rem; color: var(--text-muted); margin: 0; }
+  #shopify-section-{{ section.id }} .nproof__reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
+  #shopify-section-{{ section.id }} .nproof__reveal.is-visible { opacity: 1; transform: translateY(0); }
+  #shopify-section-{{ section.id }} .nproof__reveal--d1 { transition-delay: 0.1s; }
+  #shopify-section-{{ section.id }} .nproof__reveal--d2 { transition-delay: 0.2s; }
+  #shopify-section-{{ section.id }} .nproof__reveal--d3 { transition-delay: 0.3s; }
+
+  @media (max-width: 900px) {
+    #shopify-section-{{ section.id }} .nproof__stats { grid-template-columns: repeat(2, 1fr); }
+    #shopify-section-{{ section.id }} .nproof__testimonials { grid-template-columns: 1fr; max-width: 500px; margin: 0 auto; }
+  }
+</style>
+
+<section class="nproof">
+  <div class="nproof__container">
+    <div class="nproof__header nproof__reveal">
+      {% if section.settings.kicker != blank %}
+        <span class="nproof__kicker">{{ section.settings.kicker }}</span>
+      {% endif %}
+      <h2 class="nproof__headline">{{ section.settings.heading }}</h2>
+    </div>
+
+    {% assign stat_blocks = section.blocks | where: "type", "stat" %}
+    {% if stat_blocks.size > 0 %}
+      <div class="nproof__stats nproof__reveal">
+        {% for block in stat_blocks %}
+          <div class="nproof__stat" {{ block.shopify_attributes }}>
+            <p class="nproof__stat-number">{{ block.settings.number }}</p>
+            <p class="nproof__stat-label">{{ block.settings.label }}</p>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% assign testimonial_blocks = section.blocks | where: "type", "testimonial" %}
+    {% if testimonial_blocks.size > 0 %}
+      <div class="nproof__testimonials">
+        {% for block in testimonial_blocks %}
+          <div class="nproof__testimonial nproof__reveal nproof__reveal--d{{ forloop.index }}" {{ block.shopify_attributes }}>
+            {% if block.settings.show_stars %}
+              <div class="nproof__testimonial-stars">&starf;&starf;&starf;&starf;&starf;</div>
+            {% endif %}
+            <p class="nproof__testimonial-text">&ldquo;{{ block.settings.quote }}&rdquo;</p>
+            <div class="nproof__testimonial-author">
+              <div class="nproof__testimonial-avatar">
+                {% if block.settings.avatar != blank %}
+                  <img src="{{ block.settings.avatar | image_url: width: 80 }}" alt="{{ block.settings.name | escape }}">
+                {% else %}
+                  {{ block.settings.initials }}
+                {% endif %}
+              </div>
+              <div>
+                <p class="nproof__testimonial-name">{{ block.settings.name }}</p>
+                <p class="nproof__testimonial-location">{{ block.settings.location }}</p>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<script>
+  (function() {
+    var root = document.getElementById('shopify-section-{{ section.id }}');
+    if (!root) return;
+    var els = root.querySelectorAll('.nproof__reveal');
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) { if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); } });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    els.forEach(function(el) { io.observe(el); });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Social Proof",
+  "tag": "section",
+  "class": "nuracom-social-proof-section",
+  "settings": [
+    { "type": "header", "content": "Header" },
+    { "type": "text", "id": "kicker", "label": "Kicker", "default": "Real Australians. Real Results." },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Join Hundreds of Families Who've Made the Switch" },
+    { "type": "header", "content": "Colours" },
+    { "type": "color", "id": "bg_color", "label": "Section background", "default": "#ffffff" },
+    { "type": "color", "id": "brand_deep", "label": "Stat numbers colour", "default": "#5E0404" },
+    { "type": "color", "id": "brand_accent", "label": "Kicker colour", "default": "#a8321a" },
+    { "type": "color", "id": "navy", "label": "Navy (heading)", "default": "#101a32" },
+    { "type": "color", "id": "cream", "label": "Testimonial card bg", "default": "#f8f5f1" },
+    { "type": "color", "id": "warm_gray", "label": "Divider / avatar bg", "default": "#e8e3dd" },
+    { "type": "color", "id": "text_primary", "label": "Text primary", "default": "#1a1a1a" },
+    { "type": "color", "id": "text_secondary", "label": "Text secondary", "default": "#555555" },
+    { "type": "color", "id": "text_muted", "label": "Text muted", "default": "#888888" },
+    { "type": "color", "id": "white", "label": "White", "default": "#ffffff" },
+    { "type": "color", "id": "star_color", "label": "Star rating colour", "default": "#f59e0b" }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Stat",
+      "settings": [
+        { "type": "text", "id": "number", "label": "Number", "default": "4.9" },
+        { "type": "text", "id": "label", "label": "Label", "default": "Average Rating" }
+      ]
+    },
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        { "type": "textarea", "id": "quote", "label": "Quote", "default": "Customer quote in their own voice." },
+        { "type": "text", "id": "name", "label": "Name", "default": "Name" },
+        { "type": "text", "id": "location", "label": "Location / detail", "default": "City, State" },
+        { "type": "text", "id": "initials", "label": "Initials (fallback for avatar)", "default": "JM" },
+        { "type": "image_picker", "id": "avatar", "label": "Avatar (optional)" },
+        { "type": "checkbox", "id": "show_stars", "label": "Show 5 stars", "default": true }
+      ]
+    }
+  ],
+  "max_blocks": 16,
+  "presets": [
+    {
+      "name": "Social Proof",
+      "blocks": [
+        { "type": "stat", "settings": { "number": "4.9", "label": "Average Rating" } },
+        { "type": "stat", "settings": { "number": "500+", "label": "Happy Homes" } },
+        { "type": "stat", "settings": { "number": "<$1", "label": "Cost Per Use" } },
+        { "type": "stat", "settings": { "number": "5yr", "label": "Motor Warranty" } },
+        { "type": "testimonial", "settings": { "quote": "I don't even think about the weather anymore when I do laundry. I just hang it up, press a button, and it's dry by the time I get home from work. Should have bought this years ago.", "name": "Jessica M.", "location": "Sydney, NSW", "initials": "JM", "show_stars": true } },
+        { "type": "testimonial", "settings": { "quote": "We live in a two-bedroom apartment with zero outdoor space. The Nuracom goes up to the ceiling and completely disappears. Our electricity bill dropped noticeably the first month. Best home purchase we've made.", "name": "Daniel T.", "location": "Melbourne, VIC", "initials": "DT", "show_stars": true } },
+        { "type": "testimonial", "settings": { "quote": "I bought the Stratos and the UV feature is incredible. Our baby's clothes come off genuinely clean and fresh. The app is easy and the remote is handy. Installation took me about 25 minutes.", "name": "Sarah A.", "location": "Brisbane, QLD", "initials": "SA", "show_stars": true } }
+      ]
+    }
+  ]
+}
+{% endschema %}

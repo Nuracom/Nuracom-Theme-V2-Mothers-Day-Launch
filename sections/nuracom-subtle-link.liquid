@@ -1,0 +1,249 @@
+{% comment %}
+  Nuracom Inline Link / Scroll Button
+  A standalone link/button that scrolls to anchor or navigates to a URL.
+  Smart scroll-to fallback finds nuracom-<name>-section if exact ID isn't on page.
+  Style variants: text / ghost (outline) / filled (solid).
+{% endcomment %}
+
+<style>
+  #shopify-section-{{ section.id }} {
+    --brand-deep: {{ section.settings.brand_deep }};
+    --brand-dark: {{ section.settings.brand_dark }};
+    --text-muted: {{ section.settings.text_muted }};
+    --white: {{ section.settings.white }};
+    --max-width: 1120px;
+  }
+  #shopify-section-{{ section.id }} * { box-sizing: border-box; }
+
+  #shopify-section-{{ section.id }} .nsl {
+    background: {% if section.settings.use_transparent_bg %}transparent{% else %}{{ section.settings.bg_color }}{% endif %};
+    padding: {{ section.settings.padding_top }}px 24px {{ section.settings.padding_bottom }}px;
+    font-family: 'Inter', -apple-system, sans-serif;
+  }
+  #shopify-section-{{ section.id }} .nsl__inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    text-align: {{ section.settings.alignment }};
+  }
+
+  /* Base link */
+  #shopify-section-{{ section.id }} .nsl__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    border: none;
+    transition: all 0.25s ease;
+    text-decoration: none;
+    line-height: 1.3;
+  }
+  #shopify-section-{{ section.id }} .nsl__link svg {
+    transition: transform 0.25s ease;
+    flex-shrink: 0;
+  }
+  #shopify-section-{{ section.id }} .nsl__link--down:hover svg { transform: translateY(2px); }
+  #shopify-section-{{ section.id }} .nsl__link--right:hover svg { transform: translateX(3px); }
+  #shopify-section-{{ section.id }} .nsl__link--up:hover svg { transform: translateY(-2px); }
+
+  /* Style variant: text — minimal underlined link */
+  #shopify-section-{{ section.id }} .nsl__link--text {
+    font-size: {{ section.settings.font_size }}px;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-decoration: underline;
+    text-decoration-color: rgba(0,0,0,0.18);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    padding: 4px 0;
+  }
+  #shopify-section-{{ section.id }} .nsl__link--text:hover {
+    color: var(--brand-deep);
+    text-decoration-color: var(--brand-deep);
+  }
+
+  /* Style variant: ghost — outlined button (DEFAULT — clearly visible) */
+  #shopify-section-{{ section.id }} .nsl__link--ghost {
+    font-size: {{ section.settings.font_size }}px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    color: var(--brand-deep);
+    background: transparent;
+    border: 1.8px solid var(--brand-deep);
+    border-radius: 10px;
+    padding: 12px 26px;
+  }
+  #shopify-section-{{ section.id }} .nsl__link--ghost:hover {
+    background: var(--brand-deep);
+    color: var(--white);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px {{ section.settings.brand_deep }}33;
+  }
+
+  /* Style variant: filled — solid brand button */
+  #shopify-section-{{ section.id }} .nsl__link--filled {
+    font-size: {{ section.settings.font_size }}px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    color: var(--white);
+    background: var(--brand-deep);
+    border: 1.8px solid var(--brand-deep);
+    border-radius: 10px;
+    padding: 14px 32px;
+    box-shadow: 0 6px 18px {{ section.settings.brand_deep }}30;
+  }
+  #shopify-section-{{ section.id }} .nsl__link--filled:hover {
+    background: var(--brand-dark);
+    border-color: var(--brand-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px {{ section.settings.brand_deep }}55;
+  }
+</style>
+
+{%- assign url = section.settings.link_url | default: '#' -%}
+{%- assign icon = section.settings.icon -%}
+{%- assign style = section.settings.style_variant | default: 'ghost' -%}
+
+<section class="nsl">
+  <div class="nsl__inner">
+    {% if section.settings.link_text != blank %}
+      <a href="{{ url }}" class="nsl__link nsl__link--{{ style }} nsl__link--{{ icon }}" data-nsl-link>
+        {{ section.settings.link_text }}
+        {% if icon == 'down' %}
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8 3v10M4 9l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        {% elsif icon == 'right' %}
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        {% elsif icon == 'up' %}
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M8 13V3M4 7l4-4 4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        {% endif %}
+      </a>
+    {% endif %}
+  </div>
+</section>
+
+<script>
+  (function() {
+    var root = document.getElementById('shopify-section-{{ section.id }}');
+    if (!root) return;
+
+    root.querySelectorAll('[data-nsl-link]').forEach(function(link) {
+      link.addEventListener('click', function(e) {
+        var href = link.getAttribute('href');
+        if (!href || !href.startsWith('#')) return; // external/non-anchor — let browser handle
+
+        var id = href.slice(1);
+        if (!id) return;
+
+        // Try to find target by ID, falling back to section class lookup
+        var target = document.getElementById(id);
+
+        // Fallback 1: look for nuracom-<id>-section class (matches our convention)
+        if (!target) {
+          target = document.querySelector('.nuracom-' + id + '-section');
+        }
+
+        // Fallback 2: any element with class containing the id
+        if (!target) {
+          target = document.querySelector('[class*="' + id + '-section"]');
+        }
+
+        // Fallback 3: any element whose class contains the id at all
+        if (!target) {
+          target = document.querySelector('[class*="' + id + '"]');
+        }
+
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          // Update URL hash without jump (so back button + share-link still work)
+          if (history.replaceState) { history.replaceState(null, '', '#' + id); }
+        }
+      });
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Inline Link",
+  "tag": "section",
+  "class": "nuracom-subtle-link-section",
+  "settings": [
+    { "type": "header", "content": "Link" },
+    { "type": "text", "id": "link_text", "label": "Link text", "default": "Want to see how it's installed?" },
+    { "type": "text", "id": "link_url", "label": "Link URL or anchor", "default": "#installation", "info": "Use #installation, #faq, #savings, etc. to scroll to that section. Smart-fallback finds the section even if it doesn't have an explicit id." },
+    {
+      "type": "select",
+      "id": "style_variant",
+      "label": "Button style",
+      "default": "ghost",
+      "options": [
+        { "value": "text", "label": "Subtle text link" },
+        { "value": "ghost", "label": "Outlined button (visible)" },
+        { "value": "filled", "label": "Filled brand button (loudest)" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "icon",
+      "label": "Icon",
+      "default": "down",
+      "options": [
+        { "value": "none", "label": "No icon" },
+        { "value": "down", "label": "Down arrow (scroll-to)" },
+        { "value": "right", "label": "Right arrow (next page)" },
+        { "value": "up", "label": "Up arrow (back to top)" }
+      ]
+    },
+
+    { "type": "header", "content": "Layout" },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alignment",
+      "default": "center",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ]
+    },
+    { "type": "range", "id": "font_size", "label": "Font size", "min": 12, "max": 20, "step": 1, "unit": "px", "default": 15 },
+    { "type": "range", "id": "padding_top", "label": "Padding top", "min": 0, "max": 80, "step": 4, "unit": "px", "default": 16 },
+    { "type": "range", "id": "padding_bottom", "label": "Padding bottom", "min": 0, "max": 80, "step": 4, "unit": "px", "default": 28 },
+
+    { "type": "header", "content": "Background" },
+    { "type": "checkbox", "id": "use_transparent_bg", "label": "Transparent background (inherits page)", "default": true },
+    { "type": "color", "id": "bg_color", "label": "Background colour (if transparent is off)", "default": "#ffffff" },
+
+    { "type": "header", "content": "Colours" },
+    { "type": "color", "id": "brand_deep", "label": "Button colour (border + fill + hover for text)", "default": "#5E0404" },
+    { "type": "color", "id": "brand_dark", "label": "Button hover colour", "default": "#801f0a" },
+    { "type": "color", "id": "text_muted", "label": "Text-style link default colour", "default": "#707070" },
+    { "type": "color", "id": "white", "label": "Filled-button text colour", "default": "#ffffff" }
+  ],
+  "presets": [
+    { "name": "Inline Link" },
+    {
+      "name": "Install scroll button",
+      "settings": {
+        "link_text": "Want to see how it's installed?",
+        "link_url": "#installation",
+        "style_variant": "ghost",
+        "icon": "down",
+        "alignment": "center"
+      }
+    },
+    {
+      "name": "FAQ scroll link",
+      "settings": {
+        "link_text": "Got questions? See FAQ",
+        "link_url": "#faq",
+        "style_variant": "text",
+        "icon": "down",
+        "alignment": "center"
+      }
+    }
+  ]
+}
+{% endschema %}

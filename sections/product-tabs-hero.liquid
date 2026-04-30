@@ -1,0 +1,695 @@
+{% comment %}
+  Product Tabs + Hero Banner Section
+  - Tab navigation (Description, Additional Information, Reviews)
+  - Full-width hero image with centered overlay text
+  - Tabs switch content below (Description tab shown by default with hero)
+  Add to: sections/product-tabs-hero.liquid
+{% endcomment %}
+
+<section id="pth-{{ section.id }}">
+
+  <!-- Tab Navigation -->
+  <div class="pth-tabs">
+    <button type="button" class="pth-tab pth-tab--active" data-tab="description">
+      {{ section.settings.tab_1_label | default: 'Description' }}
+    </button>
+    <button type="button" class="pth-tab" data-tab="additional">
+      {{ section.settings.tab_2_label | default: 'Additional information' }}
+    </button>
+    <button type="button" class="pth-tab" data-tab="reviews">
+      {{ section.settings.tab_3_label | default: 'Reviews (0)' }}
+    </button>
+  </div>
+
+  <!-- Tab: Description -->
+  <div class="pth-panel pth-panel--active" data-panel="description">
+
+    <!-- Hero Image Banner -->
+    <div class="pth-hero">
+      {% if section.settings.hero_image != blank %}
+        <img
+          src="{{ section.settings.hero_image | image_url: width: 2400 }}"
+          alt="{{ section.settings.hero_heading | escape }}"
+          class="pth-hero__bg"
+          loading="lazy"
+        >
+      {% else %}
+        <div class="pth-hero__bg-fallback"></div>
+      {% endif %}
+
+      <div class="pth-hero__overlay"></div>
+
+      <div class="pth-hero__content">
+        {% if section.settings.hero_subtitle != blank %}
+          <p class="pth-hero__subtitle">{{ section.settings.hero_subtitle }}</p>
+        {% endif %}
+        {% if section.settings.hero_heading != blank %}
+          <h2 class="pth-hero__heading">{{ section.settings.hero_heading }}</h2>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Description Content (optional richtext below hero) -->
+    {% if section.settings.description_content != blank %}
+      <div class="pth-desc-content">
+        {{ section.settings.description_content }}
+      </div>
+    {% endif %}
+
+    <!-- Description Blocks (additional content blocks) -->
+    {% for block in section.blocks %}
+      {% if block.type == 'desc_image' %}
+        <div class="pth-desc-block" {{ block.shopify_attributes }}>
+          {% if block.settings.image != blank %}
+            <img
+              src="{{ block.settings.image | image_url: width: 2400 }}"
+              alt="{{ block.settings.alt_text | default: '' | escape }}"
+              class="pth-desc-block__img"
+              loading="lazy"
+            >
+            {% if block.settings.overlay_subtitle != blank or block.settings.overlay_heading != blank %}
+              <div class="pth-hero__overlay"></div>
+              <div class="pth-hero__content">
+                {% if block.settings.overlay_subtitle != blank %}
+                  <p class="pth-hero__subtitle">{{ block.settings.overlay_subtitle }}</p>
+                {% endif %}
+                {% if block.settings.overlay_heading != blank %}
+                  <h2 class="pth-hero__heading">{{ block.settings.overlay_heading }}</h2>
+                {% endif %}
+              </div>
+            {% endif %}
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if block.type == 'desc_text' %}
+        <div class="pth-desc-text" {{ block.shopify_attributes }}>
+          <div class="pth-desc-text__inner">
+            {{ block.settings.text }}
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+
+  </div>
+
+  <!-- Tab: Additional Information -->
+  <div class="pth-panel" data-panel="additional">
+    {% if section.settings.additional_content != blank %}
+      <div class="pth-additional">
+        <div class="pth-additional__inner">
+          {{ section.settings.additional_content }}
+        </div>
+      </div>
+    {% else %}
+      <div class="pth-additional">
+        <div class="pth-additional__inner">
+          <table class="pth-specs-table">
+            {% if section.settings.spec_1_label != blank %}
+              <tr>
+                <th>{{ section.settings.spec_1_label }}</th>
+                <td>{{ section.settings.spec_1_value }}</td>
+              </tr>
+            {% endif %}
+            {% if section.settings.spec_2_label != blank %}
+              <tr>
+                <th>{{ section.settings.spec_2_label }}</th>
+                <td>{{ section.settings.spec_2_value }}</td>
+              </tr>
+            {% endif %}
+            {% if section.settings.spec_3_label != blank %}
+              <tr>
+                <th>{{ section.settings.spec_3_label }}</th>
+                <td>{{ section.settings.spec_3_value }}</td>
+              </tr>
+            {% endif %}
+            {% if section.settings.spec_4_label != blank %}
+              <tr>
+                <th>{{ section.settings.spec_4_label }}</th>
+                <td>{{ section.settings.spec_4_value }}</td>
+              </tr>
+            {% endif %}
+            {% if section.settings.spec_5_label != blank %}
+              <tr>
+                <th>{{ section.settings.spec_5_label }}</th>
+                <td>{{ section.settings.spec_5_value }}</td>
+              </tr>
+            {% endif %}
+            {% if section.settings.spec_6_label != blank %}
+              <tr>
+                <th>{{ section.settings.spec_6_label }}</th>
+                <td>{{ section.settings.spec_6_value }}</td>
+              </tr>
+            {% endif %}
+            {% if section.settings.spec_7_label != blank %}
+              <tr>
+                <th>{{ section.settings.spec_7_label }}</th>
+                <td>{{ section.settings.spec_7_value }}</td>
+              </tr>
+            {% endif %}
+            {% if section.settings.spec_8_label != blank %}
+              <tr>
+                <th>{{ section.settings.spec_8_label }}</th>
+                <td>{{ section.settings.spec_8_value }}</td>
+              </tr>
+            {% endif %}
+          </table>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Tab: Reviews -->
+  <div class="pth-panel" data-panel="reviews">
+    <div class="pth-reviews">
+      <div class="pth-reviews__inner">
+        {% if section.settings.reviews_content != blank %}
+          {{ section.settings.reviews_content }}
+        {% else %}
+          <p class="pth-reviews__empty">There are no reviews yet.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<style>
+  #pth-{{ section.id }} {
+    width: 100%;
+  }
+
+  /* ── Tabs ── */
+  #pth-{{ section.id }} .pth-tabs {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 0 40px;
+  }
+
+  #pth-{{ section.id }} .pth-tab {
+    position: relative;
+    background: none;
+    border: none;
+    padding: 16px 24px;
+    font-size: 15px;
+    font-weight: 400;
+    color: #888;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    white-space: nowrap;
+    font-family: inherit;
+  }
+
+  #pth-{{ section.id }} .pth-tab:hover {
+    color: #333;
+  }
+
+  #pth-{{ section.id }} .pth-tab--active {
+    color: #101a32;
+    font-weight: 600;
+  }
+
+  #pth-{{ section.id }} .pth-tab--active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 24px;
+    right: 24px;
+    height: 2px;
+    background: #101a32;
+  }
+
+  /* ── Panels ── */
+  #pth-{{ section.id }} .pth-panel {
+    display: none;
+  }
+
+  #pth-{{ section.id }} .pth-panel--active {
+    display: block;
+  }
+
+  /* ── Hero Banner ── */
+  #pth-{{ section.id }} .pth-hero,
+  #pth-{{ section.id }} .pth-desc-block {
+    position: relative;
+    width: 100%;
+    min-height: 400px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #pth-{{ section.id }} .pth-hero__bg,
+  #pth-{{ section.id }} .pth-desc-block__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+  }
+
+  #pth-{{ section.id }} .pth-hero__bg-fallback {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #2a3a5c 0%, #101a32 100%);
+    z-index: 0;
+  }
+
+  #pth-{{ section.id }} .pth-hero__overlay {
+    position: absolute;
+    inset: 0;
+    background: {{ section.settings.overlay_color }};
+    opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+    z-index: 1;
+  }
+
+  #pth-{{ section.id }} .pth-hero__content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 60px 24px;
+    max-width: 700px;
+  }
+
+  #pth-{{ section.id }} .pth-hero__subtitle {
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: {{ section.settings.hero_text_color }};
+    margin: 0 0 14px;
+    font-weight: 500;
+    opacity: 0.85;
+  }
+
+  #pth-{{ section.id }} .pth-hero__heading {
+    font-size: 44px;
+    line-height: 1.15;
+    font-weight: 700;
+    color: {{ section.settings.hero_text_color }};
+    margin: 0;
+  }
+
+  /* ── Description Content ── */
+  #pth-{{ section.id }} .pth-desc-content {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 40px;
+    font-size: 16px;
+    line-height: 1.7;
+    color: #444;
+  }
+
+  #pth-{{ section.id }} .pth-desc-content p {
+    margin: 0 0 16px;
+  }
+
+  /* ── Description Text Block ── */
+  #pth-{{ section.id }} .pth-desc-text {
+    padding: 40px 20px;
+  }
+
+  #pth-{{ section.id }} .pth-desc-text__inner {
+    max-width: 900px;
+    margin: 0 auto;
+    font-size: 16px;
+    line-height: 1.7;
+    color: #444;
+  }
+
+  /* ── Additional Info (Specs Table) ── */
+  #pth-{{ section.id }} .pth-additional {
+    padding: 40px 20px;
+  }
+
+  #pth-{{ section.id }} .pth-additional__inner {
+    max-width: 900px;
+    margin: 0 auto;
+    font-size: 15px;
+    line-height: 1.7;
+    color: #444;
+  }
+
+  #pth-{{ section.id }} .pth-specs-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  #pth-{{ section.id }} .pth-specs-table tr {
+    border-bottom: 1px solid #eee;
+  }
+
+  #pth-{{ section.id }} .pth-specs-table th {
+    text-align: left;
+    padding: 14px 16px;
+    font-weight: 600;
+    color: #101a32;
+    width: 35%;
+    vertical-align: top;
+    font-size: 14px;
+  }
+
+  #pth-{{ section.id }} .pth-specs-table td {
+    padding: 14px 16px;
+    color: #555;
+    font-size: 14px;
+  }
+
+  /* ── Reviews ── */
+  #pth-{{ section.id }} .pth-reviews {
+    padding: 40px 20px;
+  }
+
+  #pth-{{ section.id }} .pth-reviews__inner {
+    max-width: 900px;
+    margin: 0 auto;
+    font-size: 15px;
+    line-height: 1.7;
+    color: #444;
+  }
+
+  #pth-{{ section.id }} .pth-reviews__empty {
+    text-align: center;
+    color: #999;
+    padding: 40px 0;
+    font-style: italic;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    #pth-{{ section.id }} .pth-tabs {
+      padding: 0 16px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    #pth-{{ section.id }} .pth-tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    #pth-{{ section.id }} .pth-tab {
+      padding: 14px 16px;
+      font-size: 14px;
+    }
+
+    #pth-{{ section.id }} .pth-hero,
+    #pth-{{ section.id }} .pth-desc-block {
+      min-height: 280px;
+    }
+
+    #pth-{{ section.id }} .pth-hero__heading {
+      font-size: 28px;
+    }
+
+    #pth-{{ section.id }} .pth-hero__subtitle {
+      font-size: 11px;
+    }
+
+    #pth-{{ section.id }} .pth-hero__content {
+      padding: 40px 20px;
+    }
+
+    #pth-{{ section.id }} .pth-desc-content,
+    #pth-{{ section.id }} .pth-additional,
+    #pth-{{ section.id }} .pth-reviews {
+      padding: 30px 16px;
+    }
+
+    #pth-{{ section.id }} .pth-specs-table th {
+      width: 40%;
+      padding: 12px 10px;
+    }
+
+    #pth-{{ section.id }} .pth-specs-table td {
+      padding: 12px 10px;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var section = document.getElementById('pth-{{ section.id }}');
+    if (!section) return;
+
+    var tabs = section.querySelectorAll('.pth-tab');
+    var panels = section.querySelectorAll('.pth-panel');
+
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        var target = this.dataset.tab;
+
+        tabs.forEach(function (t) { t.classList.remove('pth-tab--active'); });
+        panels.forEach(function (p) { p.classList.remove('pth-panel--active'); });
+
+        this.classList.add('pth-tab--active');
+        var targetPanel = section.querySelector('.pth-panel[data-panel="' + target + '"]');
+        if (targetPanel) targetPanel.classList.add('pth-panel--active');
+      });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Product Tabs + Hero",
+  "tag": "div",
+  "class": "product-tabs-hero-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Tab Labels"
+    },
+    {
+      "type": "text",
+      "id": "tab_1_label",
+      "label": "Tab 1 Label",
+      "default": "Description"
+    },
+    {
+      "type": "text",
+      "id": "tab_2_label",
+      "label": "Tab 2 Label",
+      "default": "Additional information"
+    },
+    {
+      "type": "text",
+      "id": "tab_3_label",
+      "label": "Tab 3 Label",
+      "default": "Reviews (0)"
+    },
+    {
+      "type": "header",
+      "content": "Description Hero Banner"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Hero Background Image"
+    },
+    {
+      "type": "text",
+      "id": "hero_subtitle",
+      "label": "Hero Subtitle",
+      "default": "NURACOM STRATOS"
+    },
+    {
+      "type": "text",
+      "id": "hero_heading",
+      "label": "Hero Heading",
+      "default": "Singapore's Thinnest Automated Laundry Rack"
+    },
+    {
+      "type": "color",
+      "id": "hero_text_color",
+      "label": "Hero Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay Opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 30,
+      "unit": "%"
+    },
+    {
+      "type": "header",
+      "content": "Description Text (below hero)"
+    },
+    {
+      "type": "richtext",
+      "id": "description_content",
+      "label": "Description Content"
+    },
+    {
+      "type": "header",
+      "content": "Additional Information Tab"
+    },
+    {
+      "type": "richtext",
+      "id": "additional_content",
+      "label": "Rich Text Content (overrides specs table)"
+    },
+    {
+      "type": "header",
+      "content": "Specs Table (if no rich text above)"
+    },
+    {
+      "type": "text",
+      "id": "spec_1_label",
+      "label": "Spec 1 Label",
+      "default": "Dimensions"
+    },
+    {
+      "type": "text",
+      "id": "spec_1_value",
+      "label": "Spec 1 Value",
+      "default": "1500mm x 380mm x 100mm"
+    },
+    {
+      "type": "text",
+      "id": "spec_2_label",
+      "label": "Spec 2 Label",
+      "default": "Weight"
+    },
+    {
+      "type": "text",
+      "id": "spec_2_value",
+      "label": "Spec 2 Value",
+      "default": "25kg"
+    },
+    {
+      "type": "text",
+      "id": "spec_3_label",
+      "label": "Spec 3 Label",
+      "default": "Material"
+    },
+    {
+      "type": "text",
+      "id": "spec_3_value",
+      "label": "Spec 3 Value",
+      "default": "Aluminium Alloy"
+    },
+    {
+      "type": "text",
+      "id": "spec_4_label",
+      "label": "Spec 4 Label",
+      "default": "Warranty"
+    },
+    {
+      "type": "text",
+      "id": "spec_4_value",
+      "label": "Spec 4 Value",
+      "default": "5 Years"
+    },
+    {
+      "type": "text",
+      "id": "spec_5_label",
+      "label": "Spec 5 Label"
+    },
+    {
+      "type": "text",
+      "id": "spec_5_value",
+      "label": "Spec 5 Value"
+    },
+    {
+      "type": "text",
+      "id": "spec_6_label",
+      "label": "Spec 6 Label"
+    },
+    {
+      "type": "text",
+      "id": "spec_6_value",
+      "label": "Spec 6 Value"
+    },
+    {
+      "type": "text",
+      "id": "spec_7_label",
+      "label": "Spec 7 Label"
+    },
+    {
+      "type": "text",
+      "id": "spec_7_value",
+      "label": "Spec 7 Value"
+    },
+    {
+      "type": "text",
+      "id": "spec_8_label",
+      "label": "Spec 8 Label"
+    },
+    {
+      "type": "text",
+      "id": "spec_8_value",
+      "label": "Spec 8 Value"
+    },
+    {
+      "type": "header",
+      "content": "Reviews Tab"
+    },
+    {
+      "type": "richtext",
+      "id": "reviews_content",
+      "label": "Reviews Content (or leave blank for empty state)"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "desc_image",
+      "name": "Description Image",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "alt_text",
+          "label": "Alt Text"
+        },
+        {
+          "type": "text",
+          "id": "overlay_subtitle",
+          "label": "Overlay Subtitle (optional)"
+        },
+        {
+          "type": "text",
+          "id": "overlay_heading",
+          "label": "Overlay Heading (optional)"
+        }
+      ]
+    },
+    {
+      "type": "desc_text",
+      "name": "Description Text",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text Content",
+          "default": "<p>Add descriptive content here.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Tabs + Hero"
+    }
+  ]
+}
+{% endschema %}

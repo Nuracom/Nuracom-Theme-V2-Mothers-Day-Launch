@@ -1,0 +1,465 @@
+{% comment %}
+  Quality Cards + CTA Section
+  - 2-column cards: each with heading, image, description, optional checkmark badges
+  - Bottom: centered italic tagline + 2 CTA buttons
+  Add to: sections/quality-cards-cta.liquid
+{% endcomment %}
+
+<section id="qcc-{{ section.id }}">
+  <div class="qcc-inner">
+
+    <!-- 2 Cards -->
+    <div class="qcc-cards">
+
+      <!-- Card 1 -->
+      <div class="qcc-card">
+        {% if section.settings.card_1_heading != blank %}
+          <h3 class="qcc-card__heading">{{ section.settings.card_1_heading }}</h3>
+        {% endif %}
+
+        {% if section.settings.card_1_image != blank %}
+          <div class="qcc-card__image">
+            <img
+              src="{{ section.settings.card_1_image | image_url: width: 800 }}"
+              alt="{{ section.settings.card_1_heading | escape }}"
+              class="qcc-card__img"
+              loading="lazy"
+            >
+          </div>
+        {% endif %}
+
+        {% if section.settings.card_1_text != blank %}
+          <div class="qcc-card__text">{{ section.settings.card_1_text }}</div>
+        {% endif %}
+
+        <!-- Checkmarks -->
+        <div class="qcc-badges">
+          {% if section.settings.card_1_badge_1 != blank %}
+            <div class="qcc-badge">
+              <svg class="qcc-badge__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="{{ section.settings.badge_color }}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              <span class="qcc-badge__text">{{ section.settings.card_1_badge_1 }}</span>
+            </div>
+          {% endif %}
+          {% if section.settings.card_1_badge_2 != blank %}
+            <div class="qcc-badge">
+              <svg class="qcc-badge__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="{{ section.settings.badge_color }}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              <span class="qcc-badge__text">{{ section.settings.card_1_badge_2 }}</span>
+            </div>
+          {% endif %}
+          {% if section.settings.card_1_badge_3 != blank %}
+            <div class="qcc-badge">
+              <svg class="qcc-badge__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="{{ section.settings.badge_color }}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              <span class="qcc-badge__text">{{ section.settings.card_1_badge_3 }}</span>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="qcc-card">
+        {% if section.settings.card_2_heading != blank %}
+          <h3 class="qcc-card__heading">{{ section.settings.card_2_heading }}</h3>
+        {% endif %}
+
+        {% if section.settings.card_2_image != blank %}
+          <div class="qcc-card__image">
+            <img
+              src="{{ section.settings.card_2_image | image_url: width: 800 }}"
+              alt="{{ section.settings.card_2_heading | escape }}"
+              class="qcc-card__img"
+              loading="lazy"
+            >
+          </div>
+        {% endif %}
+
+        {% if section.settings.card_2_text != blank %}
+          <div class="qcc-card__text">{{ section.settings.card_2_text }}</div>
+        {% endif %}
+
+        <!-- Checkmarks -->
+        <div class="qcc-badges">
+          {% if section.settings.card_2_badge_1 != blank %}
+            <div class="qcc-badge">
+              <svg class="qcc-badge__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="{{ section.settings.badge_color }}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              <span class="qcc-badge__text">{{ section.settings.card_2_badge_1 }}</span>
+            </div>
+          {% endif %}
+          {% if section.settings.card_2_badge_2 != blank %}
+            <div class="qcc-badge">
+              <svg class="qcc-badge__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="{{ section.settings.badge_color }}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              <span class="qcc-badge__text">{{ section.settings.card_2_badge_1 }}</span>
+            </div>
+          {% endif %}
+          {% if section.settings.card_2_badge_3 != blank %}
+            <div class="qcc-badge">
+              <svg class="qcc-badge__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="{{ section.settings.badge_color }}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              <span class="qcc-badge__text">{{ section.settings.card_2_badge_3 }}</span>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bottom CTA -->
+    {% if section.settings.cta_tagline != blank or section.settings.cta_button_1_text != blank %}
+      <div class="qcc-cta">
+        {% if section.settings.cta_tagline != blank %}
+          <p class="qcc-cta__tagline">{{ section.settings.cta_tagline }}</p>
+        {% endif %}
+
+        <div class="qcc-cta__buttons">
+          {% if section.settings.cta_button_1_text != blank %}
+            <a href="{{ section.settings.cta_button_1_url }}" class="qcc-btn qcc-btn--primary">
+              {{ section.settings.cta_button_1_text }}
+            </a>
+          {% endif %}
+          {% if section.settings.cta_button_2_text != blank %}
+            <a href="{{ section.settings.cta_button_2_url }}" class="qcc-btn qcc-btn--outline">
+              {{ section.settings.cta_button_2_text }}
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+<style>
+  #qcc-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+    padding: {{ section.settings.padding_top }}px 20px {{ section.settings.padding_bottom }}px;
+  }
+
+  #qcc-{{ section.id }} .qcc-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  /* ── Cards ── */
+  #qcc-{{ section.id }} .qcc-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-bottom: 48px;
+  }
+
+  #qcc-{{ section.id }} .qcc-card {
+    display: flex;
+    flex-direction: column;
+  }
+
+  #qcc-{{ section.id }} .qcc-card__heading {
+    font-size: 24px;
+    font-weight: 700;
+    color: #101a32;
+    margin: 0 0 18px;
+    line-height: 1.25;
+    font-style: italic;
+  }
+
+  #qcc-{{ section.id }} .qcc-card__image {
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 18px;
+    background: #0a0a0a;
+  }
+
+  #qcc-{{ section.id }} .qcc-card__img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    aspect-ratio: 16 / 10;
+  }
+
+  #qcc-{{ section.id }} .qcc-card__text {
+    font-size: 14px;
+    line-height: 1.75;
+    color: #444;
+    font-style: italic;
+    margin-bottom: 16px;
+  }
+
+  #qcc-{{ section.id }} .qcc-card__text p {
+    margin: 0 0 10px;
+  }
+
+  #qcc-{{ section.id }} .qcc-card__text p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* ── Badges ── */
+  #qcc-{{ section.id }} .qcc-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: auto;
+    padding-top: 8px;
+  }
+
+  #qcc-{{ section.id }} .qcc-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  #qcc-{{ section.id }} .qcc-badge__icon {
+    flex-shrink: 0;
+  }
+
+  #qcc-{{ section.id }} .qcc-badge__text {
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+  }
+
+  /* ── CTA ── */
+  #qcc-{{ section.id }} .qcc-cta {
+    text-align: center;
+    border-top: 1px solid #eee;
+    padding-top: 40px;
+  }
+
+  #qcc-{{ section.id }} .qcc-cta__tagline {
+    font-size: 26px;
+    font-weight: 700;
+    color: #101a32;
+    line-height: 1.35;
+    margin: 0 0 28px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    font-style: italic;
+  }
+
+  #qcc-{{ section.id }} .qcc-cta__buttons {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  #qcc-{{ section.id }} .qcc-btn {
+    display: inline-block;
+    padding: 14px 32px;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+    cursor: pointer;
+  }
+
+  #qcc-{{ section.id }} .qcc-btn:hover {
+    opacity: 0.88;
+  }
+
+  #qcc-{{ section.id }} .qcc-btn--primary {
+    background: {{ section.settings.btn_primary_bg }};
+    color: {{ section.settings.btn_primary_text }};
+  }
+
+  #qcc-{{ section.id }} .qcc-btn--outline {
+    background: transparent;
+    color: #101a32;
+    border: 2px solid #101a32;
+  }
+
+  #qcc-{{ section.id }} .qcc-btn--outline:hover {
+    background: #101a32;
+    color: #fff;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    #qcc-{{ section.id }} .qcc-cards {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+
+    #qcc-{{ section.id }} .qcc-card__heading {
+      font-size: 20px;
+    }
+
+    #qcc-{{ section.id }} .qcc-cta__tagline {
+      font-size: 22px;
+    }
+
+    #qcc-{{ section.id }} .qcc-btn {
+      padding: 12px 24px;
+      font-size: 14px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Quality Cards + CTA",
+  "tag": "div",
+  "class": "quality-cards-cta-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Card 1 (Left)"
+    },
+    {
+      "type": "text",
+      "id": "card_1_heading",
+      "label": "Heading",
+      "default": "Top-Of-The-Line Quality"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_1_image",
+      "label": "Image"
+    },
+    {
+      "type": "richtext",
+      "id": "card_1_text",
+      "label": "Description",
+      "default": "<p>Forged from aerospace-grade aluminium alloy, renowned for its unparalleled strength, durability, and lightweight properties.</p>"
+    },
+    {
+      "type": "text",
+      "id": "card_1_badge_1",
+      "label": "Badge 1",
+      "default": "Corrosion-Resistant"
+    },
+    {
+      "type": "text",
+      "id": "card_1_badge_2",
+      "label": "Badge 2",
+      "default": "Resistant to Cracking"
+    },
+    {
+      "type": "text",
+      "id": "card_1_badge_3",
+      "label": "Badge 3",
+      "default": "Non-Flammable"
+    },
+    {
+      "type": "header",
+      "content": "Card 2 (Right)"
+    },
+    {
+      "type": "text",
+      "id": "card_2_heading",
+      "label": "Heading",
+      "default": "Intelligently Designed"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_2_image",
+      "label": "Image"
+    },
+    {
+      "type": "richtext",
+      "id": "card_2_text",
+      "label": "Description",
+      "default": "<p>Customise your drying experience — enjoy extensive adjustability by simply setting your required height and long-pressing the stop button for 3 seconds to save.</p><p>Designed for seamless installation on all ceiling types, including low and high ceilings, even sloped ceilings.</p>"
+    },
+    {
+      "type": "text",
+      "id": "card_2_badge_1",
+      "label": "Badge 1"
+    },
+    {
+      "type": "text",
+      "id": "card_2_badge_2",
+      "label": "Badge 2"
+    },
+    {
+      "type": "text",
+      "id": "card_2_badge_3",
+      "label": "Badge 3"
+    },
+    {
+      "type": "header",
+      "content": "Bottom CTA"
+    },
+    {
+      "type": "text",
+      "id": "cta_tagline",
+      "label": "Tagline",
+      "default": "Experience the power of innovation with an automated laundry rack that dries faster, better, and smarter, only with NuraCom Stratos."
+    },
+    {
+      "type": "text",
+      "id": "cta_button_1_text",
+      "label": "Button 1 Text",
+      "default": "Compare NuraCom Models"
+    },
+    {
+      "type": "url",
+      "id": "cta_button_1_url",
+      "label": "Button 1 URL"
+    },
+    {
+      "type": "text",
+      "id": "cta_button_2_text",
+      "label": "Button 2 Text",
+      "default": "Visit Our Showroom"
+    },
+    {
+      "type": "url",
+      "id": "cta_button_2_url",
+      "label": "Button 2 URL"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "badge_color",
+      "label": "Badge Checkmark Color",
+      "default": "#1a73e8"
+    },
+    {
+      "type": "color",
+      "id": "btn_primary_bg",
+      "label": "Primary Button BG",
+      "default": "#101a32"
+    },
+    {
+      "type": "color",
+      "id": "btn_primary_text",
+      "label": "Primary Button Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 120,
+      "step": 10,
+      "default": 60,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 10,
+      "default": 60,
+      "unit": "px"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Quality Cards + CTA"
+    }
+  ]
+}
+{% endschema %}

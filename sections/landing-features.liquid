@@ -1,0 +1,340 @@
+{% comment %}
+  Nuracom Landing — Feature Blocks (benefit-led)
+  Alternating image + copy layout. Each feature tied to a real benefit.
+  Install to: sections/landing-features.liquid
+{% endcomment %}
+
+<style>
+  #lp-feat-{{ section.id }} {
+    background: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+    padding: 90px 24px;
+  }
+
+  #lp-feat-{{ section.id }} .lp-feat__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  #lp-feat-{{ section.id }} .lp-feat__header {
+    text-align: center;
+    max-width: 720px;
+    margin: 0 auto 70px;
+  }
+
+  #lp-feat-{{ section.id }} .lp-feat__eyebrow {
+    font-size: 12px;
+    letter-spacing: 2.4px;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: {{ section.settings.accent_color }};
+    margin: 0 0 14px;
+  }
+
+  #lp-feat-{{ section.id }} .lp-feat__heading {
+    font-size: clamp(28px, 3.8vw, 44px);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.4px;
+    margin: 0 0 16px;
+  }
+
+  #lp-feat-{{ section.id }} .lp-feat__sub {
+    font-size: 17px;
+    line-height: 1.6;
+    opacity: 0.75;
+    margin: 0;
+  }
+
+  #lp-feat-{{ section.id }} .lp-feat__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px;
+    align-items: center;
+    margin-bottom: 72px;
+  }
+
+  #lp-feat-{{ section.id }} .lp-feat__row:last-child {
+    margin-bottom: 0;
+  }
+
+  #lp-feat-{{ section.id }} .lp-feat__row--reverse .lp-feat__media {
+    order: 2;
+  }
+
+  #lp-feat-{{ section.id }} .lp-feat__media {
+    aspect-ratio: 4/3;
+    border-radius: 18px;
+    overflow: hidden;
+    background: {{ section.settings.image_bg }};
+    box-shadow: 0 18px 45px rgba(16,26,50,0.1);
+  }
+
+  #lp-feat-{{ section.id }} .lp-feat__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  #lp-feat-{{ section.id }} .lp-feat__tag {
+    display: inline-block;
+    font-size: 11.5px;
+    letter-spacing: 1.8px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: {{ section.settings.accent_color }};
+    margin-bottom: 12px;
+  }
+
+  #lp-feat-{{ section.id }} .lp-feat__title {
+    font-size: clamp(24px, 3vw, 32px);
+    font-weight: 800;
+    line-height: 1.2;
+    margin: 0 0 14px;
+    letter-spacing: -0.3px;
+  }
+
+  #lp-feat-{{ section.id }} .lp-feat__body {
+    font-size: 16px;
+    line-height: 1.65;
+    margin: 0 0 22px;
+    opacity: 0.8;
+  }
+
+  #lp-feat-{{ section.id }} .lp-feat__bullets {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  #lp-feat-{{ section.id }} .lp-feat__bullets li {
+    display: flex;
+    align-items: start;
+    gap: 10px;
+    font-size: 14.5px;
+    line-height: 1.55;
+    margin-bottom: 8px;
+    opacity: 0.9;
+  }
+
+  #lp-feat-{{ section.id }} .lp-feat__bullets svg {
+    flex-shrink: 0;
+    margin-top: 3px;
+    color: {{ section.settings.accent_color }};
+  }
+
+  @media (max-width: 900px) {
+    #lp-feat-{{ section.id }} .lp-feat__row,
+    #lp-feat-{{ section.id }} .lp-feat__row--reverse {
+      grid-template-columns: 1fr;
+      gap: 24px;
+      margin-bottom: 48px;
+    }
+    #lp-feat-{{ section.id }} .lp-feat__row--reverse .lp-feat__media {
+      order: 0;
+    }
+    #lp-feat-{{ section.id }} .lp-feat__header {
+      margin-bottom: 48px;
+    }
+  }
+
+  @media (max-width: 560px) {
+    #lp-feat-{{ section.id }} {
+      padding: 60px 18px;
+    }
+  }
+</style>
+
+<section id="lp-feat-{{ section.id }}">
+  <div class="lp-feat__inner">
+    <div class="lp-feat__header">
+      {% if section.settings.eyebrow != blank %}
+        <p class="lp-feat__eyebrow">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+      <h2 class="lp-feat__heading">{{ section.settings.heading }}</h2>
+      {% if section.settings.sub != blank %}
+        <p class="lp-feat__sub">{{ section.settings.sub }}</p>
+      {% endif %}
+    </div>
+
+    {% for block in section.blocks %}
+      <div class="lp-feat__row {% cycle '', 'lp-feat__row--reverse' %}" {{ block.shopify_attributes }}>
+        <div class="lp-feat__media">
+          {% if block.settings.image != blank %}
+            <img src="{{ block.settings.image | image_url: width: 1000 }}" alt="{{ block.settings.title | escape }}" loading="lazy">
+          {% else %}
+            {{ 'lifestyle-1' | placeholder_svg_tag }}
+          {% endif %}
+        </div>
+        <div class="lp-feat__copy">
+          {% if block.settings.tag != blank %}
+            <span class="lp-feat__tag">{{ block.settings.tag }}</span>
+          {% endif %}
+          <h3 class="lp-feat__title">{{ block.settings.title }}</h3>
+          {% if block.settings.body != blank %}
+            <p class="lp-feat__body">{{ block.settings.body }}</p>
+          {% endif %}
+
+          {% assign has_bullets = false %}
+          {% for i in (1..4) %}
+            {% assign key = 'bullet_' | append: i %}
+            {% if block.settings[key] != blank %}{% assign has_bullets = true %}{% endif %}
+          {% endfor %}
+
+          {% if has_bullets %}
+            <ul class="lp-feat__bullets">
+              {% for i in (1..4) %}
+                {% assign key = 'bullet_' | append: i %}
+                {% assign v = block.settings[key] %}
+                {% if v != blank %}
+                  <li>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M13.3 4.3 6 11.6 2.7 8.3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    {{ v }}
+                  </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Landing — Features",
+  "tag": "section",
+  "class": "landing-features-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Why Nuracom" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "The features that make it more than a drying rack" },
+    { "type": "textarea", "id": "sub", "label": "Subheading", "default": "Every benefit below solves a real laundry problem — no filler, no spec-sheet padding." },
+    { "type": "header", "content": "Colours" },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#ffffff" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#101a32" },
+    { "type": "color", "id": "accent_color", "label": "Accent", "default": "#866653" },
+    { "type": "color", "id": "image_bg", "label": "Image placeholder bg", "default": "#f3efe8" }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "tag", "label": "Small tag", "default": "Feature" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Feature title goes here" },
+        { "type": "textarea", "id": "body", "label": "Description", "default": "A short sentence or two describing this benefit." },
+        { "type": "header", "content": "Bullets (optional — leave blank to hide)" },
+        { "type": "text", "id": "bullet_1", "label": "Bullet 1" },
+        { "type": "text", "id": "bullet_2", "label": "Bullet 2" },
+        { "type": "text", "id": "bullet_3", "label": "Bullet 3" },
+        { "type": "text", "id": "bullet_4", "label": "Bullet 4" }
+      ]
+    }
+  ],
+  "max_blocks": 16,
+  "presets": [
+    {
+      "name": "Landing — Features",
+      "blocks": [
+        {
+          "type": "feature",
+          "settings": {
+            "tag": "Wrinkle-Free",
+            "title": "Dries without creasing or fabric damage",
+            "body": "Clothes hang naturally and dry with airflow — not tumbling. They come down almost ready to wear, without the wrinkling or shrinkage a traditional dryer leaves behind."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "tag": "Premium Design",
+            "title": "Looks like a premium appliance — not a folding rack",
+            "body": "Transforms the space it's installed in. Garage, laundry, or living area — the flush ceiling finish feels intentional, not improvised."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "tag": "Clean Drying",
+            "title": "No pollen, dust, or pollution on your clothes",
+            "body": "Outdoor lines collect whatever the wind brings. Nuracom dries your laundry in a clean indoor environment, so what comes off the rack is as fresh as what went on."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "tag": "Energy Efficient",
+            "title": "Under $1 per drying cycle — on every model",
+            "body": "At Australia's current average electricity rate of $0.3557/kWh, a full 2-hour cycle costs ~57¢ on Breeze and Aero and ~64¢ on Stratos. Around a third of what a tumble dryer charges per load."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "tag": "Any Weather",
+            "title": "Rain, humidity, cloud — your schedule doesn't care",
+            "body": "Indoor drying means the forecast stops running your laundry. Wash when it suits you, dry when you hang it — any day, any weather."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "tag": "UV Clean",
+            "title": "Built-in UV kills bacteria, mould, and odours",
+            "body": "A dedicated UV light neutralises odour-causing microbes and surface mould while your clothes dry — something a clothesline or a dryer simply can't do."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "tag": "Ion Freshness",
+            "title": "Negative ion airflow for genuinely fresh fabrics",
+            "body": "Ionised airflow reduces dust mites, static, and airborne particles around your clothes — so laundry isn't just dry, it's cleaner for the whole house."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "tag": "Smart Control",
+            "title": "Voice, app, remote, and gesture — all four",
+            "body": "Control Nuracom the way that suits the moment. Talk to it, tap the app, click the remote, or wave under the unit to bring it down hands-free.",
+            "bullet_1": "Voice control (Google / Alexa compatible)",
+            "bullet_2": "Mobile app — iOS and Android",
+            "bullet_3": "Physical remote included",
+            "bullet_4": "Gesture control for hands-full moments"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "tag": "Family-Safe",
+            "title": "UV auto-shuts off when movement is detected",
+            "body": "A built-in motion sensor cuts the UV light the moment anyone — kid, pet, or you — steps underneath. Designed to stay safe in active family homes."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "tag": "Heavy-Duty",
+            "title": "Handles bedding, blankets, and king-size sheets",
+            "body": "Telescopic rails (Stratos) extend to take the bulky items that don't fit properly in a dryer — full-size sheets, doona covers, trousers, and heavy towels — without folding or creasing."
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "tag": "Stratos Only",
+            "title": "Premium digital display with environment readings",
+            "body": "Real-time temperature and humidity on a crisp inline display. The kind of detail you notice on a premium appliance — built into Stratos by default."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,482 @@
+{% comment %}
+  Nuracom Quick Buy
+  3 compact swipe-to-compare cards with Buy Now + Add to Cart buttons.
+  Each card shows: image, name, tagline, price/cycle, 5-yr savings, 2-3 benefits, CTAs.
+
+  Buy Now uses Shopify's /cart/add with return_to=/checkout (single-click checkout).
+  Add to Cart adds the product and stays on the page.
+  Both require either a Shopify product picked OR fallback URLs.
+
+  Drop into any landing page via the customiser's "Add section" picker.
+{% endcomment %}
+
+<style>
+  #shopify-section-{{ section.id }} {
+    --brand-deep: {{ section.settings.brand_deep }};
+    --brand-dark: {{ section.settings.brand_dark }};
+    --brand-accent: {{ section.settings.brand_accent }};
+    --navy: {{ section.settings.navy }};
+    --cream: {{ section.settings.cream }};
+    --warm-gray: {{ section.settings.warm_gray }};
+    --gold: {{ section.settings.gold_color }};
+    --white: {{ section.settings.white }};
+    --positive: {{ section.settings.positive_color }};
+    --positive-bg: {{ section.settings.positive_bg }};
+    --text: {{ section.settings.text_primary }};
+    --text-muted: {{ section.settings.text_muted }};
+    --max-width: 1200px;
+    --section-pad: clamp(40px, 5vw, 70px);
+  }
+  #shopify-section-{{ section.id }} * { box-sizing: border-box; }
+  #shopify-section-{{ section.id }} .nqb { padding: var(--section-pad) 24px; background: {{ section.settings.bg_color }}; font-family: 'Inter', -apple-system, sans-serif; }
+  #shopify-section-{{ section.id }} .nqb__inner { max-width: var(--max-width); margin: 0 auto; }
+
+  /* Header */
+  #shopify-section-{{ section.id }} .nqb__header { text-align: center; max-width: 720px; margin: 0 auto 36px; }
+  #shopify-section-{{ section.id }} .nqb__kicker { font-size: 0.72rem; letter-spacing: 3px; text-transform: uppercase; color: var(--brand-accent); font-weight: 700; margin-bottom: 10px; }
+  #shopify-section-{{ section.id }} .nqb__headline { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.8rem, 3.5vw, 2.6rem); font-weight: 700; line-height: 1.2; color: var(--navy); margin: 0 0 12px; letter-spacing: -0.3px; }
+  #shopify-section-{{ section.id }} .nqb__headline em { color: var(--brand-deep); font-style: italic; }
+  #shopify-section-{{ section.id }} .nqb__sub { font-size: 1rem; line-height: 1.6; color: var(--text-muted); margin: 0; }
+
+  /* Grid */
+  #shopify-section-{{ section.id }} .nqb__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; align-items: stretch; }
+  #shopify-section-{{ section.id }} .nqb__swipe-hint { display: none; text-align: center; font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; font-weight: 600; color: var(--text-muted); margin-top: 14px; }
+
+  /* Card */
+  #shopify-section-{{ section.id }} .nqb__card { background: var(--white); border: 1.5px solid var(--warm-gray); border-radius: 16px; padding: 22px 22px 24px; display: flex; flex-direction: column; position: relative; transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease; }
+  #shopify-section-{{ section.id }} .nqb__card:hover { transform: translateY(-3px); box-shadow: 0 14px 32px rgba(16,26,50,0.08); }
+  #shopify-section-{{ section.id }} .nqb__card--featured { border-width: 2px; box-shadow: 0 8px 22px rgba(16,26,50,0.06); }
+
+  /* Badge */
+  #shopify-section-{{ section.id }} .nqb__badge { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); padding: 5px 12px; font-size: 0.65rem; letter-spacing: 1.4px; text-transform: uppercase; font-weight: 800; border-radius: 100px; white-space: nowrap; box-shadow: 0 4px 12px rgba(16,26,50,0.18); }
+
+  /* Image */
+  #shopify-section-{{ section.id }} .nqb__image { padding: 16px; background: linear-gradient(180deg, var(--cream) 0%, var(--white) 100%); border-radius: 10px; min-height: 130px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; overflow: hidden; position: relative; }
+  #shopify-section-{{ section.id }} .nqb__image img { max-width: 100%; max-height: 110px; height: auto; object-fit: contain; display: block; }
+  #shopify-section-{{ section.id }} .nqb__image img[hidden] { display: none; }
+  #shopify-section-{{ section.id }} .nqb__image-fallback { font-size: 2.5rem; opacity: 0.5; }
+
+  /* Colour-variant swatches */
+  #shopify-section-{{ section.id }} .nqb__swatches { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 0 0 14px; }
+  #shopify-section-{{ section.id }} .nqb__swatches-label { font-size: 0.7rem; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; color: var(--text-muted); margin-right: 4px; }
+  #shopify-section-{{ section.id }} .nqb__swatch { width: 26px; height: 26px; border-radius: 50%; border: 2px solid transparent; padding: 0; cursor: pointer; position: relative; transition: transform 0.18s ease, border-color 0.18s ease; background: transparent; }
+  #shopify-section-{{ section.id }} .nqb__swatch::before { content: ''; position: absolute; inset: 2px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.12); }
+  #shopify-section-{{ section.id }} .nqb__swatch--black::before { background: #1a1a1a; }
+  #shopify-section-{{ section.id }} .nqb__swatch--grey::before { background: #b8b8b8; }
+  #shopify-section-{{ section.id }} .nqb__swatch:hover { transform: scale(1.08); }
+  #shopify-section-{{ section.id }} .nqb__swatch.is-active { border-color: var(--brand-deep); }
+  #shopify-section-{{ section.id }} .nqb__swatch:focus-visible { outline: none; border-color: var(--brand-deep); box-shadow: 0 0 0 3px {{ section.settings.brand_deep }}33; }
+
+  /* Header text */
+  #shopify-section-{{ section.id }} .nqb__name { font-size: 1.15rem; font-weight: 800; color: var(--navy); margin: 0 0 2px; line-height: 1.2; letter-spacing: -0.2px; }
+  #shopify-section-{{ section.id }} .nqb__tagline { font-size: 0.78rem; color: var(--text-muted); font-style: italic; margin: 0 0 14px; line-height: 1.4; min-height: 32px; }
+
+  /* Price block */
+  #shopify-section-{{ section.id }} .nqb__price-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; padding-bottom: 14px; border-bottom: 1px solid var(--warm-gray); margin-bottom: 14px; }
+  #shopify-section-{{ section.id }} .nqb__price-stack { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; min-width: 0; }
+  #shopify-section-{{ section.id }} .nqb__price-was { font-family: 'Inter', -apple-system, sans-serif; font-size: 0.82rem; font-weight: 600; color: var(--text-muted); text-decoration: line-through; text-decoration-color: rgba(0,0,0,0.45); text-decoration-thickness: 1.5px; line-height: 1; letter-spacing: -0.2px; }
+  #shopify-section-{{ section.id }} .nqb__price { font-family: 'Playfair Display', Georgia, serif; font-size: 1.7rem; font-weight: 700; color: var(--navy); line-height: 1; letter-spacing: -0.5px; }
+  #shopify-section-{{ section.id }} .nqb__price--emphasized { color: var(--brand-deep); font-style: italic; }
+  #shopify-section-{{ section.id }} .nqb__price em { color: var(--brand-deep); font-style: italic; }
+  #shopify-section-{{ section.id }} .nqb__price-meta { text-align: right; font-size: 0.72rem; color: var(--text-muted); line-height: 1.3; }
+  #shopify-section-{{ section.id }} .nqb__price-meta strong { display: block; font-size: 0.82rem; font-weight: 700; color: var(--navy); }
+
+  /* Savings highlight */
+  #shopify-section-{{ section.id }} .nqb__savings { background: var(--positive-bg); border-radius: 10px; padding: 12px 14px; text-align: center; margin-bottom: 14px; border: 1px solid {{ section.settings.positive_color }}33; }
+  #shopify-section-{{ section.id }} .nqb__savings-label { font-size: 0.62rem; letter-spacing: 1.6px; text-transform: uppercase; font-weight: 700; color: var(--positive); margin-bottom: 2px; }
+  #shopify-section-{{ section.id }} .nqb__savings-amount { font-family: 'Playfair Display', Georgia, serif; font-size: 1.5rem; font-weight: 700; color: var(--positive); line-height: 1; letter-spacing: -0.5px; }
+  #shopify-section-{{ section.id }} .nqb__savings-note { font-size: 0.7rem; color: var(--text-muted); margin-top: 3px; line-height: 1.3; }
+
+  /* Benefits */
+  #shopify-section-{{ section.id }} .nqb__benefits { list-style: none; padding: 0; margin: 0 0 16px; flex: 1; }
+  #shopify-section-{{ section.id }} .nqb__benefit { display: flex; align-items: flex-start; gap: 8px; padding: 5px 0; font-size: 0.83rem; line-height: 1.45; color: var(--text); }
+  #shopify-section-{{ section.id }} .nqb__benefit-tick { color: var(--positive); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+
+  /* Buttons */
+  #shopify-section-{{ section.id }} .nqb__cta-stack { display: flex; flex-direction: column; gap: 8px; margin-top: auto; }
+  #shopify-section-{{ section.id }} .nqb__form { margin: 0; }
+  #shopify-section-{{ section.id }} .nqb__btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 12px 18px; font-size: 0.92rem; font-weight: 700; letter-spacing: 0.2px; border-radius: 8px; cursor: pointer; border: 2px solid transparent; text-decoration: none; transition: all 0.2s ease; font-family: inherit; }
+  #shopify-section-{{ section.id }} .nqb__btn--primary { background: var(--brand-deep); color: var(--white); }
+  #shopify-section-{{ section.id }} .nqb__btn--primary:hover { background: var(--brand-dark); transform: translateY(-1px); box-shadow: 0 6px 18px {{ section.settings.brand_deep }}40; }
+  #shopify-section-{{ section.id }} .nqb__btn--outline { background: transparent; color: var(--brand-deep); border-color: var(--brand-deep); }
+  #shopify-section-{{ section.id }} .nqb__btn--outline:hover { background: var(--brand-deep); color: var(--white); }
+  #shopify-section-{{ section.id }} .nqb__btn-arrow { transition: transform 0.2s ease; }
+  #shopify-section-{{ section.id }} .nqb__btn:hover .nqb__btn-arrow { transform: translateX(2px); }
+  #shopify-section-{{ section.id }} .nqb__btn[disabled] { opacity: 0.55; cursor: not-allowed; }
+  #shopify-section-{{ section.id }} .nqb__btn[disabled]:hover { transform: none; box-shadow: none; }
+
+  /* Reveal */
+  #shopify-section-{{ section.id }} .nqb__reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  #shopify-section-{{ section.id }} .nqb__reveal.is-visible { opacity: 1; transform: translateY(0); }
+  #shopify-section-{{ section.id }} .nqb__reveal--d1 { transition-delay: 0.05s; }
+  #shopify-section-{{ section.id }} .nqb__reveal--d2 { transition-delay: 0.15s; }
+  #shopify-section-{{ section.id }} .nqb__reveal--d3 { transition-delay: 0.25s; }
+
+  /* Mobile swipe carousel */
+  @media (max-width: 900px) {
+    #shopify-section-{{ section.id }} .nqb__grid {
+      display: flex;
+      grid-template-columns: none;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      gap: 14px;
+      padding: 14px 20px 20px;
+      margin: -10px -24px 0;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    #shopify-section-{{ section.id }} .nqb__grid::-webkit-scrollbar { display: none; }
+    #shopify-section-{{ section.id }} .nqb__card {
+      flex: 0 0 84%;
+      max-width: 340px;
+      min-width: 250px;
+      scroll-snap-align: center;
+    }
+    #shopify-section-{{ section.id }} .nqb__swipe-hint { display: block; }
+  }
+  @media (max-width: 560px) {
+    #shopify-section-{{ section.id }} .nqb__grid { margin: -10px -18px 0; padding: 14px 18px 20px; }
+    #shopify-section-{{ section.id }} .nqb__card { padding: 20px 18px; }
+  }
+</style>
+
+<section class="nqb" id="quick-buy">
+  <div class="nqb__inner">
+    <div class="nqb__header nqb__reveal">
+      {% if section.settings.kicker != blank %}
+        <div class="nqb__kicker">{{ section.settings.kicker }}</div>
+      {% endif %}
+      <h2 class="nqb__headline">{{ section.settings.headline }}</h2>
+      {% if section.settings.subheading != blank %}
+        <p class="nqb__sub">{{ section.settings.subheading }}</p>
+      {% endif %}
+    </div>
+
+    <div class="nqb__grid">
+      {% for block in section.blocks %}
+        {%- assign p = block.settings.product -%}
+        {%- if block.settings.image != blank -%}
+          {%- assign card_image = block.settings.image -%}
+        {%- elsif p != blank and p.featured_image != blank -%}
+          {%- assign card_image = p.featured_image -%}
+        {%- else -%}
+          {%- assign card_image = blank -%}
+        {%- endif -%}
+
+        {%- if block.settings.name_override != blank -%}
+          {%- assign card_name = block.settings.name_override -%}
+        {%- elsif p != blank -%}
+          {%- assign card_name = p.title -%}
+        {%- else -%}
+          {%- assign card_name = 'Product name' -%}
+        {%- endif -%}
+
+        {%- if block.settings.price_override != blank -%}
+          {%- assign card_price = block.settings.price_override -%}
+        {%- elsif p != blank -%}
+          {%- assign card_price = p.price | money -%}
+        {%- else -%}
+          {%- assign card_price = '$0' -%}
+        {%- endif -%}
+
+        {%- assign image_grey = block.settings.image_grey -%}
+        {%- assign show_swatches = false -%}
+        {%- if image_grey != blank and card_image != blank -%}{%- assign show_swatches = true -%}{%- endif -%}
+
+        <article class="nqb__card{% if block.settings.featured %} nqb__card--featured{% endif %} nqb__reveal nqb__reveal--d{{ forloop.index }}"
+                 {% if block.settings.featured %}style="border-color: {{ block.settings.badge_color }};"{% endif %}
+                 data-card
+                 {% if block.settings.variant_black_id != blank %}data-variant-black="{{ block.settings.variant_black_id }}"{% endif %}
+                 {% if block.settings.variant_grey_id != blank %}data-variant-grey="{{ block.settings.variant_grey_id }}"{% endif %}
+                 {{ block.shopify_attributes }}>
+
+          {% if block.settings.badge_text != blank %}
+            <span class="nqb__badge" style="background: {{ block.settings.badge_color }}; color: {{ block.settings.badge_text_color }};">
+              {{ block.settings.badge_text }}
+            </span>
+          {% endif %}
+
+          <div class="nqb__image">
+            {% if card_image != blank %}
+              <img data-color="black" src="{{ card_image | image_url: width: 400 }}" alt="{{ card_name | escape }} — Black" loading="lazy">
+            {% endif %}
+            {% if image_grey != blank %}
+              <img data-color="grey" src="{{ image_grey | image_url: width: 400 }}" alt="{{ card_name | escape }} — Grey" loading="lazy" {% if card_image != blank %}hidden{% endif %}>
+            {% endif %}
+            {% if card_image == blank and image_grey == blank %}
+              <span class="nqb__image-fallback">{{ block.settings.fallback_icon }}</span>
+            {% endif %}
+          </div>
+
+          {% if show_swatches %}
+            <div class="nqb__swatches" role="radiogroup" aria-label="Choose colour">
+              <span class="nqb__swatches-label">Colour</span>
+              <button type="button" class="nqb__swatch nqb__swatch--black is-active" data-color="black" role="radio" aria-checked="true" aria-label="Black"></button>
+              <button type="button" class="nqb__swatch nqb__swatch--grey" data-color="grey" role="radio" aria-checked="false" aria-label="Grey"></button>
+            </div>
+          {% endif %}
+
+          <h3 class="nqb__name">{{ card_name }}</h3>
+          <p class="nqb__tagline">{{ block.settings.tagline }}</p>
+
+          <div class="nqb__price-row">
+            <div class="nqb__price-stack">
+              {% if block.settings.compare_at_price != blank %}
+                <span class="nqb__price-was">{{ block.settings.compare_at_price }}</span>
+              {% endif %}
+              <span class="nqb__price{% if block.settings.price_emphasized %} nqb__price--emphasized{% endif %}">{{ card_price }}</span>
+            </div>
+            <div class="nqb__price-meta">
+              <strong>{{ block.settings.cycle_cost }}</strong>
+              {{ block.settings.cycle_label }}
+            </div>
+          </div>
+
+          {% if block.settings.savings_amount != blank %}
+            <div class="nqb__savings">
+              <div class="nqb__savings-label">{{ block.settings.savings_label }}</div>
+              <div class="nqb__savings-amount">{{ block.settings.savings_amount }}</div>
+              {% if block.settings.savings_note != blank %}
+                <div class="nqb__savings-note">{{ block.settings.savings_note }}</div>
+              {% endif %}
+            </div>
+          {% endif %}
+
+          <ul class="nqb__benefits">
+            {% if block.settings.benefit_1 != blank %}<li class="nqb__benefit"><span class="nqb__benefit-tick">&check;</span> {{ block.settings.benefit_1 }}</li>{% endif %}
+            {% if block.settings.benefit_2 != blank %}<li class="nqb__benefit"><span class="nqb__benefit-tick">&check;</span> {{ block.settings.benefit_2 }}</li>{% endif %}
+            {% if block.settings.benefit_3 != blank %}<li class="nqb__benefit"><span class="nqb__benefit-tick">&check;</span> {{ block.settings.benefit_3 }}</li>{% endif %}
+          </ul>
+
+          <div class="nqb__cta-stack">
+            {%- if p != blank and p.first_available_variant != blank -%}
+              {%- assign vid = p.first_available_variant.id -%}
+
+              <form action="/cart/add" method="post" class="nqb__form">
+                <input type="hidden" name="id" value="{{ vid }}">
+                <input type="hidden" name="quantity" value="1">
+                <input type="hidden" name="return_to" value="/checkout">
+                <button type="submit" class="nqb__btn nqb__btn--primary">
+                  {{ block.settings.buy_now_text }}
+                  <span class="nqb__btn-arrow">&rarr;</span>
+                </button>
+              </form>
+
+              <form action="/cart/add" method="post" class="nqb__form">
+                <input type="hidden" name="id" value="{{ vid }}">
+                <input type="hidden" name="quantity" value="1">
+                <button type="submit" class="nqb__btn nqb__btn--outline">
+                  {{ block.settings.add_to_cart_text }}
+                </button>
+              </form>
+            {%- elsif block.settings.buy_now_url != blank or block.settings.add_to_cart_url != blank -%}
+              {%- if block.settings.buy_now_url != blank -%}
+                <a href="{{ block.settings.buy_now_url }}" class="nqb__btn nqb__btn--primary">
+                  {{ block.settings.buy_now_text }}
+                  <span class="nqb__btn-arrow">&rarr;</span>
+                </a>
+              {%- endif -%}
+              {%- if block.settings.add_to_cart_url != blank -%}
+                <a href="{{ block.settings.add_to_cart_url }}" class="nqb__btn nqb__btn--outline">
+                  {{ block.settings.add_to_cart_text }}
+                </a>
+              {%- endif -%}
+            {%- else -%}
+              <button type="button" class="nqb__btn nqb__btn--primary" disabled>Pick a product to enable</button>
+              <button type="button" class="nqb__btn nqb__btn--outline" disabled>Pick a product to enable</button>
+            {%- endif -%}
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+
+    <p class="nqb__swipe-hint" aria-hidden="true">← Swipe to compare →</p>
+  </div>
+</section>
+
+<script>
+  (function() {
+    var root = document.getElementById('shopify-section-{{ section.id }}');
+    if (!root) return;
+    var els = root.querySelectorAll('.nqb__reveal');
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) { if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); } });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    els.forEach(function(el) { io.observe(el); });
+
+    // Colour swatch toggle — swaps image AND form variant id
+    root.querySelectorAll('[data-card] .nqb__swatch').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var card = btn.closest('[data-card]');
+        if (!card) return;
+        var color = btn.dataset.color;
+
+        // Update active swatch
+        card.querySelectorAll('.nqb__swatch').forEach(function(s) {
+          var on = s === btn;
+          s.classList.toggle('is-active', on);
+          s.setAttribute('aria-checked', on ? 'true' : 'false');
+        });
+
+        // Swap image
+        card.querySelectorAll('.nqb__image img').forEach(function(img) {
+          img.toggleAttribute('hidden', img.dataset.color !== color);
+        });
+
+        // Swap variant id in cart-add forms (if provided)
+        var variantId = card.getAttribute('data-variant-' + color);
+        if (variantId) {
+          card.querySelectorAll('form[action="/cart/add"] input[name="id"]').forEach(function(input) {
+            input.value = variantId;
+          });
+        }
+      });
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Quick Buy",
+  "tag": "section",
+  "class": "nuracom-quick-buy-section",
+  "settings": [
+    { "type": "header", "content": "Section header" },
+    { "type": "text", "id": "kicker", "label": "Kicker", "default": "Pick yours" },
+    { "type": "richtext", "id": "headline", "label": "Headline (use <em> for italic emphasis)", "default": "<p>Three models. <em>Save thousands.</em></p>" },
+    { "type": "textarea", "id": "subheading", "label": "Subheading", "default": "Real 5-year savings vs a tumble dryer for households of every size — based on actual cost-per-cycle and load capacity." },
+
+    { "type": "header", "content": "Section background + colours" },
+    { "type": "color", "id": "bg_color", "label": "Section background", "default": "#ffffff" },
+    { "type": "color", "id": "brand_deep", "label": "Brand deep (Buy Now)", "default": "#5E0404" },
+    { "type": "color", "id": "brand_dark", "label": "Brand dark (button hover)", "default": "#801f0a" },
+    { "type": "color", "id": "brand_accent", "label": "Brand accent (kicker)", "default": "#a8321a" },
+    { "type": "color", "id": "navy", "label": "Navy (headlines)", "default": "#101a32" },
+    { "type": "color", "id": "cream", "label": "Image background", "default": "#f8f5f1" },
+    { "type": "color", "id": "warm_gray", "label": "Card border", "default": "#e8e3dd" },
+    { "type": "color", "id": "gold_color", "label": "Gold accent", "default": "#c69a7b" },
+    { "type": "color", "id": "white", "label": "Card background", "default": "#ffffff" },
+    { "type": "color", "id": "text_primary", "label": "Text primary", "default": "#1a1a1a" },
+    { "type": "color", "id": "text_muted", "label": "Text muted", "default": "#707070" },
+    { "type": "color", "id": "positive_color", "label": "Savings green text", "default": "#16a34a" },
+    { "type": "color", "id": "positive_bg", "label": "Savings highlight bg", "default": "#dcfce7" }
+  ],
+  "blocks": [
+    {
+      "type": "model_card",
+      "name": "Model card",
+      "settings": [
+        { "type": "header", "content": "Product link" },
+        { "type": "product", "id": "product", "label": "Shopify product (enables Buy Now + Add to Cart)" },
+        { "type": "header", "content": "Card overrides (optional)", "info": "Leave blank to fall back to picked product's image, name, and price." },
+        { "type": "image_picker", "id": "image", "label": "Image — Black variant (or default)" },
+        { "type": "image_picker", "id": "image_grey", "label": "Image — Grey variant", "info": "If set + Black image is set, customer-facing colour swatch toggle appears under the image." },
+        { "type": "text", "id": "variant_black_id", "label": "Black variant ID (optional)", "info": "From Shopify Admin → Products → click the Black variant → copy the long number from the URL. Leave blank to use the product's first variant." },
+        { "type": "text", "id": "variant_grey_id", "label": "Grey variant ID (optional)", "info": "Same idea — paste the Grey variant's ID. When customer toggles to Grey, this variant is what gets added to cart." },
+        { "type": "text", "id": "name_override", "label": "Override name" },
+        { "type": "text", "id": "compare_at_price", "label": "Old price (crossed out)", "info": "Optional. Shows above the main price as strikethrough — e.g. \"$1,499\". Leave blank for no discount display." },
+        { "type": "text", "id": "price_override", "label": "Override price (e.g. \"$1,349\")" },
+        { "type": "checkbox", "id": "price_emphasized", "label": "Highlight price (italic + brand colour)", "default": false, "info": "Tick this for sale prices — turns the price italic in your brand red." },
+        { "type": "text", "id": "fallback_icon", "label": "Fallback icon (no image)", "default": "🌬" },
+        { "type": "header", "content": "Tagline" },
+        { "type": "text", "id": "tagline", "label": "Short tagline (1 line, who it's for)", "default": "For singles & couples" },
+        { "type": "header", "content": "Price detail" },
+        { "type": "text", "id": "cycle_cost", "label": "Cost per cycle", "default": "$0.57" },
+        { "type": "text", "id": "cycle_label", "label": "Cost label", "default": "per cycle" },
+        { "type": "header", "content": "5-year savings highlight" },
+        { "type": "text", "id": "savings_label", "label": "Label above amount", "default": "5-year energy savings" },
+        { "type": "text", "id": "savings_amount", "label": "Savings amount (e.g. \"$1,300+\")", "default": "$1,300+" },
+        { "type": "text", "id": "savings_note", "label": "Note below amount", "default": "vs typical tumble dryer" },
+        { "type": "header", "content": "Benefits (max 3 — keep them short)" },
+        { "type": "text", "id": "benefit_1", "label": "Benefit 1", "default": "Benefit one" },
+        { "type": "text", "id": "benefit_2", "label": "Benefit 2", "default": "Benefit two" },
+        { "type": "text", "id": "benefit_3", "label": "Benefit 3 (optional)" },
+        { "type": "header", "content": "Top badge (optional)" },
+        { "type": "text", "id": "badge_text", "label": "Badge text (e.g. \"Most Popular\")" },
+        { "type": "color", "id": "badge_color", "label": "Badge background", "default": "#5E0404" },
+        { "type": "color", "id": "badge_text_color", "label": "Badge text colour", "default": "#ffffff" },
+        { "type": "checkbox", "id": "featured", "label": "Featured (use badge colour for card border)", "default": false },
+        { "type": "header", "content": "Buttons" },
+        { "type": "text", "id": "buy_now_text", "label": "Buy Now button text", "default": "Buy Now" },
+        { "type": "text", "id": "add_to_cart_text", "label": "Add to Cart button text", "default": "Add to Cart" },
+        { "type": "header", "content": "Manual URL fallback", "info": "Only used if no Shopify product is picked above." },
+        { "type": "url", "id": "buy_now_url", "label": "Buy Now URL" },
+        { "type": "url", "id": "add_to_cart_url", "label": "Add to Cart URL" }
+      ]
+    }
+  ],
+  "max_blocks": 3,
+  "presets": [
+    {
+      "name": "Quick Buy",
+      "blocks": [
+        {
+          "type": "model_card",
+          "settings": {
+            "fallback_icon": "🌬",
+            "name_override": "Nuracom Breeze",
+            "price_override": "$1,199",
+            "tagline": "For singles & couples — small homes",
+            "cycle_cost": "$0.57",
+            "cycle_label": "per cycle (800W × 2hr)",
+            "savings_label": "5-year savings",
+            "savings_amount": "$1,300+",
+            "savings_note": "vs typical tumble dryer",
+            "benefit_1": "35kg capacity — handles 1–2 person laundry in a single weekly cycle",
+            "benefit_2": "Smart controls + integrated lighting",
+            "benefit_3": "Free metro shipping",
+            "buy_now_text": "Buy Now",
+            "add_to_cart_text": "Add to Cart"
+          }
+        },
+        {
+          "type": "model_card",
+          "settings": {
+            "fallback_icon": "☁️",
+            "name_override": "Nuracom Aero",
+            "price_override": "$1,499",
+            "tagline": "For families — the most popular pick",
+            "cycle_cost": "$0.57",
+            "cycle_label": "per cycle (800W × 2hr)",
+            "savings_label": "5-year savings",
+            "savings_amount": "$1,900+",
+            "savings_note": "vs 6 dryer loads / week",
+            "benefit_1": "40kg + UV disinfection — kills bacteria as it dries",
+            "benefit_2": "Heated drying for faster cycles in winter",
+            "benefit_3": "App + voice + remote control",
+            "badge_text": "Most Popular",
+            "badge_color": "#5E0404",
+            "badge_text_color": "#ffffff",
+            "featured": true,
+            "buy_now_text": "Buy Now",
+            "add_to_cart_text": "Add to Cart"
+          }
+        },
+        {
+          "type": "model_card",
+          "settings": {
+            "fallback_icon": "🚀",
+            "name_override": "Nuracom Stratos",
+            "price_override": "$1,699",
+            "tagline": "For large households — top of range",
+            "cycle_cost": "$0.64",
+            "cycle_label": "per cycle (900W × 2hr)",
+            "savings_label": "5-year savings",
+            "savings_amount": "$2,600+",
+            "savings_note": "biggest capacity = fewest cycles",
+            "benefit_1": "45kg + 2x faster drying with 6 turbo fans",
+            "benefit_2": "Negative ion + dust mite removal",
+            "benefit_3": "Premium digital display screen",
+            "badge_text": "Top of Range",
+            "badge_color": "#c69a7b",
+            "badge_text_color": "#101a32",
+            "featured": true,
+            "buy_now_text": "Buy Now",
+            "add_to_cart_text": "Add to Cart"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

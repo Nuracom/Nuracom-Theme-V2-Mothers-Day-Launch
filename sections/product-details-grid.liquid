@@ -1,0 +1,467 @@
+{% comment %}
+  Product Details Grid Section
+  - 2x2 grid layout:
+    Top-left: Heading + description text
+    Top-right: Promise list with icons
+    Bottom-left: Video/image embed
+    Bottom-right: Technical specifications table
+  Add to: sections/product-details-grid.liquid
+{% endcomment %}
+
+<section id="pdg-{{ section.id }}">
+  <div class="pdg-grid">
+
+    <!-- TOP LEFT: Heading + Description -->
+    <div class="pdg-cell pdg-cell--text">
+      {% if section.settings.heading != blank %}
+        <h2 class="pdg-heading">{{ section.settings.heading }}</h2>
+      {% endif %}
+      {% if section.settings.description != blank %}
+        <div class="pdg-description">{{ section.settings.description }}</div>
+      {% endif %}
+    </div>
+
+    <!-- TOP RIGHT: Promise List -->
+    <div class="pdg-cell pdg-cell--promise">
+      {% if section.settings.promise_heading != blank %}
+        <h2 class="pdg-promise-heading">{{ section.settings.promise_heading }}</h2>
+      {% endif %}
+
+      <div class="pdg-promise-list">
+        {% for block in section.blocks %}
+          {% if block.type == 'promise_item' %}
+            <div class="pdg-promise-item" {{ block.shopify_attributes }}>
+              {% if block.settings.icon != blank %}
+                <div class="pdg-promise-icon">
+                  <img
+                    src="{{ block.settings.icon | image_url: width: 80 }}"
+                    alt="{{ block.settings.title | escape }}"
+                    width="40"
+                    height="40"
+                    loading="lazy"
+                  >
+                </div>
+              {% else %}
+                <div class="pdg-promise-icon pdg-promise-icon--placeholder">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                </div>
+              {% endif %}
+              <div class="pdg-promise-text">
+                {% if block.settings.title != blank %}
+                  <p class="pdg-promise-title">{{ block.settings.title }}</p>
+                {% endif %}
+                {% if block.settings.subtitle != blank %}
+                  <p class="pdg-promise-subtitle">{{ block.settings.subtitle }}</p>
+                {% endif %}
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- BOTTOM LEFT: Video / Image -->
+    <div class="pdg-cell pdg-cell--media">
+      {% if section.settings.video_url != blank %}
+        <div class="pdg-media-wrap">
+          {% if section.settings.media_image != blank %}
+            <img
+              src="{{ section.settings.media_image | image_url: width: 1200 }}"
+              alt="{{ section.settings.heading | escape }}"
+              class="pdg-media-img"
+              loading="lazy"
+            >
+          {% endif %}
+          <a href="{{ section.settings.video_url }}" target="_blank" rel="noopener" class="pdg-play-btn" aria-label="Play video">
+            <svg width="48" height="48" viewBox="0 0 64 64" fill="none">
+              <circle cx="32" cy="32" r="30" fill="rgba(255,255,255,0.9)" stroke="none"/>
+              <polygon points="26,20 26,44 46,32" fill="#101a32"/>
+            </svg>
+          </a>
+        </div>
+      {% elsif section.settings.media_image != blank %}
+        <div class="pdg-media-wrap">
+          <img
+            src="{{ section.settings.media_image | image_url: width: 1200 }}"
+            alt="{{ section.settings.heading | escape }}"
+            class="pdg-media-img"
+            loading="lazy"
+          >
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- BOTTOM RIGHT: Technical Specifications -->
+    <div class="pdg-cell pdg-cell--specs">
+      {% if section.settings.specs_heading != blank %}
+        <h2 class="pdg-specs-heading">{{ section.settings.specs_heading }}</h2>
+      {% endif %}
+
+      {% if section.settings.specs_content != blank %}
+        <div class="pdg-specs-content">{{ section.settings.specs_content }}</div>
+      {% endif %}
+    </div>
+
+  </div>
+</section>
+
+<style>
+  #pdg-{{ section.id }} {
+    padding: {{ section.settings.padding_top }}px 20px {{ section.settings.padding_bottom }}px;
+    background-color: {{ section.settings.bg_color }};
+  }
+
+  #pdg-{{ section.id }} .pdg-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+
+  /* ── Cells ── */
+  #pdg-{{ section.id }} .pdg-cell {
+    padding: 40px 44px;
+  }
+
+  #pdg-{{ section.id }} .pdg-cell--text {
+    border-bottom: 1px solid #eee;
+    border-right: 1px solid #eee;
+  }
+
+  #pdg-{{ section.id }} .pdg-cell--promise {
+    border-bottom: 1px solid #eee;
+  }
+
+  #pdg-{{ section.id }} .pdg-cell--media {
+    border-right: 1px solid #eee;
+    padding: 40px 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #pdg-{{ section.id }} .pdg-cell--specs {
+    padding: 40px 44px;
+  }
+
+  /* ── Top Left: Heading + Desc ── */
+  #pdg-{{ section.id }} .pdg-heading {
+    font-size: 28px;
+    font-weight: 700;
+    color: #101a32;
+    margin: 0 0 20px;
+    line-height: 1.25;
+    font-style: italic;
+  }
+
+  #pdg-{{ section.id }} .pdg-description {
+    font-size: 15px;
+    line-height: 1.75;
+    color: #444;
+    font-style: italic;
+  }
+
+  #pdg-{{ section.id }} .pdg-description p {
+    margin: 0 0 12px;
+  }
+
+  #pdg-{{ section.id }} .pdg-description p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* ── Top Right: Promise ── */
+  #pdg-{{ section.id }} .pdg-promise-heading {
+    font-size: 28px;
+    font-weight: 700;
+    color: #101a32;
+    margin: 0 0 28px;
+    line-height: 1.25;
+  }
+
+  #pdg-{{ section.id }} .pdg-promise-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  #pdg-{{ section.id }} .pdg-promise-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  #pdg-{{ section.id }} .pdg-promise-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #pdg-{{ section.id }} .pdg-promise-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
+  #pdg-{{ section.id }} .pdg-promise-icon--placeholder {
+    background: #101a32;
+    color: #fff;
+  }
+
+  #pdg-{{ section.id }} .pdg-promise-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #101a32;
+    margin: 0 0 2px;
+  }
+
+  #pdg-{{ section.id }} .pdg-promise-subtitle {
+    font-size: 13px;
+    color: #1a6dcc;
+    margin: 0;
+  }
+
+  /* ── Bottom Left: Media ── */
+  #pdg-{{ section.id }} .pdg-media-wrap {
+    position: relative;
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  #pdg-{{ section.id }} .pdg-media-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+
+  #pdg-{{ section.id }} .pdg-play-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+    text-decoration: none;
+  }
+
+  #pdg-{{ section.id }} .pdg-play-btn:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+
+  /* ── Bottom Right: Specs ── */
+  #pdg-{{ section.id }} .pdg-specs-heading {
+    font-size: 28px;
+    font-weight: 700;
+    color: #101a32;
+    margin: 0 0 24px;
+    line-height: 1.25;
+    font-style: italic;
+  }
+
+  #pdg-{{ section.id }} .pdg-specs-content {
+    font-size: 14px;
+    line-height: 1.8;
+    color: #555;
+  }
+
+  #pdg-{{ section.id }} .pdg-specs-content p {
+    margin: 0 0 4px;
+  }
+
+  #pdg-{{ section.id }} .pdg-specs-content p:last-child {
+    margin-bottom: 0;
+  }
+
+  #pdg-{{ section.id }} .pdg-specs-content strong,
+  #pdg-{{ section.id }} .pdg-specs-content b {
+    color: #101a32;
+    font-weight: 700;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 900px) {
+    #pdg-{{ section.id }} .pdg-grid {
+      grid-template-columns: 1fr;
+    }
+
+    #pdg-{{ section.id }} .pdg-cell--text,
+    #pdg-{{ section.id }} .pdg-cell--promise,
+    #pdg-{{ section.id }} .pdg-cell--media {
+      border-right: none;
+      border-bottom: 1px solid #eee;
+    }
+
+    #pdg-{{ section.id }} .pdg-cell {
+      padding: 32px 24px;
+    }
+
+    #pdg-{{ section.id }} .pdg-heading,
+    #pdg-{{ section.id }} .pdg-promise-heading,
+    #pdg-{{ section.id }} .pdg-specs-heading {
+      font-size: 24px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Product Details Grid",
+  "tag": "div",
+  "class": "product-details-grid-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Top Left — Heading & Description"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "A New Benchmark in Modern Design and Innovation."
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>NuraCom is a modern electric laundry rack built for homes that want smarter drying, better hygiene, and a cleaner everyday routine. Designed to combine convenience with performance, it features telescopic poles to give you flexible hanging space without taking over the room. It's made for households that want laundry to feel faster, easier, and more efficient.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Top Right — Promise"
+    },
+    {
+      "type": "text",
+      "id": "promise_heading",
+      "label": "Promise Heading",
+      "default": "The Nuracom Satisfaction Guarantee"
+    },
+    {
+      "type": "header",
+      "content": "Bottom Left — Media"
+    },
+    {
+      "type": "image_picker",
+      "id": "media_image",
+      "label": "Image / Video Thumbnail"
+    },
+    {
+      "type": "url",
+      "id": "video_url",
+      "label": "Video URL (optional)",
+      "info": "YouTube or Vimeo link. Leave blank for image only."
+    },
+    {
+      "type": "header",
+      "content": "Bottom Right — Technical Specs"
+    },
+    {
+      "type": "text",
+      "id": "specs_heading",
+      "label": "Specs Heading",
+      "default": "Technical Specifications"
+    },
+    {
+      "type": "richtext",
+      "id": "specs_content",
+      "label": "Specifications",
+      "info": "Use bold for labels. Example: **Dimensions:** 130 ~ 220 cm",
+      "default": "<p><strong>Dimensions:</strong> Expandable pole range: 130 ~ 220 cm</p><p><strong>Main Host Size:</strong> 1200 × 330 × 80 mm</p><p><strong>Load Capacity:</strong> 30kg</p><p><strong>Expandable / Telescopic Rod Size:</strong> 1300–2200 mm</p><p><strong>Material:</strong> Top Grade Aluminium Alloy</p><p><strong>Safety Features:</strong> Obstruction Sensor & Human Detection Switch (UV Sterilization Lamp)</p><p><strong>Motor:</strong> Ultra-silent motor</p><p><strong>Voice Control Module:</strong> Yes</p><p><strong>Ioniser Module:</strong> No, Available in Stratos only.</p><p><strong>LED Light:</strong> Double lighting, 3 lighting modes</p>"
+    },
+    {
+      "type": "header",
+      "content": "Section Settings"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 120,
+      "step": 10,
+      "default": 40,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 120,
+      "step": 10,
+      "default": 40,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "promise_item",
+      "name": "Promise Item",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "5 Year Warranty"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitle",
+          "default": "Excellent after-sales care"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Details Grid",
+      "blocks": [
+        {
+          "type": "promise_item",
+          "settings": {
+            "title": "5 Year Warranty",
+            "subtitle": "Amazing after-sales care"
+          }
+        },
+        {
+          "type": "promise_item",
+          "settings": {
+            "title": "Great Value & Easy Install",
+            "subtitle": "Free Delivery & Install Guidance"
+          }
+        },
+        {
+          "type": "promise_item",
+          "settings": {
+            "title": "Transparent Prices & Great Quality",
+            "subtitle": "No middleman or markup fees, only fantastic materials."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

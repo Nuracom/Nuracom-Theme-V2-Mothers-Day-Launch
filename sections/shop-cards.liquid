@@ -1,0 +1,366 @@
+{% comment %}
+  Shop Cards Section — 3 product cards with variant image swatches
+  Add to: sections/shop-cards.liquid
+{% endcomment %}
+
+<section id="shop-cards-{{ section.id }}" style="background-color: {{ section.settings.bg_color }}; padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+  <div class="sc-container">
+
+    {% if section.settings.heading != blank %}
+      <h2 class="sc-heading">{{ section.settings.heading }}</h2>
+    {% endif %}
+
+    {% if section.settings.subtext != blank %}
+      <p class="sc-subtext">{{ section.settings.subtext }}</p>
+    {% endif %}
+
+    <div class="sc-grid">
+      {% for block in section.blocks %}
+        {% if block.type == 'product_card' %}
+          <div class="sc-card" {{ block.shopify_attributes }}>
+            <a href="{{ block.settings.product_url }}" class="sc-card__link">
+
+              <div class="sc-card__image-wrap">
+                {% if block.settings.image_1 != blank %}
+                  <img
+                    src="{{ block.settings.image_1 | image_url: width: 800 }}"
+                    alt="{{ block.settings.title }}"
+                    class="sc-card__image sc-card__image--active"
+                    loading="lazy"
+                    data-index="0"
+                  >
+                {% endif %}
+                {% if block.settings.image_2 != blank %}
+                  <img
+                    src="{{ block.settings.image_2 | image_url: width: 800 }}"
+                    alt="{{ block.settings.title }}"
+                    class="sc-card__image"
+                    loading="lazy"
+                    data-index="1"
+                  >
+                {% endif %}
+                {% if block.settings.image_3 != blank %}
+                  <img
+                    src="{{ block.settings.image_3 | image_url: width: 800 }}"
+                    alt="{{ block.settings.title }}"
+                    class="sc-card__image"
+                    loading="lazy"
+                    data-index="2"
+                  >
+                {% endif %}
+              </div>
+
+              <div class="sc-card__swatches">
+                {% if block.settings.image_1 != blank %}
+                  <button type="button" class="sc-swatch sc-swatch--active" data-index="0" aria-label="View variant 1">
+                    <img src="{{ block.settings.image_1 | image_url: width: 80 }}" alt="" loading="lazy">
+                  </button>
+                {% endif %}
+                {% if block.settings.image_2 != blank %}
+                  <button type="button" class="sc-swatch" data-index="1" aria-label="View variant 2">
+                    <img src="{{ block.settings.image_2 | image_url: width: 80 }}" alt="" loading="lazy">
+                  </button>
+                {% endif %}
+                {% if block.settings.image_3 != blank %}
+                  <button type="button" class="sc-swatch" data-index="2" aria-label="View variant 3">
+                    <img src="{{ block.settings.image_3 | image_url: width: 80 }}" alt="" loading="lazy">
+                  </button>
+                {% endif %}
+              </div>
+
+              {% if block.settings.category != blank %}
+                <p class="sc-card__category">{{ block.settings.category }}</p>
+              {% endif %}
+
+              {% if block.settings.title != blank %}
+                <h3 class="sc-card__title">{{ block.settings.title }}</h3>
+              {% endif %}
+
+              {% if block.settings.price != blank %}
+                <p class="sc-card__price">{{ block.settings.price }}</p>
+              {% endif %}
+
+            </a>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+  </div>
+</section>
+
+<style>
+  #shop-cards-{{ section.id }} {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  #shop-cards-{{ section.id }} .sc-container {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  #shop-cards-{{ section.id }} .sc-heading {
+    text-align: center;
+    font-size: 36px;
+    font-weight: 700;
+    color: #101a32;
+    margin: 0 0 14px;
+    line-height: 1.2;
+  }
+
+  #shop-cards-{{ section.id }} .sc-subtext {
+    text-align: center;
+    font-size: 15px;
+    color: #555;
+    margin: 0 0 36px;
+    line-height: 1.5;
+  }
+
+  #shop-cards-{{ section.id }} .sc-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  #shop-cards-{{ section.id }} .sc-card {
+    background: #ffffff;
+    border: 1px solid #e8e3dd;
+    border-radius: 16px;
+    overflow: hidden;
+    transition: box-shadow 0.2s ease;
+  }
+
+  #shop-cards-{{ section.id }} .sc-card:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  }
+
+  #shop-cards-{{ section.id }} .sc-card__link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    padding: 20px 20px 24px;
+  }
+
+  #shop-cards-{{ section.id }} .sc-card__image-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #shop-cards-{{ section.id }} .sc-card__image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  #shop-cards-{{ section.id }} .sc-card__image--active {
+    opacity: 1;
+  }
+
+  #shop-cards-{{ section.id }} .sc-card__swatches {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  #shop-cards-{{ section.id }} .sc-swatch {
+    width: 40px;
+    height: 40px;
+    border: 2px solid transparent;
+    border-radius: 6px;
+    padding: 2px;
+    background: #fff;
+    cursor: pointer;
+    overflow: hidden;
+    transition: border-color 0.2s ease;
+  }
+
+  #shop-cards-{{ section.id }} .sc-swatch--active {
+    border-color: #101a32;
+  }
+
+  #shop-cards-{{ section.id }} .sc-swatch img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  #shop-cards-{{ section.id }} .sc-card__category {
+    text-align: center;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #888;
+    margin: 0 0 4px;
+  }
+
+  #shop-cards-{{ section.id }} .sc-card__title {
+    text-align: center;
+    font-size: 18px;
+    font-weight: 600;
+    font-style: italic;
+    color: #101a32;
+    margin: 0 0 6px;
+  }
+
+  #shop-cards-{{ section.id }} .sc-card__price {
+    text-align: center;
+    font-size: 17px;
+    font-weight: 700;
+    color: #866653;
+    margin: 0;
+  }
+
+  @media (max-width: 900px) {
+    #shop-cards-{{ section.id }} .sc-grid {
+      grid-template-columns: 1fr;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+
+    #shop-cards-{{ section.id }} .sc-heading {
+      font-size: 28px;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('#shop-cards-{{ section.id }} .sc-card').forEach(function (card) {
+      var swatches = card.querySelectorAll('.sc-swatch');
+      var images = card.querySelectorAll('.sc-card__image');
+
+      swatches.forEach(function (swatch) {
+        swatch.addEventListener('click', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          var idx = this.dataset.index;
+
+          swatches.forEach(function (s) { s.classList.remove('sc-swatch--active'); });
+          images.forEach(function (img) { img.classList.remove('sc-card__image--active'); });
+
+          this.classList.add('sc-swatch--active');
+          var target = card.querySelector('.sc-card__image[data-index="' + idx + '"]');
+          if (target) target.classList.add('sc-card__image--active');
+        });
+      });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Shop Cards",
+  "tag": "section",
+  "class": "shop-cards-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Singapore's Thinnest Automated Laundry Racks"
+    },
+    {
+      "type": "text",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "With NuraCom, it's not just laundry – it's the promise of perfect drying, every time."
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product_card",
+      "name": "Product Card",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image_1",
+          "label": "Variant Image 1 (Black)"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_2",
+          "label": "Variant Image 2 (Grey)"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_3",
+          "label": "Variant Image 3 (White)"
+        },
+        {
+          "type": "text",
+          "id": "category",
+          "label": "Category Label",
+          "default": "AUTOMATED LAUNDRY RACK"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Product Name",
+          "default": "NuraCom Breeze"
+        },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "Price",
+          "default": "$599.00"
+        },
+        {
+          "type": "url",
+          "id": "product_url",
+          "label": "Product Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shop Cards",
+      "blocks": [
+        { "type": "product_card", "settings": { "title": "NuraCom Breeze", "price": "$599.00", "category": "AUTOMATED LAUNDRY RACK" } },
+        { "type": "product_card", "settings": { "title": "NuraCom Aero", "price": "$899.00", "category": "AUTOMATED LAUNDRY RACK" } },
+        { "type": "product_card", "settings": { "title": "NuraCom Stratos", "price": "$1,199.00", "category": "AUTOMATED LAUNDRY RACK" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

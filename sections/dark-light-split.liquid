@@ -1,0 +1,244 @@
+{% comment %}
+  Dark + Light Split Feature Section
+  - Top: Dark background, text left / image right
+  - Bottom: White background, image left / text right
+  - Italic text styling
+  Add to: sections/dark-light-split.liquid
+{% endcomment %}
+
+<section id="dls-{{ section.id }}">
+
+  <!-- Dark Row -->
+  <div class="dls-row dls-row--dark">
+    <div class="dls-row__text">
+      {% if section.settings.dark_heading != blank %}
+        <h2 class="dls-heading">{{ section.settings.dark_heading }}</h2>
+      {% endif %}
+      {% if section.settings.dark_description != blank %}
+        <div class="dls-desc">{{ section.settings.dark_description }}</div>
+      {% endif %}
+    </div>
+    <div class="dls-row__image">
+      {% if section.settings.dark_image != blank %}
+        <img
+          src="{{ section.settings.dark_image | image_url: width: 1000 }}"
+          alt="{{ section.settings.dark_heading | escape }}"
+          class="dls-img"
+          loading="lazy"
+        >
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Light Row -->
+  <div class="dls-row dls-row--light">
+    <div class="dls-row__image">
+      {% if section.settings.light_image != blank %}
+        <img
+          src="{{ section.settings.light_image | image_url: width: 1000 }}"
+          alt="{{ section.settings.light_heading | escape }}"
+          class="dls-img"
+          loading="lazy"
+        >
+      {% endif %}
+    </div>
+    <div class="dls-row__text">
+      {% if section.settings.light_heading != blank %}
+        <h2 class="dls-heading dls-heading--dark-text">{{ section.settings.light_heading }}</h2>
+      {% endif %}
+      {% if section.settings.light_description != blank %}
+        <div class="dls-desc dls-desc--dark-text">{{ section.settings.light_description }}</div>
+      {% endif %}
+    </div>
+  </div>
+
+</section>
+
+<style>
+  #dls-{{ section.id }} {
+    width: 100%;
+  }
+
+  /* ── Row Base ── */
+  #dls-{{ section.id }} .dls-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    min-height: 380px;
+  }
+
+  /* ── Dark Row ── */
+  #dls-{{ section.id }} .dls-row--dark {
+    background-color: {{ section.settings.dark_bg_color }};
+  }
+
+  #dls-{{ section.id }} .dls-row--dark .dls-heading {
+    color: {{ section.settings.dark_text_color }};
+  }
+
+  #dls-{{ section.id }} .dls-row--dark .dls-desc {
+    color: {{ section.settings.dark_text_color }};
+    opacity: 0.85;
+  }
+
+  /* ── Light Row ── */
+  #dls-{{ section.id }} .dls-row--light {
+    background-color: {{ section.settings.light_bg_color }};
+  }
+
+  #dls-{{ section.id }} .dls-heading--dark-text {
+    color: #101a32;
+  }
+
+  #dls-{{ section.id }} .dls-desc--dark-text {
+    color: #444;
+  }
+
+  /* ── Text ── */
+  #dls-{{ section.id }} .dls-row__text {
+    padding: 50px 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  #dls-{{ section.id }} .dls-heading {
+    font-size: 30px;
+    font-weight: 700;
+    margin: 0 0 20px;
+    line-height: 1.25;
+    font-style: italic;
+  }
+
+  #dls-{{ section.id }} .dls-desc {
+    font-size: 15px;
+    line-height: 1.75;
+    font-style: italic;
+  }
+
+  #dls-{{ section.id }} .dls-desc p {
+    margin: 0 0 14px;
+  }
+
+  #dls-{{ section.id }} .dls-desc p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* ── Image ── */
+  #dls-{{ section.id }} .dls-row__image {
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #dls-{{ section.id }} .dls-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    #dls-{{ section.id }} .dls-row {
+      grid-template-columns: 1fr;
+      min-height: auto;
+    }
+
+    #dls-{{ section.id }} .dls-row--light .dls-row__image {
+      order: 1;
+    }
+
+    #dls-{{ section.id }} .dls-row--light .dls-row__text {
+      order: 2;
+    }
+
+    #dls-{{ section.id }} .dls-row__text {
+      padding: 32px 24px;
+    }
+
+    #dls-{{ section.id }} .dls-row__image {
+      min-height: 240px;
+    }
+
+    #dls-{{ section.id }} .dls-heading {
+      font-size: 24px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Dark + Light Split",
+  "tag": "div",
+  "class": "dark-light-split-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Dark Row (Top)"
+    },
+    {
+      "type": "text",
+      "id": "dark_heading",
+      "label": "Heading",
+      "default": "A Silent Symphony"
+    },
+    {
+      "type": "richtext",
+      "id": "dark_description",
+      "label": "Description",
+      "default": "<p>We know that a quiet environment is vital to a comfortable home. That's why we've designed our product with whisper-quiet operation in mind. In addition, our upgraded DC motor is engineered to minimise wear-and-tear, providing a prolonged lifespan for your NuraCom Stratos.</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "dark_image",
+      "label": "Image"
+    },
+    {
+      "type": "color",
+      "id": "dark_bg_color",
+      "label": "Dark Row Background",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "dark_text_color",
+      "label": "Dark Row Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Light Row (Bottom)"
+    },
+    {
+      "type": "text",
+      "id": "light_heading",
+      "label": "Heading",
+      "default": "Always Perfectly Adjusted By You"
+    },
+    {
+      "type": "richtext",
+      "id": "light_description",
+      "label": "Description",
+      "default": "<p>Enjoy complete control over your laundry area lighting. NuraCom Stratos features 3 lighting modes for you to choose the perfect comfortable and convenient setting. Whether you prefer a bright, well-lit space or a more relaxed, subdued atmosphere, we've got you covered.</p><p>Also, you're free to do laundry anytime without worrying about harsh or inadequate lighting. Alternatively, feel free to leave the lights on and use NuraCom Stratos as an elegant and practical lighting solution for your laundry room.</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "light_image",
+      "label": "Image"
+    },
+    {
+      "type": "color",
+      "id": "light_bg_color",
+      "label": "Light Row Background",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Dark + Light Split"
+    }
+  ]
+}
+{% endschema %}

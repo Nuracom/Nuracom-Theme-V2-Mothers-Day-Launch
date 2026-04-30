@@ -1,0 +1,302 @@
+{% comment %}
+  Nuracom Warranty & Trust — Reinforces Beliefs #3 + #4
+  5-year true-cost comparison, payback timeline, warranty depth, trust cards.
+  This is the final conversion engine before CTA.
+{% endcomment %}
+
+<style>
+  #shopify-section-{{ section.id }} {
+    --brand-deep: {{ section.settings.brand_deep }};
+    --white: {{ section.settings.white }};
+    --positive: {{ section.settings.positive_color }};
+    --negative: {{ section.settings.negative_color }};
+    --payback: {{ section.settings.payback_color }};
+    --radius: 12px;
+    --radius-lg: 20px;
+    --max-width: 1120px;
+    --section-pad: clamp(44px, 6vw, 80px);
+  }
+  #shopify-section-{{ section.id }} * { box-sizing: border-box; }
+  #shopify-section-{{ section.id }} .ntrust { padding: var(--section-pad) 0 calc(var(--section-pad) * 0.85); background: var(--brand-deep); color: var(--white); position: relative; overflow: hidden; font-family: 'Inter', -apple-system, sans-serif; scroll-margin-top: 80px; }
+  #shopify-section-{{ section.id }} .ntrust::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 70% 30%, rgba(255,255,255,0.05) 0%, transparent 60%); pointer-events: none; }
+  #shopify-section-{{ section.id }} .ntrust__container { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; position: relative; z-index: 2; }
+  #shopify-section-{{ section.id }} .ntrust__header { text-align: center; max-width: 700px; margin: 0 auto 50px; }
+  #shopify-section-{{ section.id }} .ntrust__kicker { font-size: 0.75rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: {{ section.settings.kicker_color }}; margin-bottom: 12px; display: block; }
+  #shopify-section-{{ section.id }} .ntrust__headline { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; line-height: 1.2; color: var(--white); margin: 0 0 20px; }
+  #shopify-section-{{ section.id }} .ntrust__sub { font-size: clamp(1.05rem, 1.5vw, 1.2rem); color: rgba(255,255,255,0.7); line-height: 1.7; margin: 0 auto; max-width: 640px; }
+
+  #shopify-section-{{ section.id }} .ntrust__price-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 820px; margin: 0 auto 50px; }
+  #shopify-section-{{ section.id }} .ntrust__price-col { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-lg); padding: 32px 28px; }
+  #shopify-section-{{ section.id }} .ntrust__price-col--nuracom { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.25); }
+  #shopify-section-{{ section.id }} .ntrust__price-col-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; opacity: 0.5; margin: 0 0 4px; }
+  #shopify-section-{{ section.id }} .ntrust__price-col-name { font-size: 1.2rem; font-weight: 700; margin: 0 0 16px; }
+  #shopify-section-{{ section.id }} .ntrust__price-col-price { font-family: 'Playfair Display', Georgia, serif; font-size: 2.2rem; font-weight: 700; margin: 0 0 4px; }
+  #shopify-section-{{ section.id }} .ntrust__price-col-sub { font-size: 0.8rem; opacity: 0.5; margin: 0 0 20px; }
+  #shopify-section-{{ section.id }} .ntrust__price-col-row { display: flex; justify-content: space-between; align-items: baseline; padding: 8px 0; border-top: 1px solid rgba(255,255,255,0.08); font-size: 0.85rem; }
+  #shopify-section-{{ section.id }} .ntrust__price-col-row span:last-child { font-weight: 600; }
+  #shopify-section-{{ section.id }} .ntrust__price-col-row--total { border-top: 1px solid rgba(255,255,255,0.2); padding-top: 12px; margin-top: 4px; font-size: 0.95rem; }
+  #shopify-section-{{ section.id }} .ntrust__price-col--nuracom .ntrust__price-col-row--total { border-top-color: rgba(255,255,255,0.25); }
+  #shopify-section-{{ section.id }} .ntrust__price-col--dryer .ntrust__num-bad { color: var(--negative); }
+  #shopify-section-{{ section.id }} .ntrust__price-col--nuracom .ntrust__num-good { color: var(--positive); }
+  #shopify-section-{{ section.id }} .ntrust__price-col-warranty { margin-top: 20px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.12); }
+  #shopify-section-{{ section.id }} .ntrust__price-col-warranty-title { font-size: 0.75rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.5; margin: 0 0 10px; }
+  #shopify-section-{{ section.id }} .ntrust__warranty-item { display: flex; align-items: baseline; gap: 10px; padding: 5px 0; font-size: 0.85rem; }
+  #shopify-section-{{ section.id }} .ntrust__warranty-years { font-weight: 800; font-size: 1rem; min-width: 52px; color: var(--positive); }
+  #shopify-section-{{ section.id }} .ntrust__price-col--dryer .ntrust__warranty-years { color: rgba(255,255,255,0.4); }
+  #shopify-section-{{ section.id }} .ntrust__warranty-desc { opacity: 0.8; }
+
+  #shopify-section-{{ section.id }} .ntrust__payback { max-width: 820px; margin: 0 auto 50px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-lg); padding: 36px 32px; }
+  #shopify-section-{{ section.id }} .ntrust__payback-headline { font-size: 1.3rem; font-weight: 800; margin: 0 0 6px; text-align: center; }
+  #shopify-section-{{ section.id }} .ntrust__payback-sub { font-size: 0.95rem; opacity: 0.7; text-align: center; margin: 0 0 28px; line-height: 1.6; }
+  #shopify-section-{{ section.id }} .ntrust__timeline { position: relative; display: flex; justify-content: space-between; padding: 0 8px; margin-bottom: 12px; }
+  #shopify-section-{{ section.id }} .ntrust__timeline::before { content: ''; position: absolute; top: 20px; left: 8px; right: 8px; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; }
+  #shopify-section-{{ section.id }} .ntrust__timeline::after { content: ''; position: absolute; top: 20px; left: 8px; width: 35%; height: 4px; background: linear-gradient(90deg, var(--positive), var(--payback)); border-radius: 2px; }
+  #shopify-section-{{ section.id }} .ntrust__timeline-point { position: relative; text-align: center; z-index: 2; flex: 1; }
+  #shopify-section-{{ section.id }} .ntrust__timeline-year { font-size: 0.75rem; font-weight: 700; opacity: 0.5; }
+  #shopify-section-{{ section.id }} .ntrust__timeline-dot { width: 14px; height: 14px; border-radius: 50%; background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.3); margin: 14px auto 10px; }
+  #shopify-section-{{ section.id }} .ntrust__timeline-dot--active { background: var(--positive); border-color: var(--positive); box-shadow: 0 0 12px rgba(74,222,128,0.4); }
+  #shopify-section-{{ section.id }} .ntrust__timeline-dot--payback { background: var(--payback); border-color: var(--payback); box-shadow: 0 0 12px rgba(251,191,36,0.4); }
+  #shopify-section-{{ section.id }} .ntrust__timeline-label { font-size: 0.7rem; opacity: 0.6; margin-top: 2px; line-height: 1.3; }
+  #shopify-section-{{ section.id }} .ntrust__timeline-label--highlight { color: var(--payback); opacity: 1; font-weight: 700; }
+  #shopify-section-{{ section.id }} .ntrust__timeline-label--green { color: var(--positive); opacity: 1; font-weight: 600; }
+  #shopify-section-{{ section.id }} .ntrust__payback-note { font-size: 0.8rem; opacity: 0.5; text-align: center; margin: 8px 0 0; }
+
+  #shopify-section-{{ section.id }} .ntrust__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 820px; margin: 0 auto; }
+  #shopify-section-{{ section.id }} .ntrust__card { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: var(--radius); padding: 32px 24px; text-align: center; backdrop-filter: blur(4px); transition: all 0.3s ease; }
+  #shopify-section-{{ section.id }} .ntrust__card:hover { background: rgba(255,255,255,0.12); transform: translateY(-4px); }
+  #shopify-section-{{ section.id }} .ntrust__card-icon { font-size: 2.5rem; margin-bottom: 16px; }
+  #shopify-section-{{ section.id }} .ntrust__card-title { font-size: 1.15rem; font-weight: 700; margin: 0 0 8px; }
+  #shopify-section-{{ section.id }} .ntrust__card-text { font-size: 0.9rem; color: rgba(255,255,255,0.7); line-height: 1.6; margin: 0; }
+  #shopify-section-{{ section.id }} .ntrust__reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
+  #shopify-section-{{ section.id }} .ntrust__reveal.is-visible { opacity: 1; transform: translateY(0); }
+  #shopify-section-{{ section.id }} .ntrust__reveal--d1 { transition-delay: 0.1s; }
+  #shopify-section-{{ section.id }} .ntrust__reveal--d2 { transition-delay: 0.2s; }
+  #shopify-section-{{ section.id }} .ntrust__reveal--d3 { transition-delay: 0.3s; }
+
+  @media (max-width: 900px) {
+    #shopify-section-{{ section.id }} .ntrust__price-compare { grid-template-columns: 1fr; max-width: 420px; margin: 0 auto 50px; }
+    #shopify-section-{{ section.id }} .ntrust__grid { grid-template-columns: 1fr; max-width: 420px; margin: 0 auto; }
+    #shopify-section-{{ section.id }} .ntrust__timeline-label { font-size: 0.6rem; }
+    #shopify-section-{{ section.id }} .ntrust__timeline-year { font-size: 0.65rem; }
+  }
+</style>
+
+<section class="ntrust" id="warranty-trust">
+  <span id="savings" aria-hidden="true" style="position:absolute;top:-80px;"></span>
+  <div class="ntrust__container">
+
+    <div class="ntrust__header ntrust__reveal">
+      {% if section.settings.kicker != blank %}
+        <span class="ntrust__kicker">{{ section.settings.kicker }}</span>
+      {% endif %}
+      <h2 class="ntrust__headline">{{ section.settings.heading }}</h2>
+      {% if section.settings.subheading != blank %}
+        <p class="ntrust__sub">{{ section.settings.subheading }}</p>
+      {% endif %}
+    </div>
+
+    <div class="ntrust__price-compare ntrust__reveal">
+      <div class="ntrust__price-col ntrust__price-col--dryer">
+        <p class="ntrust__price-col-label">{{ section.settings.dryer_label }}</p>
+        <p class="ntrust__price-col-name">{{ section.settings.dryer_name }}</p>
+        <p class="ntrust__price-col-price">{{ section.settings.dryer_price }}</p>
+        <p class="ntrust__price-col-sub">{{ section.settings.dryer_sub }}</p>
+        <div class="ntrust__price-col-row"><span>{{ section.settings.dryer_row_1_label }}</span> <span class="ntrust__num-bad">{{ section.settings.dryer_row_1_value }}</span></div>
+        <div class="ntrust__price-col-row"><span>{{ section.settings.dryer_row_2_label }}</span> <span class="ntrust__num-bad">{{ section.settings.dryer_row_2_value }}</span></div>
+        <div class="ntrust__price-col-row ntrust__price-col-row--total"><span><strong>{{ section.settings.dryer_total_label }}</strong></span> <span class="ntrust__num-bad"><strong>{{ section.settings.dryer_total_value }}</strong></span></div>
+        <div class="ntrust__price-col-warranty">
+          <p class="ntrust__price-col-warranty-title">{{ section.settings.dryer_warranty_title }}</p>
+          <div class="ntrust__warranty-item"><span class="ntrust__warranty-years">{{ section.settings.dryer_w1_years }}</span> <span class="ntrust__warranty-desc">{{ section.settings.dryer_w1_desc }}</span></div>
+          <div class="ntrust__warranty-item"><span class="ntrust__warranty-years">{{ section.settings.dryer_w2_years }}</span> <span class="ntrust__warranty-desc">{{ section.settings.dryer_w2_desc }}</span></div>
+          <div class="ntrust__warranty-item"><span class="ntrust__warranty-years">{{ section.settings.dryer_w3_years }}</span> <span class="ntrust__warranty-desc">{{ section.settings.dryer_w3_desc }}</span></div>
+        </div>
+      </div>
+
+      <div class="ntrust__price-col ntrust__price-col--nuracom">
+        <p class="ntrust__price-col-label">{{ section.settings.nuracom_label }}</p>
+        <p class="ntrust__price-col-name">{{ section.settings.nuracom_name }}</p>
+        <p class="ntrust__price-col-price">{{ section.settings.nuracom_price }}</p>
+        <p class="ntrust__price-col-sub">{{ section.settings.nuracom_sub }}</p>
+        <div class="ntrust__price-col-row"><span>{{ section.settings.nuracom_row_1_label }}</span> <span class="ntrust__num-good">{{ section.settings.nuracom_row_1_value }}</span></div>
+        <div class="ntrust__price-col-row"><span>{{ section.settings.nuracom_row_2_label }}</span> <span class="ntrust__num-good">{{ section.settings.nuracom_row_2_value }}</span></div>
+        <div class="ntrust__price-col-row ntrust__price-col-row--total"><span><strong>{{ section.settings.nuracom_total_label }}</strong></span> <span class="ntrust__num-good"><strong>{{ section.settings.nuracom_total_value }}</strong></span></div>
+        <div class="ntrust__price-col-warranty">
+          <p class="ntrust__price-col-warranty-title">{{ section.settings.nuracom_warranty_title }}</p>
+          <div class="ntrust__warranty-item"><span class="ntrust__warranty-years">{{ section.settings.nuracom_w1_years }}</span> <span class="ntrust__warranty-desc">{{ section.settings.nuracom_w1_desc }}</span></div>
+          <div class="ntrust__warranty-item"><span class="ntrust__warranty-years">{{ section.settings.nuracom_w2_years }}</span> <span class="ntrust__warranty-desc">{{ section.settings.nuracom_w2_desc }}</span></div>
+          <div class="ntrust__warranty-item"><span class="ntrust__warranty-years">{{ section.settings.nuracom_w3_years }}</span> <span class="ntrust__warranty-desc">{{ section.settings.nuracom_w3_desc }}</span></div>
+        </div>
+      </div>
+    </div>
+
+    {% assign timeline_blocks = section.blocks | where: "type", "timeline_point" %}
+    {% if timeline_blocks.size > 0 %}
+      <div class="ntrust__payback ntrust__reveal">
+        <p class="ntrust__payback-headline">{{ section.settings.payback_headline }}</p>
+        {% if section.settings.payback_sub != blank %}
+          <p class="ntrust__payback-sub">{{ section.settings.payback_sub }}</p>
+        {% endif %}
+        <div class="ntrust__timeline">
+          {% for block in timeline_blocks %}
+            <div class="ntrust__timeline-point" {{ block.shopify_attributes }}>
+              <p class="ntrust__timeline-year">{{ block.settings.year }}</p>
+              <div class="ntrust__timeline-dot{% if block.settings.dot_style == 'active' %} ntrust__timeline-dot--active{% elsif block.settings.dot_style == 'payback' %} ntrust__timeline-dot--payback{% endif %}"></div>
+              <p class="ntrust__timeline-label{% if block.settings.label_style == 'highlight' %} ntrust__timeline-label--highlight{% elsif block.settings.label_style == 'green' %} ntrust__timeline-label--green{% endif %}">{{ block.settings.label }}</p>
+            </div>
+          {% endfor %}
+        </div>
+        {% if section.settings.payback_note != blank %}
+          <p class="ntrust__payback-note">{{ section.settings.payback_note }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% assign trust_blocks = section.blocks | where: "type", "trust_card" %}
+    {% if trust_blocks.size > 0 %}
+      <div class="ntrust__grid">
+        {% for block in trust_blocks %}
+          <div class="ntrust__card ntrust__reveal ntrust__reveal--d{{ forloop.index }}" {{ block.shopify_attributes }}>
+            <div class="ntrust__card-icon">{{ block.settings.icon }}</div>
+            <h3 class="ntrust__card-title">{{ block.settings.title }}</h3>
+            <p class="ntrust__card-text">{{ block.settings.text }}</p>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<script>
+  (function() {
+    var root = document.getElementById('shopify-section-{{ section.id }}');
+    if (!root) return;
+    var els = root.querySelectorAll('.ntrust__reveal');
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) { if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); } });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    els.forEach(function(el) { io.observe(el); });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Warranty & Trust",
+  "tag": "section",
+  "class": "nuracom-warranty-trust-section",
+  "settings": [
+    { "type": "header", "content": "Header" },
+    { "type": "text", "id": "kicker", "label": "Kicker", "default": "The Full Picture" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Compare the Real Cost of Ownership" },
+    { "type": "textarea", "id": "subheading", "label": "Subheading", "default": "A dryer looks cheaper on the shelf. But once you factor in what you'll actually spend over the next 5 years — and what you're protected by — the picture changes completely." },
+
+    { "type": "header", "content": "Dryer column" },
+    { "type": "text", "id": "dryer_label", "label": "Label", "default": "Traditional" },
+    { "type": "text", "id": "dryer_name", "label": "Name", "default": "Mid-Range Tumble Dryer" },
+    { "type": "text", "id": "dryer_price", "label": "Price", "default": "$700–$1,200" },
+    { "type": "text", "id": "dryer_sub", "label": "Sub", "default": "Upfront purchase price" },
+    { "type": "text", "id": "dryer_row_1_label", "label": "Row 1 label", "default": "+ Energy (5 years)" },
+    { "type": "text", "id": "dryer_row_1_value", "label": "Row 1 value", "default": "+$2,215" },
+    { "type": "text", "id": "dryer_row_2_label", "label": "Row 2 label", "default": "+ Maintenance/repairs" },
+    { "type": "text", "id": "dryer_row_2_value", "label": "Row 2 value", "default": "+$200–$500" },
+    { "type": "text", "id": "dryer_total_label", "label": "Total label", "default": "5-Year True Cost" },
+    { "type": "text", "id": "dryer_total_value", "label": "Total value", "default": "$3,115–$3,915" },
+    { "type": "text", "id": "dryer_warranty_title", "label": "Warranty title", "default": "Typical Dryer Warranty" },
+    { "type": "text", "id": "dryer_w1_years", "label": "Warranty 1 years", "default": "2 yr" },
+    { "type": "text", "id": "dryer_w1_desc", "label": "Warranty 1 description", "default": "Parts & labour (most brands)" },
+    { "type": "text", "id": "dryer_w2_years", "label": "Warranty 2 years", "default": "0" },
+    { "type": "text", "id": "dryer_w2_desc", "label": "Warranty 2 description", "default": "No dedicated motor coverage" },
+    { "type": "text", "id": "dryer_w3_years", "label": "Warranty 3 years", "default": "0" },
+    { "type": "text", "id": "dryer_w3_desc", "label": "Warranty 3 description", "default": "No included servicing" },
+
+    { "type": "header", "content": "Nuracom column" },
+    { "type": "text", "id": "nuracom_label", "label": "Label", "default": "Smart" },
+    { "type": "text", "id": "nuracom_name", "label": "Name", "default": "Nuracom System" },
+    { "type": "text", "id": "nuracom_price", "label": "Price", "default": "$1,199–$1,699" },
+    { "type": "text", "id": "nuracom_sub", "label": "Sub", "default": "Breeze · Aero · Stratos" },
+    { "type": "text", "id": "nuracom_row_1_label", "label": "Row 1 label", "default": "+ Energy (5 years)" },
+    { "type": "text", "id": "nuracom_row_1_value", "label": "Row 1 value", "default": "+$445" },
+    { "type": "text", "id": "nuracom_row_2_label", "label": "Row 2 label", "default": "+ Maintenance/repairs" },
+    { "type": "text", "id": "nuracom_row_2_value", "label": "Row 2 value", "default": "Covered" },
+    { "type": "text", "id": "nuracom_total_label", "label": "Total label", "default": "5-Year True Cost" },
+    { "type": "text", "id": "nuracom_total_value", "label": "Total value", "default": "$1,644–$2,144" },
+    { "type": "text", "id": "nuracom_warranty_title", "label": "Warranty title", "default": "Nuracom Warranty" },
+    { "type": "text", "id": "nuracom_w1_years", "label": "Warranty 1 years", "default": "5 yr" },
+    { "type": "text", "id": "nuracom_w1_desc", "label": "Warranty 1 description", "default": "Motor warranty — the heart of the system" },
+    { "type": "text", "id": "nuracom_w2_years", "label": "Warranty 2 years", "default": "2 yr" },
+    { "type": "text", "id": "nuracom_w2_desc", "label": "Warranty 2 description", "default": "All parts — electronics, rails, fans, lighting" },
+    { "type": "text", "id": "nuracom_w3_years", "label": "Warranty 3 years", "default": "1 yr" },
+    { "type": "text", "id": "nuracom_w3_desc", "label": "Warranty 3 description", "default": "Full unit service — included, on us" },
+
+    { "type": "header", "content": "Payback timeline" },
+    { "type": "text", "id": "payback_headline", "label": "Headline", "default": "Your Nuracom Is Paying You Back From Day One" },
+    { "type": "textarea", "id": "payback_sub", "label": "Sub text", "default": "Every cycle costs 57c instead of $1.42. That $354 in annual energy savings means the price difference between a dryer and a Nuracom is recovered well within the warranty period — and the savings keep compounding every year after." },
+    { "type": "text", "id": "payback_note", "label": "Footnote", "default": "5-year savings: $354/yr × 5 = $1,770 in reduced energy costs alone" },
+
+    { "type": "header", "content": "Colours" },
+    { "type": "color", "id": "brand_deep", "label": "Section background (brand deep)", "default": "#5E0404" },
+    { "type": "color", "id": "white", "label": "Text / white", "default": "#ffffff" },
+    { "type": "color", "id": "kicker_color", "label": "Kicker colour", "default": "#f8a89a" },
+    { "type": "color", "id": "positive_color", "label": "Positive / Nuracom (green)", "default": "#4ade80" },
+    { "type": "color", "id": "negative_color", "label": "Negative / dryer (red)", "default": "#f87171" },
+    { "type": "color", "id": "payback_color", "label": "Payback highlight (amber)", "default": "#fbbf24" }
+  ],
+  "blocks": [
+    {
+      "type": "timeline_point",
+      "name": "Timeline Point",
+      "settings": [
+        { "type": "text", "id": "year", "label": "Year label", "default": "Day 1" },
+        {
+          "type": "select",
+          "id": "dot_style",
+          "label": "Dot style",
+          "default": "default",
+          "options": [
+            { "value": "default", "label": "Default (dim)" },
+            { "value": "active", "label": "Active (green)" },
+            { "value": "payback", "label": "Payback (amber)" }
+          ]
+        },
+        { "type": "text", "id": "label", "label": "Label", "default": "Milestone" },
+        {
+          "type": "select",
+          "id": "label_style",
+          "label": "Label style",
+          "default": "default",
+          "options": [
+            { "value": "default", "label": "Default" },
+            { "value": "green", "label": "Green (Nuracom positive)" },
+            { "value": "highlight", "label": "Highlight (amber payback)" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "trust_card",
+      "name": "Trust Card",
+      "settings": [
+        { "type": "text", "id": "icon", "label": "Icon (emoji)", "default": "🛡" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Card title" },
+        { "type": "textarea", "id": "text", "label": "Body text", "default": "Supporting detail." }
+      ]
+    }
+  ],
+  "max_blocks": 14,
+  "presets": [
+    {
+      "name": "Warranty & Trust",
+      "blocks": [
+        { "type": "timeline_point", "settings": { "year": "Day 1", "dot_style": "active", "label": "Purchase", "label_style": "green" } },
+        { "type": "timeline_point", "settings": { "year": "Year 1", "dot_style": "active", "label": "Full unit service coverage", "label_style": "default" } },
+        { "type": "timeline_point", "settings": { "year": "Year 2", "dot_style": "payback", "label": "Price difference recovered", "label_style": "highlight" } },
+        { "type": "timeline_point", "settings": { "year": "Year 3", "dot_style": "default", "label": "All parts covered", "label_style": "default" } },
+        { "type": "timeline_point", "settings": { "year": "Year 5", "dot_style": "default", "label": "Motor still covered", "label_style": "default" } },
+        { "type": "timeline_point", "settings": { "year": "Year 5+", "dot_style": "default", "label": "Pure savings ~$1,770+ saved", "label_style": "green" } },
+        { "type": "trust_card", "settings": { "icon": "🛡", "title": "Protected While You Save", "text": "5 years on the motor. 2 years on every part. 1 year of full unit servicing included. Your investment is covered well past the point it's already paid for itself." } },
+        { "type": "trust_card", "settings": { "icon": "🇦🇺", "title": "Local Support, Real People", "text": "Australian-designed for Australian homes. Local customer support that actually picks up. You're not dealing with a faceless import brand — we're here when you need us." } },
+        { "type": "trust_card", "settings": { "icon": "💰", "title": "No Hidden Costs", "text": "Direct supply means no middleman markups. Free delivery to metro areas. And with $354+ in annual energy savings, the maths keeps getting better every year you own it." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

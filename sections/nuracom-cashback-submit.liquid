@@ -1,0 +1,238 @@
+{% comment %}
+  Nuracom Cashback — Submit form
+  Uses Shopify's built-in contact form. Custom fields prefixed with contact[]
+  are included in the notification email sent to the store admin.
+{% endcomment %}
+
+<style>
+  #shopify-section-{{ section.id }} {
+    --brand-deep: {{ section.settings.brand_deep }};
+    --brand-dark: {{ section.settings.brand_dark }};
+    --brand-accent: {{ section.settings.brand_accent }};
+    --navy: {{ section.settings.navy }};
+    --cream: {{ section.settings.cream }};
+    --warm-gray: {{ section.settings.warm_gray }};
+    --gold: {{ section.settings.gold_color }};
+    --white: {{ section.settings.white }};
+    --text: {{ section.settings.text_primary }};
+    --text-muted: {{ section.settings.text_muted }};
+    --positive: {{ section.settings.positive_color }};
+    --error: {{ section.settings.error_color }};
+    --max-width: 720px;
+    --section-pad: clamp(44px, 6vw, 80px);
+  }
+  #shopify-section-{{ section.id }} * { box-sizing: border-box; }
+  #shopify-section-{{ section.id }} .ncb-sub { padding: var(--section-pad) 24px; background: {{ section.settings.bg_color }}; font-family: 'Inter', -apple-system, sans-serif; }
+  #shopify-section-{{ section.id }} .ncb-sub__inner { max-width: var(--max-width); margin: 0 auto; }
+
+  #shopify-section-{{ section.id }} .ncb-sub__header { text-align: center; margin-bottom: 36px; }
+  #shopify-section-{{ section.id }} .ncb-sub__kicker { font-size: 0.75rem; letter-spacing: 3px; text-transform: uppercase; color: var(--brand-accent); font-weight: 700; margin-bottom: 12px; }
+  #shopify-section-{{ section.id }} .ncb-sub__headline { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.8rem, 3.6vw, 2.6rem); font-weight: 700; line-height: 1.2; color: var(--navy); margin: 0 0 14px; letter-spacing: -0.3px; }
+  #shopify-section-{{ section.id }} .ncb-sub__headline em { color: var(--brand-deep); font-style: italic; }
+  #shopify-section-{{ section.id }} .ncb-sub__sub { font-size: 1rem; line-height: 1.65; color: var(--text-muted); margin: 0; }
+
+  /* Success state */
+  #shopify-section-{{ section.id }} .ncb-sub__success { background: {{ section.settings.positive_color }}15; border: 1.5px solid var(--positive); border-radius: 12px; padding: 28px 32px; text-align: center; }
+  #shopify-section-{{ section.id }} .ncb-sub__success-icon { width: 52px; height: 52px; border-radius: 50%; background: var(--positive); color: var(--white); display: inline-flex; align-items: center; justify-content: center; font-size: 1.6rem; margin-bottom: 14px; font-weight: 700; }
+  #shopify-section-{{ section.id }} .ncb-sub__success-title { font-family: 'Playfair Display', Georgia, serif; font-size: 1.5rem; color: var(--navy); margin: 0 0 8px; }
+  #shopify-section-{{ section.id }} .ncb-sub__success-text { font-size: 0.95rem; line-height: 1.65; color: var(--text); margin: 0; max-width: 520px; margin: 0 auto; }
+  #shopify-section-{{ section.id }} .ncb-sub__success-text strong { color: var(--navy); }
+
+  /* Form card */
+  #shopify-section-{{ section.id }} .ncb-sub__form { background: var(--white); border: 1px solid var(--warm-gray); border-radius: 16px; padding: 36px 38px; box-shadow: 0 12px 32px rgba(16,26,50,0.06); }
+  #shopify-section-{{ section.id }} .ncb-sub__row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  #shopify-section-{{ section.id }} .ncb-sub__field { margin-bottom: 16px; }
+  #shopify-section-{{ section.id }} .ncb-sub__field:last-of-type { margin-bottom: 0; }
+  #shopify-section-{{ section.id }} .ncb-sub__label { display: block; font-size: 0.82rem; font-weight: 700; letter-spacing: 0.3px; color: var(--navy); margin-bottom: 6px; }
+  #shopify-section-{{ section.id }} .ncb-sub__label-req { color: var(--brand-deep); font-weight: 700; }
+  #shopify-section-{{ section.id }} .ncb-sub__label-hint { display: block; font-size: 0.78rem; font-weight: 400; color: var(--text-muted); margin-top: 3px; line-height: 1.5; }
+  #shopify-section-{{ section.id }} .ncb-sub__input,
+  #shopify-section-{{ section.id }} .ncb-sub__textarea { width: 100%; padding: 12px 14px; background: var(--cream); border: 1.5px solid var(--warm-gray); border-radius: 8px; font-size: 0.95rem; font-family: inherit; color: var(--text); transition: border-color 0.2s, background 0.2s; }
+  #shopify-section-{{ section.id }} .ncb-sub__textarea { min-height: 120px; resize: vertical; line-height: 1.55; }
+  #shopify-section-{{ section.id }} .ncb-sub__input:focus,
+  #shopify-section-{{ section.id }} .ncb-sub__textarea:focus { outline: none; border-color: var(--brand-deep); background: var(--white); box-shadow: 0 0 0 3px {{ section.settings.brand_deep }}1a; }
+  #shopify-section-{{ section.id }} .ncb-sub__input::placeholder,
+  #shopify-section-{{ section.id }} .ncb-sub__textarea::placeholder { color: #b5b5b5; }
+
+  #shopify-section-{{ section.id }} .ncb-sub__agreement { display: flex; align-items: flex-start; gap: 10px; padding: 16px 18px; background: var(--cream); border-radius: 10px; margin-bottom: 22px; cursor: pointer; }
+  #shopify-section-{{ section.id }} .ncb-sub__agreement input { width: 18px; height: 18px; margin-top: 2px; flex-shrink: 0; accent-color: var(--brand-deep); cursor: pointer; }
+  #shopify-section-{{ section.id }} .ncb-sub__agreement-text { font-size: 0.88rem; line-height: 1.55; color: var(--text); }
+  #shopify-section-{{ section.id }} .ncb-sub__agreement-text strong { color: var(--navy); }
+
+  #shopify-section-{{ section.id }} .ncb-sub__submit { display: inline-flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 16px 28px; background: var(--brand-deep); color: var(--white); border: none; border-radius: 10px; font-size: 1rem; font-weight: 700; letter-spacing: 0.3px; cursor: pointer; transition: all 0.25s ease; font-family: inherit; }
+  #shopify-section-{{ section.id }} .ncb-sub__submit:hover { background: var(--brand-dark); transform: translateY(-1px); box-shadow: 0 8px 22px {{ section.settings.brand_deep }}40; }
+  #shopify-section-{{ section.id }} .ncb-sub__submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  #shopify-section-{{ section.id }} .ncb-sub__errors { background: {{ section.settings.error_color }}15; border-left: 3px solid var(--error); padding: 12px 16px; border-radius: 6px; margin-bottom: 20px; font-size: 0.9rem; color: var(--error); }
+  #shopify-section-{{ section.id }} .ncb-sub__errors ul { margin: 0; padding-left: 20px; }
+  #shopify-section-{{ section.id }} .ncb-sub__errors li { line-height: 1.5; }
+
+  #shopify-section-{{ section.id }} .ncb-sub__note { text-align: center; font-size: 0.82rem; color: var(--text-muted); line-height: 1.6; margin-top: 18px; }
+  #shopify-section-{{ section.id }} .ncb-sub__note strong { color: var(--navy); }
+
+  #shopify-section-{{ section.id }} .ncb-reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.8s ease, transform 0.8s ease; }
+  #shopify-section-{{ section.id }} .ncb-reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 640px) {
+    #shopify-section-{{ section.id }} .ncb-sub__form { padding: 26px 22px; }
+    #shopify-section-{{ section.id }} .ncb-sub__row { grid-template-columns: 1fr; gap: 0; margin-bottom: 0; }
+    #shopify-section-{{ section.id }} .ncb-sub__row .ncb-sub__field { margin-bottom: 16px; }
+  }
+</style>
+
+<section class="ncb-sub" id="submit">
+  <div class="ncb-sub__inner">
+    <div class="ncb-sub__header ncb-reveal">
+      {% if section.settings.kicker != blank %}
+        <div class="ncb-sub__kicker">{{ section.settings.kicker }}</div>
+      {% endif %}
+      <h2 class="ncb-sub__headline">{{ section.settings.headline }}</h2>
+      {% if section.settings.subheadline != blank %}
+        <p class="ncb-sub__sub">{{ section.settings.subheadline }}</p>
+      {% endif %}
+    </div>
+
+    <div class="ncb-reveal">
+      {% form 'contact', id: 'nuracom-cashback-form' %}
+        {% if form.posted_successfully? %}
+          <div class="ncb-sub__success" role="status">
+            <div class="ncb-sub__success-icon">&check;</div>
+            <h3 class="ncb-sub__success-title">{{ section.settings.success_title }}</h3>
+            <p class="ncb-sub__success-text">{{ section.settings.success_text }}</p>
+          </div>
+        {% else %}
+          {% if form.errors %}
+            <div class="ncb-sub__errors" role="alert">
+              <strong>Please fix the following:</strong>
+              {{ form.errors | default_errors }}
+            </div>
+          {% endif %}
+
+          <div class="ncb-sub__form">
+            {%- comment -%} Tag the email subject so admin can filter it {%- endcomment -%}
+            <input type="hidden" name="contact[subject]" value="🎬 UGC Cashback submission — review + footage">
+
+            <div class="ncb-sub__row">
+              <div class="ncb-sub__field">
+                <label class="ncb-sub__label" for="ncb-name">Your name <span class="ncb-sub__label-req">*</span></label>
+                <input type="text" id="ncb-name" name="contact[name]" class="ncb-sub__input" placeholder="e.g. Sarah Mitchell" required value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}">
+              </div>
+              <div class="ncb-sub__field">
+                <label class="ncb-sub__label" for="ncb-email">Email <span class="ncb-sub__label-req">*</span>
+                  <span class="ncb-sub__label-hint">We'll reply here with your cashback status</span>
+                </label>
+                <input type="email" id="ncb-email" name="contact[email]" class="ncb-sub__input" placeholder="you@example.com" required value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}">
+              </div>
+            </div>
+
+            <div class="ncb-sub__row">
+              <div class="ncb-sub__field">
+                <label class="ncb-sub__label" for="ncb-order">Order number <span class="ncb-sub__label-req">*</span>
+                  <span class="ncb-sub__label-hint">Starts with # — from your confirmation email</span>
+                </label>
+                <input type="text" id="ncb-order" name="contact[Order Number]" class="ncb-sub__input" placeholder="#1234" required>
+              </div>
+              <div class="ncb-sub__field">
+                <label class="ncb-sub__label" for="ncb-model">Which model? <span class="ncb-sub__label-req">*</span></label>
+                <input type="text" id="ncb-model" name="contact[Model]" class="ncb-sub__input" placeholder="Breeze / Aero / Stratos" required>
+              </div>
+            </div>
+
+            <div class="ncb-sub__field">
+              <label class="ncb-sub__label" for="ncb-video">Video upload link <span class="ncb-sub__label-req">*</span>
+                <span class="ncb-sub__label-hint">{{ section.settings.video_link_hint }}</span>
+              </label>
+              <input type="url" id="ncb-video" name="contact[Video Link]" class="ncb-sub__input" placeholder="https://drive.google.com/..." required>
+            </div>
+
+            <div class="ncb-sub__field">
+              <label class="ncb-sub__label" for="ncb-review">Your written review <span class="ncb-sub__label-req">*</span>
+                <span class="ncb-sub__label-hint">What worked? What didn't? Who would you recommend it to? Honest feedback only — 50 words minimum.</span>
+              </label>
+              <textarea id="ncb-review" name="contact[body]" class="ncb-sub__textarea" placeholder="Install was faster than I expected — took me about 25 minutes. First cycle the clothes came out completely dry in 2 hours, and they were flat. I think the only issue was..." required minlength="50"></textarea>
+            </div>
+
+            <div class="ncb-sub__field">
+              <label class="ncb-sub__label" for="ncb-phone">Phone (optional)
+                <span class="ncb-sub__label-hint">Only if we need to clarify something quickly</span>
+              </label>
+              <input type="tel" id="ncb-phone" name="contact[phone]" class="ncb-sub__input" placeholder="04XX XXX XXX">
+            </div>
+
+            <label class="ncb-sub__agreement">
+              <input type="checkbox" name="contact[I Agree]" value="Yes — I confirm this is genuine and Nuracom may use my footage" required>
+              <span class="ncb-sub__agreement-text">
+                {{ section.settings.agreement_text }}
+              </span>
+            </label>
+
+            <button type="submit" class="ncb-sub__submit">
+              {{ section.settings.submit_text }}
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </button>
+
+            <p class="ncb-sub__note">
+              <strong>What happens next:</strong> {{ section.settings.next_steps_text }}
+            </p>
+          </div>
+        {% endif %}
+      {% endform %}
+    </div>
+  </div>
+</section>
+
+<script>
+  (function() {
+    var root = document.getElementById('shopify-section-{{ section.id }}');
+    if (!root) return;
+    var els = root.querySelectorAll('.ncb-reveal');
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) { if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); } });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    els.forEach(function(el) { io.observe(el); });
+
+    // Auto-scroll to success state if it renders post-submit
+    var success = root.querySelector('.ncb-sub__success');
+    if (success) { success.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Cashback Submit",
+  "tag": "section",
+  "class": "nuracom-cashback-submit-section",
+  "settings": [
+    { "type": "header", "content": "Header" },
+    { "type": "text", "id": "kicker", "label": "Kicker", "default": "Ready when you are" },
+    { "type": "richtext", "id": "headline", "label": "Headline (use <em> for italic emphasis)", "default": "<p>Submit your clips &mdash; <em>claim your cashback</em>.</p>" },
+    { "type": "textarea", "id": "subheadline", "label": "Subheadline", "default": "Upload your videos to Google Drive, Dropbox, or WeTransfer, then paste the sharing link below. We'll review within 3–5 business days and email you with approval + cashback details." },
+
+    { "type": "header", "content": "Form copy" },
+    { "type": "text", "id": "video_link_hint", "label": "Video-link field hint", "default": "Upload to Google Drive / Dropbox / WeTransfer and paste a viewable share link here" },
+    { "type": "richtext", "id": "agreement_text", "label": "Agreement checkbox text", "default": "<p>I confirm this footage is <strong>genuinely mine</strong> and I'm happy for Nuracom to use it in marketing (social, paid ads, website). Reviews are refundable whether positive or negative — cashback is for the genuine footage, not a requirement for a 5-star review.</p>" },
+    { "type": "text", "id": "submit_text", "label": "Submit button text", "default": "Submit for cashback review" },
+    { "type": "textarea", "id": "next_steps_text", "label": "\"What happens next\" note", "default": "We review within 3–5 business days. If approved, we'll email you a confirmation and process your 7% cashback to the payment method you used at checkout. If we need clarification or more footage, we'll let you know what's missing." },
+
+    { "type": "header", "content": "Success state (after submission)" },
+    { "type": "text", "id": "success_title", "label": "Success title", "default": "Submission received!" },
+    { "type": "textarea", "id": "success_text", "label": "Success message", "default": "Thanks for filming — we really appreciate it. You'll get a confirmation email within a few minutes, and we'll follow up within 3–5 business days with your cashback status. Keep an eye on your inbox (check spam just in case)." },
+
+    { "type": "header", "content": "Colours" },
+    { "type": "color", "id": "bg_color", "label": "Section background", "default": "#f8f5f1" },
+    { "type": "color", "id": "brand_deep", "label": "Brand deep (submit button, accents)", "default": "#5E0404" },
+    { "type": "color", "id": "brand_dark", "label": "Button hover", "default": "#801f0a" },
+    { "type": "color", "id": "brand_accent", "label": "Kicker colour", "default": "#a8321a" },
+    { "type": "color", "id": "navy", "label": "Navy (headings, field labels)", "default": "#101a32" },
+    { "type": "color", "id": "cream", "label": "Input background", "default": "#f8f5f1" },
+    { "type": "color", "id": "warm_gray", "label": "Input border / card border", "default": "#e8e3dd" },
+    { "type": "color", "id": "gold_color", "label": "Gold accent", "default": "#c69a7b" },
+    { "type": "color", "id": "white", "label": "Card + button text", "default": "#ffffff" },
+    { "type": "color", "id": "text_primary", "label": "Text primary", "default": "#1a1a1a" },
+    { "type": "color", "id": "text_muted", "label": "Text muted", "default": "#707070" },
+    { "type": "color", "id": "positive_color", "label": "Success accent", "default": "#16a34a" },
+    { "type": "color", "id": "error_color", "label": "Error accent", "default": "#dc2626" }
+  ],
+  "presets": [ { "name": "Cashback Submit" } ]
+}
+{% endschema %}

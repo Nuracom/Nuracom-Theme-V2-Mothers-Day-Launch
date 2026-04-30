@@ -1,0 +1,155 @@
+{% comment %}
+  Nuracom Mother's Day Countdown
+  Live countdown to Mother's Day (or any deadline) + shipping cutoff messaging.
+  Falls back to a static message if the deadline passes.
+{% endcomment %}
+
+<style>
+  #shopify-section-{{ section.id }} {
+    --brand-deep: {{ section.settings.brand_deep }};
+    --brand-dark: {{ section.settings.brand_dark }};
+    --navy: {{ section.settings.navy }};
+    --cream: {{ section.settings.cream }};
+    --gold: {{ section.settings.gold }};
+    --white: {{ section.settings.white }};
+    --text-muted: {{ section.settings.text_muted }};
+    --max-width: 1120px;
+  }
+  #shopify-section-{{ section.id }} * { box-sizing: border-box; }
+  #shopify-section-{{ section.id }} .nmdc { padding: clamp(36px, 5vw, 64px) 24px; background: {% if section.settings.use_dark_bg %}var(--navy){% else %}{{ section.settings.bg_color }}{% endif %}; color: {% if section.settings.use_dark_bg %}var(--white){% else %}var(--navy){% endif %}; font-family: 'Inter', -apple-system, sans-serif; }
+  #shopify-section-{{ section.id }} .nmdc__inner { max-width: var(--max-width); margin: 0 auto; text-align: center; }
+
+  #shopify-section-{{ section.id }} .nmdc__label { font-size: 0.72rem; letter-spacing: 2.6px; text-transform: uppercase; font-weight: 700; color: {% if section.settings.use_dark_bg %}var(--gold){% else %}var(--brand-deep){% endif %}; margin-bottom: 10px; }
+  #shopify-section-{{ section.id }} .nmdc__title { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.6rem, 3.2vw, 2.4rem); font-weight: 700; line-height: 1.2; margin: 0 0 24px; letter-spacing: -0.3px; }
+  #shopify-section-{{ section.id }} .nmdc__title em { color: {% if section.settings.use_dark_bg %}var(--gold){% else %}var(--brand-deep){% endif %}; font-style: italic; }
+
+  #shopify-section-{{ section.id }} .nmdc__timer { display: inline-flex; gap: 12px; padding: 8px; background: {% if section.settings.use_dark_bg %}rgba(255,255,255,0.06){% else %}var(--cream){% endif %}; border-radius: 14px; margin-bottom: 22px; flex-wrap: wrap; justify-content: center; }
+  #shopify-section-{{ section.id }} .nmdc__unit { background: {% if section.settings.use_dark_bg %}rgba(255,255,255,0.08){% else %}var(--white){% endif %}; border-radius: 10px; padding: 12px 16px; min-width: 78px; }
+  #shopify-section-{{ section.id }} .nmdc__num { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.7rem, 3.5vw, 2.4rem); font-weight: 700; line-height: 1; letter-spacing: -0.5px; color: {% if section.settings.use_dark_bg %}var(--white){% else %}var(--navy){% endif %}; }
+  #shopify-section-{{ section.id }} .nmdc__unit-label { font-size: 0.65rem; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; color: {% if section.settings.use_dark_bg %}rgba(255,255,255,0.55){% else %}var(--text-muted){% endif %}; margin-top: 4px; }
+
+  #shopify-section-{{ section.id }} .nmdc__cutoff { font-size: 0.95rem; opacity: 0.85; margin: 0 0 16px; line-height: 1.6; }
+  #shopify-section-{{ section.id }} .nmdc__cutoff strong { color: {% if section.settings.use_dark_bg %}var(--gold){% else %}var(--brand-deep){% endif %}; }
+
+  #shopify-section-{{ section.id }} .nmdc__cta { display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; background: var(--brand-deep); color: var(--white); border-radius: 10px; font-size: 0.95rem; font-weight: 700; letter-spacing: 0.3px; text-decoration: none; transition: all 0.2s; margin-top: 8px; }
+  #shopify-section-{{ section.id }} .nmdc__cta:hover { background: var(--brand-dark); transform: translateY(-2px); }
+  #shopify-section-{{ section.id }} .nmdc__cta-arrow { transition: transform 0.2s; }
+  #shopify-section-{{ section.id }} .nmdc__cta:hover .nmdc__cta-arrow { transform: translateX(3px); }
+
+  #shopify-section-{{ section.id }} .nmdc__expired { display: none; }
+  #shopify-section-{{ section.id }}.is-expired .nmdc__timer,
+  #shopify-section-{{ section.id }}.is-expired .nmdc__cutoff { display: none; }
+  #shopify-section-{{ section.id }}.is-expired .nmdc__expired { display: block; font-size: 1.05rem; margin-bottom: 16px; }
+</style>
+
+<section class="nmdc" id="shopify-section-{{ section.id }}-inner" data-deadline="{{ section.settings.deadline_date }}T{{ section.settings.deadline_time }}{{ section.settings.timezone_offset }}">
+  <div class="nmdc__inner">
+    {% if section.settings.label != blank %}
+      <p class="nmdc__label">{{ section.settings.label }}</p>
+    {% endif %}
+    <h2 class="nmdc__title">{{ section.settings.title }}</h2>
+
+    <div class="nmdc__timer" role="timer" aria-live="polite">
+      <div class="nmdc__unit"><div class="nmdc__num" data-days>--</div><div class="nmdc__unit-label">Days</div></div>
+      <div class="nmdc__unit"><div class="nmdc__num" data-hours>--</div><div class="nmdc__unit-label">Hours</div></div>
+      <div class="nmdc__unit"><div class="nmdc__num" data-minutes>--</div><div class="nmdc__unit-label">Mins</div></div>
+      <div class="nmdc__unit"><div class="nmdc__num" data-seconds>--</div><div class="nmdc__unit-label">Secs</div></div>
+    </div>
+
+    {% if section.settings.cutoff_text != blank %}
+      <p class="nmdc__cutoff">{{ section.settings.cutoff_text }}</p>
+    {% endif %}
+
+    <p class="nmdc__expired">{{ section.settings.expired_text }}</p>
+
+    {% if section.settings.cta_text != blank %}
+      <a href="{{ section.settings.cta_url | default: '#products' }}" class="nmdc__cta">
+        {{ section.settings.cta_text }}
+        <span class="nmdc__cta-arrow">&rarr;</span>
+      </a>
+    {% endif %}
+  </div>
+</section>
+
+<script>
+  (function() {
+    var root = document.getElementById('shopify-section-{{ section.id }}');
+    if (!root) return;
+    var section = root.querySelector('.nmdc');
+    if (!section) return;
+    var deadlineRaw = section.getAttribute('data-deadline');
+    if (!deadlineRaw) return;
+    var deadline = new Date(deadlineRaw).getTime();
+    if (isNaN(deadline)) return;
+
+    var elDays = section.querySelector('[data-days]');
+    var elHours = section.querySelector('[data-hours]');
+    var elMinutes = section.querySelector('[data-minutes]');
+    var elSeconds = section.querySelector('[data-seconds]');
+
+    function pad(n) { return n < 10 ? '0' + n : '' + n; }
+
+    function tick() {
+      var now = Date.now();
+      var diff = deadline - now;
+      if (diff <= 0) {
+        root.classList.add('is-expired');
+        if (elDays) elDays.textContent = '0';
+        if (elHours) elHours.textContent = '00';
+        if (elMinutes) elMinutes.textContent = '00';
+        if (elSeconds) elSeconds.textContent = '00';
+        clearInterval(interval);
+        return;
+      }
+      var days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      var hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      var minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      var seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      if (elDays) elDays.textContent = days;
+      if (elHours) elHours.textContent = pad(hours);
+      if (elMinutes) elMinutes.textContent = pad(minutes);
+      if (elSeconds) elSeconds.textContent = pad(seconds);
+    }
+
+    tick();
+    var interval = setInterval(tick, 1000);
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "MD Countdown",
+  "tag": "section",
+  "class": "nuracom-md-countdown-section",
+  "settings": [
+    { "type": "header", "content": "Headline" },
+    { "type": "text", "id": "label", "label": "Small label", "default": "Mother's Day countdown" },
+    { "type": "richtext", "id": "title", "label": "Title (use <em> for italic emphasis)", "default": "<p>Time left to make Mum's day <em>unforgettable</em></p>" },
+
+    { "type": "header", "content": "Deadline" },
+    { "type": "text", "id": "deadline_date", "label": "Deadline date (YYYY-MM-DD)", "default": "2026-05-10", "info": "Australian Mother's Day 2026 = Sunday 10 May" },
+    { "type": "text", "id": "deadline_time", "label": "Deadline time (24h, HH:MM:SS)", "default": "23:59:59" },
+    { "type": "text", "id": "timezone_offset", "label": "Timezone offset", "default": "+10:00", "info": "AEST = +10:00, AEDT = +11:00. Adjust if you want the countdown anchored to a specific local time." },
+
+    { "type": "header", "content": "Below the timer" },
+    { "type": "richtext", "id": "cutoff_text", "label": "Shipping cutoff line", "default": "<p>Order by <strong>Wed 6 May</strong> for metro delivery before Mother's Day. <strong>Sat 2 May</strong> for regional. After cutoff — gift-card option available at checkout.</p>" },
+    { "type": "text", "id": "cta_text", "label": "CTA text", "default": "Shop the gift" },
+    { "type": "url", "id": "cta_url", "label": "CTA URL" },
+
+    { "type": "header", "content": "Expired state" },
+    { "type": "richtext", "id": "expired_text", "label": "Shown after deadline passes", "default": "<p>💐 Happy Mother's Day from all of us at Nuracom.</p>" },
+
+    { "type": "header", "content": "Style" },
+    { "type": "checkbox", "id": "use_dark_bg", "label": "Dark navy background", "default": true },
+    { "type": "color", "id": "bg_color", "label": "Background colour (if light)", "default": "#fbe7e3" },
+    { "type": "color", "id": "brand_deep", "label": "Brand deep", "default": "#5E0404" },
+    { "type": "color", "id": "brand_dark", "label": "Brand dark (CTA hover)", "default": "#801f0a" },
+    { "type": "color", "id": "navy", "label": "Navy", "default": "#101a32" },
+    { "type": "color", "id": "cream", "label": "Cream (light timer bg)", "default": "#f8f5f1" },
+    { "type": "color", "id": "gold", "label": "Gold accent", "default": "#c69a7b" },
+    { "type": "color", "id": "white", "label": "White", "default": "#ffffff" },
+    { "type": "color", "id": "text_muted", "label": "Text muted", "default": "#666666" }
+  ],
+  "presets": [ { "name": "MD Countdown" } ]
+}
+{% endschema %}

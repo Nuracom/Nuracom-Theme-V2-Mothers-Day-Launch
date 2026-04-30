@@ -1,0 +1,330 @@
+{% comment %}
+  About Nuracom Section
+  - Hero banner with title
+  - Alternating text+image rows (Our Journey, Our Mission, etc.)
+  - Fully configurable via customizer using blocks
+  Add to: sections/about-nuracom.liquid
+{% endcomment %}
+
+<section id="about-{{ section.id }}">
+
+  <!-- Hero Banner -->
+  {% if section.settings.hero_title != blank %}
+    <div class="about-hero">
+      {% if section.settings.hero_image != blank %}
+        {{ section.settings.hero_image | image_url: width: 1920 | image_tag: class: 'about-hero__bg', alt: section.settings.hero_title, loading: 'lazy' }}
+      {% endif %}
+      <div class="about-hero__overlay"></div>
+      <h1 class="about-hero__title">{{ section.settings.hero_title }}</h1>
+    </div>
+  {% endif %}
+
+  <!-- Content Rows -->
+  <div class="about-rows">
+    {% for block in section.blocks %}
+      {% if block.type == 'content_row' %}
+        {% assign img_pos = block.settings.image_position %}
+        <div class="about-row{% if img_pos == 'left' %} about-row--img-left{% else %} about-row--img-right{% endif %}" {{ block.shopify_attributes }}>
+          <div class="about-row__text">
+            {% if block.settings.heading != blank %}
+              <h2 class="about-row__heading">{{ block.settings.heading }}</h2>
+            {% endif %}
+            {% if block.settings.body != blank %}
+              <div class="about-row__body">{{ block.settings.body }}</div>
+            {% endif %}
+          </div>
+          <div class="about-row__image">
+            {% if block.settings.image != blank %}
+              {{ block.settings.image | image_url: width: 800 | image_tag: alt: block.settings.heading, loading: 'lazy', class: 'about-row__img' }}
+            {% else %}
+              <div class="about-row__placeholder"></div>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+</section>
+
+<style>
+  #about-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+  }
+
+  /* ── Hero Banner ── */
+  #about-{{ section.id }} .about-hero {
+    position: relative;
+    width: 100%;
+    min-height: 280px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  #about-{{ section.id }} .about-hero__bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  #about-{{ section.id }} .about-hero__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: {{ section.settings.hero_overlay_color }};
+    opacity: {{ section.settings.hero_overlay_opacity | divided_by: 100.0 }};
+  }
+
+  #about-{{ section.id }} .about-hero__title {
+    position: relative;
+    z-index: 1;
+    font-size: 42px;
+    font-weight: 700;
+    color: {{ section.settings.hero_text_color }};
+    margin: 0;
+    padding: 60px 20px;
+    text-align: center;
+    font-style: italic;
+  }
+
+  /* ── Content Rows ── */
+  #about-{{ section.id }} .about-rows {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 60px 20px;
+  }
+
+  #about-{{ section.id }} .about-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: center;
+    margin-bottom: 60px;
+  }
+
+  #about-{{ section.id }} .about-row:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Image right (default): text first, image second */
+  #about-{{ section.id }} .about-row--img-right .about-row__text {
+    order: 1;
+  }
+  #about-{{ section.id }} .about-row--img-right .about-row__image {
+    order: 2;
+  }
+
+  /* Image left: image first, text second */
+  #about-{{ section.id }} .about-row--img-left .about-row__text {
+    order: 2;
+  }
+  #about-{{ section.id }} .about-row--img-left .about-row__image {
+    order: 1;
+  }
+
+  #about-{{ section.id }} .about-row__heading {
+    font-size: 28px;
+    font-weight: 700;
+    color: {{ section.settings.heading_color }};
+    margin: 0 0 16px;
+    line-height: 1.2;
+  }
+
+  #about-{{ section.id }} .about-row__body {
+    font-size: 15px;
+    line-height: 1.7;
+    color: {{ section.settings.body_color }};
+  }
+
+  #about-{{ section.id }} .about-row__body p {
+    margin: 0 0 12px;
+  }
+
+  #about-{{ section.id }} .about-row__body p:last-child {
+    margin-bottom: 0;
+  }
+
+  #about-{{ section.id }} .about-row__img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    display: block;
+    object-fit: cover;
+  }
+
+  #about-{{ section.id }} .about-row__placeholder {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background: #f0f0f0;
+    border-radius: 8px;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    #about-{{ section.id }} .about-hero {
+      min-height: 200px;
+    }
+
+    #about-{{ section.id }} .about-hero__title {
+      font-size: 30px;
+      padding: 40px 20px;
+    }
+
+    #about-{{ section.id }} .about-rows {
+      padding: 40px 20px;
+    }
+
+    #about-{{ section.id }} .about-row {
+      grid-template-columns: 1fr;
+      gap: 24px;
+      margin-bottom: 48px;
+    }
+
+    /* On mobile, always show text first, image second */
+    #about-{{ section.id }} .about-row--img-left .about-row__text,
+    #about-{{ section.id }} .about-row--img-right .about-row__text {
+      order: 1;
+    }
+    #about-{{ section.id }} .about-row--img-left .about-row__image,
+    #about-{{ section.id }} .about-row--img-right .about-row__image {
+      order: 2;
+    }
+
+    #about-{{ section.id }} .about-row__heading {
+      font-size: 24px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "About Nuracom",
+  "tag": "section",
+  "class": "about-nuracom-section",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Hero Banner"
+    },
+    {
+      "type": "text",
+      "id": "hero_title",
+      "label": "Hero Title",
+      "default": "About Nuracom"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Hero Background Image"
+    },
+    {
+      "type": "color",
+      "id": "hero_text_color",
+      "label": "Hero Text Color",
+      "default": "#101a32"
+    },
+    {
+      "type": "color",
+      "id": "hero_overlay_color",
+      "label": "Hero Overlay Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "hero_overlay_opacity",
+      "label": "Hero Overlay Opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 40,
+      "unit": "%"
+    },
+    {
+      "type": "header",
+      "content": "Content Styling"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#101a32"
+    },
+    {
+      "type": "color",
+      "id": "body_color",
+      "label": "Body Text Color",
+      "default": "#444444"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "content_row",
+      "name": "Content Row",
+      "limit": 10,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Our Journey"
+        },
+        {
+          "type": "richtext",
+          "id": "body",
+          "label": "Body Text",
+          "default": "<p>Add your content here. Describe your journey, mission, values, or any other information about your brand.</p>"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "select",
+          "id": "image_position",
+          "label": "Image Position",
+          "options": [
+            { "value": "left", "label": "Left" },
+            { "value": "right", "label": "Right" }
+          ],
+          "default": "right"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "About Nuracom",
+      "blocks": [
+        {
+          "type": "content_row",
+          "settings": {
+            "heading": "Our Journey",
+            "image_position": "right"
+          }
+        },
+        {
+          "type": "content_row",
+          "settings": {
+            "heading": "Our Mission",
+            "image_position": "left"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

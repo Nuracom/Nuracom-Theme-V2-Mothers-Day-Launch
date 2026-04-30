@@ -1,0 +1,237 @@
+{% comment %}
+  Nuracom Products — Belief #3 (Nuracom is the superior choice)
+  Three-tier good/better/best (Breeze → Aero → Stratos) with Aero featured.
+{% endcomment %}
+
+<style>
+  #shopify-section-{{ section.id }} {
+    --brand-deep: {{ section.settings.brand_deep }};
+    --brand-dark: {{ section.settings.brand_dark }};
+    --brand-accent: {{ section.settings.brand_accent }};
+    --navy: {{ section.settings.navy }};
+    --cream: {{ section.settings.cream }};
+    --text-secondary: {{ section.settings.text_secondary }};
+    --text-muted: {{ section.settings.text_muted }};
+    --white: {{ section.settings.white }};
+    --radius: 12px;
+    --radius-lg: 20px;
+    --max-width: 1120px;
+    --section-pad: clamp(44px, 6vw, 80px);
+  }
+  #shopify-section-{{ section.id }} * { box-sizing: border-box; }
+  #shopify-section-{{ section.id }} .nprod { padding: var(--section-pad) 0 calc(var(--section-pad) * 0.85); background: {{ section.settings.bg_color }}; font-family: 'Inter', -apple-system, sans-serif; }
+  #shopify-section-{{ section.id }} .nprod__container { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; }
+  #shopify-section-{{ section.id }} .nprod__header { text-align: center; max-width: 600px; margin: 0 auto 50px; }
+  #shopify-section-{{ section.id }} .nprod__kicker { font-size: 0.75rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--brand-accent); margin-bottom: 12px; display: block; }
+  #shopify-section-{{ section.id }} .nprod__headline { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; line-height: 1.2; color: var(--navy); margin: 0 0 20px; }
+  #shopify-section-{{ section.id }} .nprod__sub { font-size: clamp(1.05rem, 1.5vw, 1.2rem); color: var(--text-secondary); line-height: 1.7; margin: 0 auto; max-width: 640px; }
+  #shopify-section-{{ section.id }} .nprod__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  #shopify-section-{{ section.id }} .nprod__card { background: var(--white); border-radius: var(--radius-lg); overflow: hidden; display: flex; flex-direction: column; border: 2px solid transparent; transition: all 0.3s ease; position: relative; }
+  #shopify-section-{{ section.id }} .nprod__card:hover { transform: translateY(-6px); box-shadow: 0 12px 40px rgba(0,0,0,0.15); }
+  #shopify-section-{{ section.id }} .nprod__card--featured { border-color: {{ section.settings.badge_color }}; }
+  #shopify-section-{{ section.id }} .nprod__badge { position: absolute; top: 16px; right: 16px; background: {{ section.settings.badge_color }}; color: {{ section.settings.badge_text_color }}; font-size: 0.7rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 6px 12px; border-radius: 6px; z-index: 2; }
+  #shopify-section-{{ section.id }} .nprod__image { padding: 32px; background: linear-gradient(180deg, var(--cream) 0%, var(--white) 100%); display: flex; align-items: center; justify-content: center; min-height: 200px; }
+  #shopify-section-{{ section.id }} .nprod__image img { max-width: 100%; height: auto; display: block; }
+  #shopify-section-{{ section.id }} .nprod__image-placeholder { font-size: 3.5rem; opacity: 0.6; }
+  #shopify-section-{{ section.id }} .nprod__content { padding: 28px; flex: 1; display: flex; flex-direction: column; }
+  #shopify-section-{{ section.id }} .nprod__name { font-size: 1.3rem; font-weight: 800; color: var(--navy); margin: 0 0 4px; }
+  #shopify-section-{{ section.id }} .nprod__tagline { font-size: 0.85rem; color: var(--text-muted); font-style: italic; margin: 0 0 20px; }
+  #shopify-section-{{ section.id }} .nprod__specs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 24px; }
+  #shopify-section-{{ section.id }} .nprod__spec { text-align: center; background: var(--cream); border-radius: 8px; padding: 10px; }
+  #shopify-section-{{ section.id }} .nprod__spec-value { font-size: 1rem; font-weight: 700; color: var(--navy); }
+  #shopify-section-{{ section.id }} .nprod__spec-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+  #shopify-section-{{ section.id }} .nprod__features { list-style: none; margin: 0 0 24px; padding: 0; flex: 1; }
+  #shopify-section-{{ section.id }} .nprod__feature { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; font-size: 0.9rem; color: var(--text-secondary); border-bottom: 1px solid #f5f2ee; }
+  #shopify-section-{{ section.id }} .nprod__feature:last-child { border-bottom: none; }
+  #shopify-section-{{ section.id }} .nprod__check { color: {{ section.settings.check_color }}; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+  #shopify-section-{{ section.id }} .nprod__cta { margin-top: auto; }
+  #shopify-section-{{ section.id }} .nprod__btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 14px 24px; font-size: 1rem; font-weight: 600; border-radius: 8px; border: 2px solid transparent; text-decoration: none; transition: all 0.3s ease; font-family: inherit; cursor: pointer; }
+  #shopify-section-{{ section.id }} .nprod__btn--primary { background: var(--brand-deep); color: var(--white); }
+  #shopify-section-{{ section.id }} .nprod__btn--primary:hover { background: var(--brand-dark); transform: translateY(-2px); }
+  #shopify-section-{{ section.id }} .nprod__btn--outline { background: transparent; color: var(--brand-deep); border-color: var(--brand-deep); }
+  #shopify-section-{{ section.id }} .nprod__btn--outline:hover { background: var(--brand-deep); color: var(--white); }
+  #shopify-section-{{ section.id }} .nprod__reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
+  #shopify-section-{{ section.id }} .nprod__reveal.is-visible { opacity: 1; transform: translateY(0); }
+  #shopify-section-{{ section.id }} .nprod__reveal--d1 { transition-delay: 0.1s; }
+  #shopify-section-{{ section.id }} .nprod__reveal--d2 { transition-delay: 0.2s; }
+  #shopify-section-{{ section.id }} .nprod__reveal--d3 { transition-delay: 0.3s; }
+
+  #shopify-section-{{ section.id }} .nprod__swipe-hint { display: none; text-align: center; font-size: 0.72rem; letter-spacing: 2.4px; text-transform: uppercase; font-weight: 600; color: var(--text-muted); margin-top: 18px; }
+
+  @media (max-width: 900px) {
+    #shopify-section-{{ section.id }} .nprod__grid {
+      display: flex;
+      grid-template-columns: none;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      gap: 14px;
+      padding: 10px 20px 20px;
+      margin: -10px -24px 0;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    #shopify-section-{{ section.id }} .nprod__grid::-webkit-scrollbar { display: none; }
+    #shopify-section-{{ section.id }} .nprod__card {
+      flex: 0 0 86%;
+      max-width: 360px;
+      min-width: 260px;
+      scroll-snap-align: center;
+      padding: 0;
+    }
+    #shopify-section-{{ section.id }} .nprod__image { min-height: 160px; padding: 22px; }
+    #shopify-section-{{ section.id }} .nprod__content { padding: 22px 20px; }
+    #shopify-section-{{ section.id }} .nprod__name { font-size: 1.2rem; }
+    #shopify-section-{{ section.id }} .nprod__specs { margin-bottom: 18px; }
+    #shopify-section-{{ section.id }} .nprod__swipe-hint { display: block; }
+  }
+  @media (max-width: 600px) {
+    #shopify-section-{{ section.id }} .nprod__grid { margin: -10px -18px 0; padding: 10px 18px 20px; }
+  }
+</style>
+
+<section class="nprod">
+  <div class="nprod__container">
+    <div class="nprod__header nprod__reveal">
+      {% if section.settings.kicker != blank %}
+        <span class="nprod__kicker">{{ section.settings.kicker }}</span>
+      {% endif %}
+      <h2 class="nprod__headline">{{ section.settings.heading }}</h2>
+      {% if section.settings.subheading != blank %}
+        <p class="nprod__sub">{{ section.settings.subheading }}</p>
+      {% endif %}
+    </div>
+
+    <div class="nprod__grid">
+      {% for block in section.blocks %}
+        <div class="nprod__card{% if block.settings.featured %} nprod__card--featured{% endif %} nprod__reveal nprod__reveal--d{{ forloop.index }}" {{ block.shopify_attributes }}>
+          {% if block.settings.badge_text != blank %}
+            <div class="nprod__badge">{{ block.settings.badge_text }}</div>
+          {% endif %}
+
+          <div class="nprod__image">
+            {% if block.settings.image != blank %}
+              <img src="{{ block.settings.image | image_url: width: 400 }}" alt="{{ block.settings.name | escape }}" loading="lazy">
+            {% else %}
+              <div class="nprod__image-placeholder">{{ block.settings.fallback_icon }}</div>
+            {% endif %}
+          </div>
+
+          <div class="nprod__content">
+            <h3 class="nprod__name">{{ block.settings.name }}</h3>
+            <p class="nprod__tagline">{{ block.settings.tagline }}</p>
+
+            <div class="nprod__specs">
+              <div class="nprod__spec">
+                <div class="nprod__spec-value">{{ block.settings.spec_1_value }}</div>
+                <div class="nprod__spec-label">{{ block.settings.spec_1_label }}</div>
+              </div>
+              <div class="nprod__spec">
+                <div class="nprod__spec-value">{{ block.settings.spec_2_value }}</div>
+                <div class="nprod__spec-label">{{ block.settings.spec_2_label }}</div>
+              </div>
+            </div>
+
+            <ul class="nprod__features">
+              {% for i in (1..8) %}
+                {% assign key = 'feature_' | append: i %}
+                {% assign v = block.settings[key] %}
+                {% if v != blank %}
+                  <li class="nprod__feature"><span class="nprod__check">&check;</span> {{ v }}</li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+
+            <div class="nprod__cta">
+              <a href="{{ block.settings.cta_url | default: '#' }}" class="nprod__btn {% if block.settings.featured %}nprod__btn--primary{% else %}nprod__btn--outline{% endif %}">
+                {{ block.settings.cta_text }}
+                {% if block.settings.featured %}<span>&rarr;</span>{% endif %}
+              </a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    <p class="nprod__swipe-hint" aria-hidden="true">← Swipe to compare →</p>
+  </div>
+</section>
+
+<script>
+  (function() {
+    var root = document.getElementById('shopify-section-{{ section.id }}');
+    if (!root) return;
+    var els = root.querySelectorAll('.nprod__reveal');
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) { if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); } });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    els.forEach(function(el) { io.observe(el); });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Product Showcase",
+  "tag": "section",
+  "class": "nuracom-products-section",
+  "settings": [
+    { "type": "header", "content": "Section intro" },
+    { "type": "text", "id": "kicker", "label": "Kicker", "default": "The Range" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Choose Your Nuracom" },
+    { "type": "textarea", "id": "subheading", "label": "Subheading", "default": "Three models. One guarantee: a perfect dry, every time." },
+    { "type": "header", "content": "Colours" },
+    { "type": "color", "id": "bg_color", "label": "Section background", "default": "#f8f5f1" },
+    { "type": "color", "id": "brand_deep", "label": "Brand deep (CTAs)", "default": "#5E0404" },
+    { "type": "color", "id": "badge_color", "label": "Badge + featured card border", "default": "#5E0404", "info": "Colour of the \"Most Popular\" badge and the featured card's coloured border." },
+    { "type": "color", "id": "badge_text_color", "label": "Badge text colour", "default": "#ffffff" },
+    { "type": "color", "id": "brand_dark", "label": "Brand dark (CTA hover)", "default": "#801f0a" },
+    { "type": "color", "id": "brand_accent", "label": "Kicker colour", "default": "#a8321a" },
+    { "type": "color", "id": "navy", "label": "Navy (titles)", "default": "#101a32" },
+    { "type": "color", "id": "cream", "label": "Cream (specs bg)", "default": "#f8f5f1" },
+    { "type": "color", "id": "text_secondary", "label": "Text secondary", "default": "#555555" },
+    { "type": "color", "id": "text_muted", "label": "Text muted", "default": "#888888" },
+    { "type": "color", "id": "white", "label": "Card background / button text", "default": "#ffffff" },
+    { "type": "color", "id": "check_color", "label": "Feature tick colour", "default": "#16a34a" }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product Card",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Product image" },
+        { "type": "text", "id": "fallback_icon", "label": "Fallback icon (if no image)", "default": "🌬" },
+        { "type": "text", "id": "name", "label": "Product name", "default": "Nuracom" },
+        { "type": "text", "id": "tagline", "label": "Tagline", "default": "The tagline" },
+        { "type": "checkbox", "id": "featured", "label": "Feature this card (adds border + primary CTA style)", "default": false },
+        { "type": "text", "id": "badge_text", "label": "Badge text (optional)" },
+        { "type": "header", "content": "Specs" },
+        { "type": "text", "id": "spec_1_value", "label": "Spec 1 value", "default": "2" },
+        { "type": "text", "id": "spec_1_label", "label": "Spec 1 label", "default": "Turbo Fans" },
+        { "type": "text", "id": "spec_2_value", "label": "Spec 2 value", "default": "30kg" },
+        { "type": "text", "id": "spec_2_label", "label": "Spec 2 label", "default": "Capacity" },
+        { "type": "header", "content": "Feature list (leave blank to hide)" },
+        { "type": "text", "id": "feature_1", "label": "Feature 1" },
+        { "type": "text", "id": "feature_2", "label": "Feature 2" },
+        { "type": "text", "id": "feature_3", "label": "Feature 3" },
+        { "type": "text", "id": "feature_4", "label": "Feature 4" },
+        { "type": "text", "id": "feature_5", "label": "Feature 5" },
+        { "type": "text", "id": "feature_6", "label": "Feature 6" },
+        { "type": "text", "id": "feature_7", "label": "Feature 7" },
+        { "type": "text", "id": "feature_8", "label": "Feature 8" },
+        { "type": "header", "content": "CTA" },
+        { "type": "text", "id": "cta_text", "label": "CTA text", "default": "View Product" },
+        { "type": "url", "id": "cta_url", "label": "CTA URL" }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    {
+      "name": "Product Showcase",
+      "blocks": [
+        { "type": "product", "settings": { "fallback_icon": "🌬", "name": "Nuracom Breeze", "tagline": "The Trendsetter", "featured": false, "spec_1_value": "2", "spec_1_label": "Turbo Fans", "spec_2_value": "30kg", "spec_2_label": "Capacity", "feature_1": "Lighting & Drying", "feature_2": "Smart Home App", "feature_3": "Remote Control", "feature_4": "One-Touch Lifting", "feature_5": "Ultra-Silent Motors", "feature_6": "Obstruction Sensing", "cta_text": "View Breeze" } },
+        { "type": "product", "settings": { "fallback_icon": "☁️", "name": "Nuracom Aero", "tagline": "The New Standard", "featured": true, "badge_text": "Most Popular", "spec_1_value": "4", "spec_1_label": "Turbo Fans", "spec_2_value": "35kg", "spec_2_label": "Capacity", "feature_1": "Everything in Breeze, plus:", "feature_2": "UV Disinfection", "feature_3": "Voice Control", "feature_4": "2 Extra Lighting Modes", "feature_5": "Longer Rail (130–220cm)", "cta_text": "View Aero" } },
+        { "type": "product", "settings": { "fallback_icon": "🚀", "name": "Nuracom Stratos", "tagline": "The State of The Art", "featured": false, "spec_1_value": "6", "spec_1_label": "Turbo Fans", "spec_2_value": "40kg", "spec_2_label": "Capacity", "feature_1": "Everything in Aero, plus:", "feature_2": "2x Faster Drying", "feature_3": "Negative Ion Dust Mite Removal", "feature_4": "Digital Display Screen", "cta_text": "View Stratos" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

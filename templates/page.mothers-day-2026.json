@@ -1,0 +1,261 @@
+{
+  "sections": {
+    "md_hero": {
+      "type": "nuracom-md-hero",
+      "blocks": {
+        "chip_1": { "type": "chip", "settings": { "text": "Free shipping included" } },
+        "chip_2": { "type": "chip", "settings": { "text": "5-yr Australian warranty" } },
+        "chip_3": { "type": "chip", "settings": { "text": "Order by 6 May for MD delivery" } },
+        "chip_4": { "type": "chip", "settings": { "text": "Gift-card option available" } }
+      },
+      "block_order": ["chip_1", "chip_2", "chip_3", "chip_4"],
+      "settings": {}
+    },
+    "md_countdown": {
+      "type": "nuracom-md-countdown",
+      "settings": {}
+    },
+    "md_reasons": {
+      "type": "nuracom-md-gift-reasons",
+      "blocks": {
+        "r1": { "type": "reason", "settings": { "icon": "🏋", "title": "No more heavy baskets", "text": "If she's ever winced lifting wet washing to the line, she'll never have to again. Loads lift to the ceiling at the touch of a button." } },
+        "r2": { "type": "reason", "settings": { "icon": "⏰", "title": "Hours back, every week", "text": "She's been planning her week around the weather. This ends that. Wash in the morning, dry in 2 hours, no rain check, no rewashing." } },
+        "r3": { "type": "reason", "settings": { "icon": "🌹", "title": "She'll use it Sunday after Sunday", "text": "Flowers wilt in 5 days. Chocolates last 3. Nuracom is the gift she'll thank you for every laundry day for the next decade." } },
+        "r4": { "type": "reason", "settings": { "icon": "🛡", "title": "5-year warranty — guilt-free", "text": "It won't break in 6 months. 5 years on the motor, 2 years on every part, 1 year of full service. A gift that doesn't make you nervous." } }
+      },
+      "block_order": ["r1", "r2", "r3", "r4"],
+      "settings": {}
+    },
+    "md_quickbuy": {
+      "type": "nuracom-quick-buy",
+      "settings": {}
+    },
+    "md_savings": {
+      "type": "nuracom-warranty-trust",
+      "blocks": {
+        "tl_1": { "type": "timeline_point", "settings": { "year": "Day 1", "dot_style": "active", "label": "Mum unwraps it", "label_style": "green" } },
+        "tl_2": { "type": "timeline_point", "settings": { "year": "Year 1", "dot_style": "active", "label": "Full unit service covered", "label_style": "default" } },
+        "tl_3": { "type": "timeline_point", "settings": { "year": "Year 2", "dot_style": "payback", "label": "Has paid itself back", "label_style": "highlight" } },
+        "tl_4": { "type": "timeline_point", "settings": { "year": "Year 3", "dot_style": "default", "label": "All parts still covered", "label_style": "default" } },
+        "tl_5": { "type": "timeline_point", "settings": { "year": "Year 5", "dot_style": "default", "label": "Motor still under warranty", "label_style": "default" } },
+        "tl_6": { "type": "timeline_point", "settings": { "year": "Year 5+", "dot_style": "default", "label": "Pure savings ~$1,900+", "label_style": "green" } },
+        "tc_1": { "type": "trust_card", "settings": { "icon": "💰", "title": "The husband-approved maths", "text": "$443/year on the dryer vs $89/year on Nuracom. Show him the spreadsheet — he'll agree this is the smart Mother's Day gift." } },
+        "tc_2": { "type": "trust_card", "settings": { "icon": "🇦🇺", "title": "Real Australian support", "text": "Designed and supported in Australia. If anything ever isn't right, you'll talk to a real person — not an offshore contact form." } },
+        "tc_3": { "type": "trust_card", "settings": { "icon": "🛡", "title": "Covered well past payback", "text": "5 years on the motor. By the time the warranty ends, you've already saved ~$1,800. Everything after that is just bonus." } }
+      },
+      "block_order": ["tl_1", "tl_2", "tl_3", "tl_4", "tl_5", "tl_6", "tc_1", "tc_2", "tc_3"],
+      "settings": {
+        "kicker": "The honest maths",
+        "heading": "Why this is the gift that keeps thanking you",
+        "subheading": "It feels like a splurge. It performs like an investment. Here's the 5-year picture every mum (and every husband watching the budget) deserves to see.",
+        "payback_headline": "It pays for itself before the warranty's even halfway done",
+        "payback_sub": "$354+ in annual energy savings means the price difference between a tumble dryer and a Nuracom is recovered well within Year 2 — and the savings just keep stacking from there. The motor is still under warranty long after it's already paid for itself."
+      }
+    },
+    "md_proof": {
+      "type": "nuracom-social-proof",
+      "blocks": {
+        "stat_1": { "type": "stat", "settings": { "number": "4.9", "label": "Average mum rating" } },
+        "stat_2": { "type": "stat", "settings": { "number": "500+", "label": "Aussie homes" } },
+        "stat_3": { "type": "stat", "settings": { "number": "4–6 hrs", "label": "Saved per week" } },
+        "stat_4": { "type": "stat", "settings": { "number": "$354/yr", "label": "Energy saved" } },
+        "stat_5": { "type": "stat", "settings": { "number": "5 yrs", "label": "Motor warranty" } },
+        "stat_6": { "type": "stat", "settings": { "number": "0kg", "label": "Of basket lifting" } },
+        "test_1": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "I get my Sunday afternoons back. The kids' uniforms are dry by lunchtime, sheets are done before dinner, and I don't have to plan my week around the forecast anymore. Should have asked for one years ago.",
+            "name": "Sarah M.",
+            "location": "Brisbane, QLD · mum of 3",
+            "initials": "SM",
+            "show_stars": true
+          }
+        },
+        "test_2": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "My husband actually noticed the power bill drop the first month — and he never notices anything. He calculated $30/week saved vs the dryer. It's already half-paid for itself in 6 months.",
+            "name": "Emma R.",
+            "location": "Sydney, NSW · mum of 2",
+            "initials": "ER",
+            "show_stars": true
+          }
+        },
+        "test_3": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "Our laundry is tiny. The clothes horse used to live in the hallway, the basket on the kitchen bench. Now everything is on the ceiling, out of the way. The cat is annoyed but we are not.",
+            "name": "Jess P.",
+            "location": "Melbourne, VIC · apartment mum",
+            "initials": "JP",
+            "show_stars": true
+          }
+        },
+        "test_4": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "I have a sore back from years of carrying wet baskets. The Nuracom raises itself to the ceiling — I never lift wet washing again. This was the most thoughtful Mother's Day gift my daughter has ever given me. I cried a bit.",
+            "name": "Margaret L.",
+            "location": "Adelaide, SA · grandmother of 5",
+            "initials": "ML",
+            "show_stars": true
+          }
+        },
+        "test_5": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "We didn't have a ceiling power point. Got a sparky in for half an hour — $180 — and that was it. One-time cost, then we're saving $30/week vs the dryer. Best home upgrade we've made for the price.",
+            "name": "Rachel & Tom",
+            "location": "Perth, WA · family of 4",
+            "initials": "RT",
+            "show_stars": true
+          }
+        },
+        "test_6": {
+          "type": "testimonial",
+          "settings": {
+            "quote": "My partner installed it himself in about 30 minutes. We already had a ceiling point from a removed light fitting. The instructions were really clear — even I could have done it. Now even the teenagers do their own washing.",
+            "name": "Aisha K.",
+            "location": "Geelong, VIC · mum of 4",
+            "initials": "AK",
+            "show_stars": true
+          }
+        }
+      },
+      "block_order": ["stat_1", "stat_2", "stat_3", "stat_4", "stat_5", "stat_6", "test_1", "test_2", "test_3", "test_4", "test_5", "test_6"],
+      "settings": {
+        "kicker": "Real mums. Real Sundays back.",
+        "heading": "Six Australian mums on what changed for them"
+      }
+    },
+    "md_faq": {
+      "type": "nuracom-faq",
+      "blocks": {
+        "fq_1": {
+          "type": "faq_item",
+          "settings": {
+            "question": "How much time will mum actually save?",
+            "answer": "<p>Real talk — about <strong>4 to 6 hours per week</strong>. No more checking the forecast before every wash. No more rearranging her day around drying windows. No more rewashing a load that got rained on. No more lugging baskets out and back in.</p><p>Most mums tell us they get a full Sunday afternoon back within the first month — and stop thinking about laundry as a 'task' altogether. It just happens in the background while life keeps going.</p>",
+            "open_by_default": true
+          }
+        },
+        "fq_2": {
+          "type": "faq_item",
+          "settings": {
+            "question": "How much money will it actually save us on power?",
+            "answer": "<p>For an average Aussie family of 4, the maths is hard to argue with:</p><ul><li><strong>Tumble dryer</strong> at $1.42/load × 6 loads/week × 52 weeks = <strong>$443/year</strong></li><li><strong>Nuracom Aero</strong> at $0.57/cycle × ~3 cycles/week (bigger capacity = fewer cycles) = <strong>$89/year</strong></li><li><strong>Net saving: $354/year</strong> on energy alone</li></ul><p>Over 5 years that's <strong>~$1,770 in your pocket</strong> — more than the unit cost itself. Show this to your husband. He'll do the maths and approve faster than you can say 'Mother's Day.'</p>",
+            "open_by_default": false
+          }
+        },
+        "fq_3": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Our laundry is tiny — will it actually fit?",
+            "answer": "<p>That's exactly who Nuracom was built for. It mounts to the <strong>ceiling</strong>, not the floor. When not in use, it sits flush against the ceiling — looks like a clean light fitting. <strong>Zero floor footprint.</strong></p><p>The smaller your laundry, the more useful Nuracom is. No more clothes horse blocking the hallway. No more basket living on the kitchen bench. No more chair drying that one delicate jumper. Everything goes up, dries, comes down — and the floor stays usable.</p>",
+            "open_by_default": false
+          }
+        },
+        "fq_4": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Can my husband install it himself?",
+            "answer": "<p><strong>If he's ever put up a curtain rod or a shelf, yes.</strong> The mounting kit is included. Step-by-step printed instructions and a video walkthrough come with every unit.</p><p>Most installs take <strong>25–40 minutes</strong> for a first-timer. The unit clicks into the ceiling brackets and the obstruction-sensing system auto-calibrates the moment it's powered on. He'll feel like a hero. You'll have your laundry sorted. Win-win.</p><p>If he's genuinely not handy — see the next question.</p>",
+            "open_by_default": false
+          }
+        },
+        "fq_5": {
+          "type": "faq_item",
+          "settings": {
+            "question": "We don't have a ceiling power point. Is that a deal-breaker?",
+            "answer": "<p><strong>Not at all.</strong> A licensed electrician adds a ceiling power outlet in about <strong>20–30 minutes</strong>. Standard work — no permits needed for a homeowner, no gyprock cutting in most cases.</p><p>Average cost in Australia: <strong>$150–$300</strong> depending on state and ceiling type. Get 2–3 quotes — most local sparkies will do it as a quick call-out.</p><p><strong>Important context:</strong> this is a <em>one-time cost</em>. After that, you have a lifetime of better laundry — and you're saving ~$30/week in dryer energy. The electrician fee pays for itself in <strong>5–10 weeks of avoided dryer use</strong>. Then you save forever.</p><p>Many homes already have a ceiling rose from a previous light fitting that the electrician can convert. If yours does, the install is even faster and cheaper.</p>",
+            "open_by_default": false
+          }
+        },
+        "fq_6": {
+          "type": "faq_item",
+          "settings": {
+            "question": "How simple is the electrician part really?",
+            "answer": "<p>Genuinely simple. Most sparkies treat it as a <strong>30-minute job</strong>:</p><ul><li>They locate your existing ceiling rose (or nearest power source)</li><li>Tap into the existing wiring</li><li>Install a new ceiling outlet</li><li>Done</li></ul><p>No rewiring, no major gyprock work, no permits required for a standard residential install. We can email you a one-page brief to give your electrician so they know exactly what's needed — saves the back-and-forth.</p><p>Tip: when getting quotes, mention it's a 'ceiling outlet for a 800W appliance' so they can quote accurately. Most will say yes for $150–$250.</p>",
+            "open_by_default": false
+          }
+        },
+        "fq_7": {
+          "type": "faq_item",
+          "settings": {
+            "question": "I'm gifting this and don't know if mum has the right setup. What do I do?",
+            "answer": "<p>We've got you. Order it, then <strong>email our installation team a photo of mum's laundry ceiling</strong> (or get her to send one). We'll tell you within 24 hours whether she needs an electrician or just a regular plug.</p><p>If she does need an electrician, we'll give you a list of recommended sparkies in her area and a rough cost estimate. Or you can include it in the gift — pre-pay the install, hand her the unit + a service appointment. Now <em>that's</em> a complete Mother's Day gift.</p>",
+            "open_by_default": false
+          }
+        },
+        "fq_8": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Will mum need to lift heavy wet washing to the ceiling?",
+            "answer": "<p><strong>Never.</strong> The whole point of Nuracom is that <em>she doesn't lift anything heavy ever again</em>.</p><p>The empty rack lowers to a comfortable hip-height. She hangs clothes at that height (the same height as a clothesline). When she's done, she presses one button and the loaded rack lifts itself up to the ceiling — handling up to <strong>35–45kg</strong> depending on the model.</p><p>If mum has a sore back, dodgy shoulder, or any kind of joint issue from years of laundry-lifting, this is the single biggest physical relief Nuracom delivers.</p>",
+            "open_by_default": false
+          }
+        },
+        "fq_9": {
+          "type": "faq_item",
+          "settings": {
+            "question": "What about energy bills and running cost?",
+            "answer": "<p>Each cycle costs about <strong>57¢ to 64¢</strong> depending on the model — based on Australia's current average residential electricity rate of $0.3557/kWh. That's roughly <strong>a third of what a tumble dryer charges</strong> per load.</p><p>For a typical family of 4, expect:</p><ul><li>~$89/year in Nuracom running costs</li><li>vs ~$443/year on a tumble dryer</li><li>= <strong>$354/year back in your pocket</strong></li></ul><p>Plus you stop replacing dryer-shrunk clothes — most families estimate another $200–$400/year saved on wardrobe replacement.</p>",
+            "open_by_default": false
+          }
+        },
+        "fq_10": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Will it work in our home? (apartment, rental, weird ceiling)",
+            "answer": "<p>Compatible with <strong>standard plasterboard, timber, and concrete ceilings</strong> — that's the vast majority of Australian homes, including most apartments and townhouses.</p><p><strong>Renting?</strong> Two paths:</p><ul><li>Get written landlord/strata consent (many approve because it adds value and replaces a light fitting — easy to revert)</li><li>Some renters install just the ceiling-mount kit and pop the unit off when they move. Message support after purchase and we'll send a 'renter's install guide.'</li></ul><p>If your ceiling is unusual (very high, very low, slanted, exposed beam), send us a photo before ordering and we'll confirm fit.</p>",
+            "open_by_default": false
+          }
+        },
+        "fq_11": {
+          "type": "faq_item",
+          "settings": {
+            "question": "What if I'm too late to ship before Mother's Day?",
+            "answer": "<p>No stress — we have a <strong>gift card option</strong>. Order a Nuracom gift card right up until Mother's Day, wrap it Saturday night, give mum the gift on Sunday, and the unit ships the following week.</p><p>Mum still gets the surprise. You still get the credit. Nobody hauls another wet basket.</p><p>The 10% off MUM10 code applies to gift card purchases too.</p>",
+            "open_by_default": false
+          }
+        },
+        "fq_12": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Is the warranty actually any good?",
+            "answer": "<p>Yes — and we deliberately structured it to outlast the payback period:</p><ul><li><strong>5 years</strong> on the motor (the most expensive component)</li><li><strong>2 years</strong> on all parts (electronics, rails, fans, lighting)</li><li><strong>1 year</strong> of full unit servicing — included, on us</li></ul><p>By the time the motor warranty ends, the unit has already saved you ~$1,800 in energy. Everything past Year 5 is pure savings — and you're still covered for the most expensive part.</p><p>Real Australian support team — you'll talk to a human, not a chatbot.</p>",
+            "open_by_default": false
+          }
+        }
+      },
+      "block_order": ["fq_1", "fq_2", "fq_3", "fq_4", "fq_5", "fq_6", "fq_7", "fq_8", "fq_9", "fq_10", "fq_11", "fq_12"],
+      "settings": {
+        "kicker": "Mum-specific questions",
+        "heading": "Everything you (or your husband, or your dad) might want to know"
+      }
+    },
+    "md_cta": {
+      "type": "nuracom-final-cta",
+      "settings": {
+        "headline": "<p>Make this Mother's Day the one she <em>actually remembers</em>.</p>",
+        "subtext": "10% off + free shipping with code MUM10. Order by 6 May for delivery before Mother's Day. Gift-card option available if you're cutting it close.",
+        "primary_btn_text": "Shop the gift",
+        "secondary_btn_text": "Get a gift card",
+        "check_1": "Free Australian shipping",
+        "check_2": "5-year motor warranty",
+        "check_3": "10% off with MUM10",
+        "check_4": "Saves her ~$354/year"
+      }
+    }
+  },
+  "order": [
+    "md_hero",
+    "md_countdown",
+    "md_reasons",
+    "md_quickbuy",
+    "md_savings",
+    "md_proof",
+    "md_faq",
+    "md_cta"
+  ]
+}

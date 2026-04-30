@@ -1,0 +1,292 @@
+{% comment %}
+  Nuracom Mother's Day Hero
+  Soft warm palette, emotional gift framing, prominent discount + free-shipping callout.
+{% endcomment %}
+
+<style>
+  #shopify-section-{{ section.id }} {
+    --brand-deep: {{ section.settings.brand_deep }};
+    --brand-dark: {{ section.settings.brand_dark }};
+    --blush: {{ section.settings.blush }};
+    --cream: {{ section.settings.cream }};
+    --navy: {{ section.settings.navy }};
+    --gold: {{ section.settings.gold }};
+    --white: {{ section.settings.white }};
+    --text: {{ section.settings.text_primary }};
+    --text-muted: {{ section.settings.text_muted }};
+    --max-width: 1180px;
+    --section-pad: clamp(60px, 8vw, 110px);
+  }
+  #shopify-section-{{ section.id }} * { box-sizing: border-box; }
+
+  #shopify-section-{{ section.id }} .nmd { padding: var(--section-pad) 24px; background: linear-gradient(135deg, var(--blush) 0%, var(--cream) 60%, var(--white) 100%); position: relative; overflow: hidden; font-family: 'Inter', -apple-system, sans-serif; color: var(--text); }
+  #shopify-section-{{ section.id }} .nmd::before { content: ''; position: absolute; top: -160px; right: -160px; width: 520px; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, {{ section.settings.brand_deep }}1a 0%, transparent 70%); pointer-events: none; }
+  #shopify-section-{{ section.id }} .nmd::after { content: ''; position: absolute; bottom: -180px; left: -140px; width: 480px; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, {{ section.settings.gold }}22 0%, transparent 70%); pointer-events: none; }
+
+  #shopify-section-{{ section.id }} .nmd__inner { max-width: var(--max-width); margin: 0 auto; position: relative; z-index: 2; display: grid; grid-template-columns: 1.1fr 1fr; gap: 64px; align-items: center; }
+
+  #shopify-section-{{ section.id }} .nmd__pill { display: inline-flex; align-items: center; gap: 10px; padding: 8px 18px; background: var(--white); border: 1px solid {{ section.settings.brand_deep }}25; border-radius: 100px; font-size: 0.72rem; letter-spacing: 2.6px; font-weight: 700; text-transform: uppercase; color: var(--brand-deep); margin-bottom: 28px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
+  #shopify-section-{{ section.id }} .nmd__pill-emoji { font-size: 1rem; }
+
+  #shopify-section-{{ section.id }} .nmd__headline { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(2.6rem, 5.5vw, 4.2rem); font-weight: 700; line-height: 1.06; color: var(--navy); letter-spacing: -0.6px; margin: 0 0 22px; }
+  #shopify-section-{{ section.id }} .nmd__headline em { color: var(--brand-deep); font-style: italic; }
+  #shopify-section-{{ section.id }} .nmd__headline p { margin: 0; }
+
+  #shopify-section-{{ section.id }} .nmd__sub { font-size: 1.15rem; line-height: 1.65; color: var(--text-muted); max-width: 540px; margin: 0 0 32px; }
+  #shopify-section-{{ section.id }} .nmd__sub strong { color: var(--text); }
+
+  /* Promo card */
+  #shopify-section-{{ section.id }} .nmd__promo { background: var(--white); border: 1.5px dashed {{ section.settings.brand_deep }}55; border-radius: 14px; padding: 18px 22px; display: flex; align-items: center; gap: 18px; flex-wrap: wrap; margin-bottom: 32px; box-shadow: 0 8px 24px rgba(94,4,4,0.06); }
+  #shopify-section-{{ section.id }} .nmd__promo-icon { font-size: 2rem; flex-shrink: 0; }
+  #shopify-section-{{ section.id }} .nmd__promo-info { flex: 1 1 220px; }
+  #shopify-section-{{ section.id }} .nmd__promo-title { font-size: 0.85rem; font-weight: 700; color: var(--navy); margin: 0 0 2px; letter-spacing: 0.2px; }
+  #shopify-section-{{ section.id }} .nmd__promo-sub { font-size: 0.78rem; color: var(--text-muted); margin: 0; line-height: 1.4; }
+  #shopify-section-{{ section.id }} .nmd__code { display: inline-flex; align-items: center; gap: 8px; padding: 9px 14px; background: var(--brand-deep); color: var(--white); border-radius: 6px; font-family: 'Menlo', monospace; font-size: 0.95rem; font-weight: 700; letter-spacing: 1.5px; cursor: pointer; transition: all 0.2s; border: none; }
+  #shopify-section-{{ section.id }} .nmd__code:hover { background: var(--brand-dark); transform: translateY(-1px); }
+  #shopify-section-{{ section.id }} .nmd__code-copied { font-size: 0.7rem; opacity: 0; transition: opacity 0.2s; }
+  #shopify-section-{{ section.id }} .nmd__code.is-copied .nmd__code-copied { opacity: 1; }
+
+  #shopify-section-{{ section.id }} .nmd__ctas { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 32px; }
+  #shopify-section-{{ section.id }} .nmd__btn { display: inline-flex; align-items: center; gap: 8px; padding: 16px 32px; font-size: 1rem; font-weight: 700; letter-spacing: 0.3px; border-radius: 10px; text-decoration: none; border: 2px solid transparent; transition: all 0.25s; white-space: nowrap; cursor: pointer; font-family: inherit; }
+  #shopify-section-{{ section.id }} .nmd__btn--primary { background: var(--brand-deep); color: var(--white); }
+  #shopify-section-{{ section.id }} .nmd__btn--primary:hover { background: var(--brand-dark); transform: translateY(-2px); box-shadow: 0 10px 26px {{ section.settings.brand_deep }}40; }
+  #shopify-section-{{ section.id }} .nmd__btn--ghost { background: transparent; color: var(--brand-deep); border-color: var(--brand-deep); }
+  #shopify-section-{{ section.id }} .nmd__btn--ghost:hover { background: var(--brand-deep); color: var(--white); }
+  #shopify-section-{{ section.id }} .nmd__btn-arrow { transition: transform 0.25s; }
+  #shopify-section-{{ section.id }} .nmd__btn:hover .nmd__btn-arrow { transform: translateX(3px); }
+
+  #shopify-section-{{ section.id }} .nmd__chips { display: flex; gap: 10px 20px; flex-wrap: wrap; padding-top: 24px; border-top: 1px solid {{ section.settings.brand_deep }}18; }
+  #shopify-section-{{ section.id }} .nmd__chip { display: inline-flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--text-muted); }
+  #shopify-section-{{ section.id }} .nmd__chip-icon { color: var(--brand-deep); flex-shrink: 0; font-weight: 700; }
+
+  /* Visual side */
+  #shopify-section-{{ section.id }} .nmd__visual { position: relative; display: flex; align-items: stretch; }
+  #shopify-section-{{ section.id }} .nmd__image-wrap { width: 100%; min-height: 540px; border-radius: 24px; background: linear-gradient(135deg, var(--cream) 0%, #ede4dc 100%); overflow: hidden; box-shadow: 0 30px 60px rgba(94,4,4,0.18); position: relative; }
+  #shopify-section-{{ section.id }} .nmd__image-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  #shopify-section-{{ section.id }} .nmd__image-fallback { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; padding: 40px; gap: 14px; }
+  #shopify-section-{{ section.id }} .nmd__image-fallback-icon { font-size: 3.5rem; opacity: 0.6; }
+  #shopify-section-{{ section.id }} .nmd__image-fallback-text { font-size: 0.85rem; color: var(--text-muted); text-align: center; }
+
+  #shopify-section-{{ section.id }} .nmd__gift-card { position: absolute; top: 20px; left: 20px; background: var(--white); border-radius: 14px; padding: 14px 18px; box-shadow: 0 12px 32px rgba(0,0,0,0.12); display: flex; align-items: center; gap: 12px; max-width: calc(100% - 40px); }
+  #shopify-section-{{ section.id }} .nmd__gift-card-icon { width: 40px; height: 40px; background: {{ section.settings.brand_deep }}15; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; }
+  #shopify-section-{{ section.id }} .nmd__gift-card-label { font-size: 0.72rem; color: var(--text-muted); margin: 0; letter-spacing: 0.3px; }
+  #shopify-section-{{ section.id }} .nmd__gift-card-value { font-size: 0.95rem; font-weight: 700; color: var(--navy); margin: 0; }
+
+  #shopify-section-{{ section.id }} .nmd__price-card { position: absolute; bottom: 20px; right: 20px; background: var(--navy); color: var(--white); border-radius: 14px; padding: 16px 20px; box-shadow: 0 12px 32px rgba(16,26,50,0.25); max-width: calc(100% - 40px); }
+  #shopify-section-{{ section.id }} .nmd__price-card-label { white-space: nowrap; }
+  #shopify-section-{{ section.id }} .nmd__price-card-strike { font-size: 0.85rem; opacity: 0.6; text-decoration: line-through; margin: 0; }
+  #shopify-section-{{ section.id }} .nmd__price-card-now { font-family: 'Playfair Display', Georgia, serif; font-size: 1.6rem; font-weight: 700; color: var(--gold); line-height: 1; margin: 2px 0; letter-spacing: -0.3px; }
+  #shopify-section-{{ section.id }} .nmd__price-card-label { font-size: 0.72rem; opacity: 0.75; margin: 0; letter-spacing: 0.3px; }
+
+  /* Reveal */
+  #shopify-section-{{ section.id }} .nmd__reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.9s ease, transform 0.9s ease; }
+  #shopify-section-{{ section.id }} .nmd__reveal.is-visible { opacity: 1; transform: translateY(0); }
+  #shopify-section-{{ section.id }} .nmd__reveal--d1 { transition-delay: 0.05s; }
+  #shopify-section-{{ section.id }} .nmd__reveal--d2 { transition-delay: 0.18s; }
+  #shopify-section-{{ section.id }} .nmd__reveal--d3 { transition-delay: 0.3s; }
+  #shopify-section-{{ section.id }} .nmd__reveal--d4 { transition-delay: 0.42s; }
+
+  @media (max-width: 900px) {
+    #shopify-section-{{ section.id }} .nmd__inner { grid-template-columns: 1fr; gap: 40px; }
+    #shopify-section-{{ section.id }} .nmd__visual { order: -1; }
+    #shopify-section-{{ section.id }} .nmd__image-wrap { min-height: 0; aspect-ratio: 4/3; }
+    #shopify-section-{{ section.id }} .nmd__gift-card { left: 14px; top: 14px; max-width: calc(100% - 28px); padding: 10px 14px; }
+    #shopify-section-{{ section.id }} .nmd__gift-card-icon { width: 32px; height: 32px; font-size: 1.1rem; }
+    #shopify-section-{{ section.id }} .nmd__price-card { right: 14px; bottom: 14px; max-width: calc(100% - 28px); padding: 12px 16px; }
+    #shopify-section-{{ section.id }} .nmd__price-card-now { font-size: 1.3rem; }
+    #shopify-section-{{ section.id }} .nmd__price-card-label { font-size: 0.65rem; white-space: normal; }
+  }
+  @media (max-width: 560px) {
+    #shopify-section-{{ section.id }} .nmd__ctas { flex-direction: column; align-items: stretch; }
+    #shopify-section-{{ section.id }} .nmd__btn { justify-content: center; }
+  }
+</style>
+
+<section class="nmd">
+  <div class="nmd__inner">
+    <div>
+      <div class="nmd__pill nmd__reveal nmd__reveal--d1">
+        <span class="nmd__pill-emoji">{{ section.settings.pill_emoji }}</span>
+        {{ section.settings.pill_text }}
+      </div>
+
+      <h1 class="nmd__headline nmd__reveal nmd__reveal--d2">{{ section.settings.headline }}</h1>
+
+      {% if section.settings.subheadline != blank %}
+        <p class="nmd__sub nmd__reveal nmd__reveal--d2">{{ section.settings.subheadline }}</p>
+      {% endif %}
+
+      {% if section.settings.show_promo %}
+        <div class="nmd__promo nmd__reveal nmd__reveal--d3">
+          <span class="nmd__promo-icon">{{ section.settings.promo_icon }}</span>
+          <div class="nmd__promo-info">
+            <p class="nmd__promo-title">{{ section.settings.promo_title }}</p>
+            <p class="nmd__promo-sub">{{ section.settings.promo_sub }}</p>
+          </div>
+          <button type="button" class="nmd__code" data-code="{{ section.settings.promo_code }}" onclick="nmdCopy_{{ section.id | replace: '-', '_' }}(this)">
+            <span class="nmd__code-text">{{ section.settings.promo_code }}</span>
+            <span class="nmd__code-copied">✓ copied</span>
+          </button>
+        </div>
+      {% endif %}
+
+      <div class="nmd__ctas nmd__reveal nmd__reveal--d3">
+        {% if section.settings.primary_btn_text != blank %}
+          <a href="{{ section.settings.primary_btn_url | default: '#products' }}" class="nmd__btn nmd__btn--primary">
+            {{ section.settings.primary_btn_text }}
+            <span class="nmd__btn-arrow">&rarr;</span>
+          </a>
+        {% endif %}
+        {% if section.settings.secondary_btn_text != blank %}
+          <a href="{{ section.settings.secondary_btn_url | default: '#why-mum' }}" class="nmd__btn nmd__btn--ghost">
+            {{ section.settings.secondary_btn_text }}
+          </a>
+        {% endif %}
+      </div>
+
+      {% if section.blocks.size > 0 %}
+        <div class="nmd__chips nmd__reveal nmd__reveal--d4">
+          {% for block in section.blocks %}
+            <span class="nmd__chip" {{ block.shopify_attributes }}>
+              <span class="nmd__chip-icon">&check;</span>
+              {{ block.settings.text }}
+            </span>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="nmd__visual nmd__reveal nmd__reveal--d2">
+      <div class="nmd__image-wrap">
+        {% if section.settings.hero_image != blank %}
+          <img src="{{ section.settings.hero_image | image_url: width: 1200 }}" alt="{{ section.settings.headline | strip_html | escape }}" loading="eager" fetchpriority="high">
+        {% else %}
+          <div class="nmd__image-fallback">
+            <div class="nmd__image-fallback-icon">💐</div>
+            <p class="nmd__image-fallback-text">Upload a Mother's Day-themed hero image (mum smiling with Nuracom in the background, mum + kid moment, etc.)</p>
+          </div>
+        {% endif %}
+
+        {% if section.settings.show_gift_card %}
+          <div class="nmd__gift-card">
+            <div class="nmd__gift-card-icon">{{ section.settings.gift_card_icon }}</div>
+            <div>
+              <p class="nmd__gift-card-label">{{ section.settings.gift_card_label }}</p>
+              <p class="nmd__gift-card-value">{{ section.settings.gift_card_value }}</p>
+            </div>
+          </div>
+        {% endif %}
+
+        {% if section.settings.show_price_card %}
+          <div class="nmd__price-card">
+            <p class="nmd__price-card-strike">{{ section.settings.price_card_strike }}</p>
+            <p class="nmd__price-card-now">{{ section.settings.price_card_now }}</p>
+            <p class="nmd__price-card-label">{{ section.settings.price_card_label }}</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  (function() {
+    var root = document.getElementById('shopify-section-{{ section.id }}');
+    if (!root) return;
+    var els = root.querySelectorAll('.nmd__reveal');
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) { if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); } });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    els.forEach(function(el) { io.observe(el); });
+  })();
+
+  function nmdCopy_{{ section.id | replace: '-', '_' }}(btn) {
+    var code = btn.getAttribute('data-code');
+    if (!code) return;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(code).then(function() {
+        btn.classList.add('is-copied');
+        setTimeout(function() { btn.classList.remove('is-copied'); }, 1800);
+      });
+    }
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Mother's Day Hero",
+  "tag": "section",
+  "class": "nuracom-md-hero-section",
+  "settings": [
+    { "type": "header", "content": "Top pill" },
+    { "type": "text", "id": "pill_emoji", "label": "Pill emoji", "default": "💐" },
+    { "type": "text", "id": "pill_text", "label": "Pill text", "default": "Mother's Day · 10 May" },
+
+    { "type": "header", "content": "Headline" },
+    { "type": "richtext", "id": "headline", "label": "Headline (use <em> for italic emphasis)", "default": "<p>Give Mum a gift she'll <em>actually use</em> every Sunday.</p>" },
+    { "type": "textarea", "id": "subheadline", "label": "Subheadline", "default": "Flowers wilt. Chocolates disappear. Nuracom is the one Mother's Day gift she'll thank you for every time she does laundry — for the next decade." },
+
+    { "type": "header", "content": "Promo card" },
+    { "type": "checkbox", "id": "show_promo", "label": "Show promo card", "default": true },
+    { "type": "text", "id": "promo_icon", "label": "Promo icon", "default": "🎁" },
+    { "type": "text", "id": "promo_title", "label": "Promo title", "default": "10% OFF + FREE shipping" },
+    { "type": "text", "id": "promo_sub", "label": "Promo subtext", "default": "Mother's Day exclusive — ends midnight 10 May" },
+    { "type": "text", "id": "promo_code", "label": "Discount code", "default": "MUM10" },
+
+    { "type": "header", "content": "Buttons" },
+    { "type": "text", "id": "primary_btn_text", "label": "Primary button text", "default": "Shop the gift" },
+    { "type": "url", "id": "primary_btn_url", "label": "Primary button URL" },
+    { "type": "text", "id": "secondary_btn_text", "label": "Secondary button text", "default": "Why mum will love it" },
+    { "type": "url", "id": "secondary_btn_url", "label": "Secondary button URL" },
+
+    { "type": "header", "content": "Hero image" },
+    { "type": "image_picker", "id": "hero_image", "label": "Hero image (mum-themed lifestyle shot)" },
+
+    { "type": "header", "content": "Floating gift card (image top-left)" },
+    { "type": "checkbox", "id": "show_gift_card", "label": "Show card", "default": true },
+    { "type": "text", "id": "gift_card_icon", "label": "Icon", "default": "🎀" },
+    { "type": "text", "id": "gift_card_label", "label": "Small label", "default": "A gift she'll use" },
+    { "type": "text", "id": "gift_card_value", "label": "Big value", "default": "Every Sunday for years" },
+
+    { "type": "header", "content": "Floating price card (bottom-right)" },
+    { "type": "checkbox", "id": "show_price_card", "label": "Show card", "default": true },
+    { "type": "text", "id": "price_card_strike", "label": "Strikethrough price", "default": "$1,499" },
+    { "type": "text", "id": "price_card_now", "label": "Discounted price", "default": "$1,349" },
+    { "type": "text", "id": "price_card_label", "label": "Label", "default": "Aero with MUM10 · save $150" },
+
+    { "type": "header", "content": "Trust chips (under buttons)" },
+
+    { "type": "header", "content": "Colours" },
+    { "type": "color", "id": "brand_deep", "label": "Brand deep", "default": "#5E0404" },
+    { "type": "color", "id": "brand_dark", "label": "Brand dark (button hover)", "default": "#801f0a" },
+    { "type": "color", "id": "blush", "label": "Soft blush (background gradient start)", "default": "#fbe7e3" },
+    { "type": "color", "id": "cream", "label": "Cream (background gradient mid)", "default": "#f8f5f1" },
+    { "type": "color", "id": "navy", "label": "Navy (headlines + price card)", "default": "#101a32" },
+    { "type": "color", "id": "gold", "label": "Gold (price card highlight)", "default": "#c69a7b" },
+    { "type": "color", "id": "white", "label": "White / promo bg", "default": "#ffffff" },
+    { "type": "color", "id": "text_primary", "label": "Text primary", "default": "#1a1a1a" },
+    { "type": "color", "id": "text_muted", "label": "Text muted", "default": "#666666" }
+  ],
+  "blocks": [
+    {
+      "type": "chip",
+      "name": "Trust chip",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Chip text", "default": "Chip text" }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Mother's Day Hero",
+      "blocks": [
+        { "type": "chip", "settings": { "text": "Free shipping included" } },
+        { "type": "chip", "settings": { "text": "5-yr Australian warranty" } },
+        { "type": "chip", "settings": { "text": "Order by 6 May for MD delivery" } },
+        { "type": "chip", "settings": { "text": "Gift-card option available" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

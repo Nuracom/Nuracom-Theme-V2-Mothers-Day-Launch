@@ -1,0 +1,156 @@
+{% comment %}
+  Nuracom Mechanism — Installs Belief #2 (the tech actually works) + begins #3 (Nuracom is superior)
+  Alternating image/text "Innovation" blocks. Mechanisms convert — features just list.
+{% endcomment %}
+
+<style>
+  #shopify-section-{{ section.id }} {
+    --brand-deep: {{ section.settings.brand_deep }};
+    --brand-accent: {{ section.settings.brand_accent }};
+    --navy: {{ section.settings.navy }};
+    --cream: {{ section.settings.cream }};
+    --text-primary: {{ section.settings.text_primary }};
+    --text-secondary: {{ section.settings.text_secondary }};
+    --white: {{ section.settings.white }};
+    --radius: 12px;
+    --radius-lg: 20px;
+    --max-width: 1120px;
+    --section-pad: clamp(44px, 6vw, 80px);
+  }
+  #shopify-section-{{ section.id }} * { box-sizing: border-box; }
+  #shopify-section-{{ section.id }} .nmech { padding: var(--section-pad) 0; background: {{ section.settings.bg_color }}; font-family: 'Inter', -apple-system, sans-serif; }
+  #shopify-section-{{ section.id }} .nmech__container { max-width: var(--max-width); margin: 0 auto; padding: 0 24px; }
+  #shopify-section-{{ section.id }} .nmech__header { text-align: center; max-width: 700px; margin: 0 auto 60px; }
+  #shopify-section-{{ section.id }} .nmech__kicker { font-size: 0.75rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--brand-accent); margin-bottom: 12px; display: block; }
+  #shopify-section-{{ section.id }} .nmech__headline { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; line-height: 1.2; color: var(--navy); margin: 0 0 20px; }
+  #shopify-section-{{ section.id }} .nmech__sub { font-size: clamp(1.05rem, 1.5vw, 1.2rem); color: var(--text-secondary); line-height: 1.7; margin: 0 auto; max-width: 640px; }
+  #shopify-section-{{ section.id }} .nmech__row { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; margin-bottom: 60px; }
+  #shopify-section-{{ section.id }} .nmech__row:last-child { margin-bottom: 0; }
+  #shopify-section-{{ section.id }} .nmech__row--reverse .nmech__visual { order: 2; }
+  #shopify-section-{{ section.id }} .nmech__visual { background: linear-gradient(135deg, var(--cream), #ede8e2); border-radius: var(--radius-lg); aspect-ratio: 1; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+  #shopify-section-{{ section.id }} .nmech__visual img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  #shopify-section-{{ section.id }} .nmech__visual-number { font-family: 'Playfair Display', Georgia, serif; font-size: 8rem; font-weight: 700; color: {{ section.settings.brand_deep }}10; position: absolute; top: 20px; left: 30px; }
+  #shopify-section-{{ section.id }} .nmech__visual-icon { font-size: 4rem; position: relative; z-index: 2; }
+  #shopify-section-{{ section.id }} .nmech__step-kicker { font-size: 0.7rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--brand-accent); margin-bottom: 8px; }
+  #shopify-section-{{ section.id }} .nmech__step-title { font-size: 1.5rem; font-weight: 700; color: var(--navy); margin: 0 0 16px; line-height: 1.3; }
+  #shopify-section-{{ section.id }} .nmech__step-text { font-size: 1rem; color: var(--text-secondary); line-height: 1.8; margin: 0 0 16px; }
+  #shopify-section-{{ section.id }} .nmech__step-text:last-of-type { margin-bottom: 0; }
+  #shopify-section-{{ section.id }} .nmech__step-highlight { display: flex; align-items: flex-start; gap: 12px; background: var(--cream); border-radius: var(--radius); padding: 16px 20px; margin-top: 20px; }
+  #shopify-section-{{ section.id }} .nmech__step-highlight-icon { flex-shrink: 0; width: 24px; height: 24px; background: var(--brand-deep); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--white); font-size: 0.7rem; font-weight: 700; margin-top: 2px; }
+  #shopify-section-{{ section.id }} .nmech__step-highlight-text { font-size: 0.9rem; color: var(--text-primary); line-height: 1.6; margin: 0; }
+  #shopify-section-{{ section.id }} .nmech__step-highlight-text strong { font-weight: 700; }
+  #shopify-section-{{ section.id }} .nmech__reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
+  #shopify-section-{{ section.id }} .nmech__reveal.is-visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 900px) {
+    #shopify-section-{{ section.id }} .nmech__row, #shopify-section-{{ section.id }} .nmech__row--reverse { grid-template-columns: 1fr; gap: 40px; }
+    #shopify-section-{{ section.id }} .nmech__row--reverse .nmech__visual { order: 0; }
+  }
+</style>
+
+<section class="nmech">
+  <div class="nmech__container">
+    <div class="nmech__header nmech__reveal">
+      {% if section.settings.kicker != blank %}
+        <span class="nmech__kicker">{{ section.settings.kicker }}</span>
+      {% endif %}
+      <h2 class="nmech__headline">{{ section.settings.heading }}</h2>
+      {% if section.settings.subheading != blank %}
+        <p class="nmech__sub">{{ section.settings.subheading }}</p>
+      {% endif %}
+    </div>
+
+    {% for block in section.blocks %}
+      <div class="nmech__row {% cycle '', 'nmech__row--reverse' %} nmech__reveal" {{ block.shopify_attributes }}>
+        <div class="nmech__visual">
+          {% if block.settings.image != blank %}
+            <img src="{{ block.settings.image | image_url: width: 800 }}" alt="{{ block.settings.title | escape }}" loading="lazy">
+          {% else %}
+            <div class="nmech__visual-number">{{ block.settings.step_number }}</div>
+            <div class="nmech__visual-icon">{{ block.settings.icon }}</div>
+          {% endif %}
+        </div>
+        <div>
+          {% if block.settings.kicker != blank %}
+            <p class="nmech__step-kicker">{{ block.settings.kicker }}</p>
+          {% endif %}
+          <h3 class="nmech__step-title">{{ block.settings.title }}</h3>
+          {% if block.settings.text_1 != blank %}
+            <p class="nmech__step-text">{{ block.settings.text_1 }}</p>
+          {% endif %}
+          {% if block.settings.text_2 != blank %}
+            <p class="nmech__step-text">{{ block.settings.text_2 }}</p>
+          {% endif %}
+          {% if block.settings.highlight_text != blank %}
+            <div class="nmech__step-highlight">
+              <div class="nmech__step-highlight-icon">&check;</div>
+              <p class="nmech__step-highlight-text">{{ block.settings.highlight_text }}</p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+<script>
+  (function() {
+    var root = document.getElementById('shopify-section-{{ section.id }}');
+    if (!root) return;
+    var els = root.querySelectorAll('.nmech__reveal');
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) { if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); } });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    els.forEach(function(el) { io.observe(el); });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "How It Works",
+  "tag": "section",
+  "class": "nuracom-mechanism-section",
+  "settings": [
+    { "type": "header", "content": "Section intro" },
+    { "type": "text", "id": "kicker", "label": "Kicker", "default": "The Technology" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "How Nuracom Dries Clothes 2x Faster — Without Heat Damage" },
+    { "type": "textarea", "id": "subheading", "label": "Subheading", "default": "Three engineering innovations working together to create the fastest, most efficient indoor drying system ever built for Australian homes." },
+    { "type": "header", "content": "Colours" },
+    { "type": "color", "id": "bg_color", "label": "Section background", "default": "#ffffff" },
+    { "type": "color", "id": "brand_deep", "label": "Brand deep (highlights)", "default": "#5E0404" },
+    { "type": "color", "id": "brand_accent", "label": "Brand accent (kickers)", "default": "#a8321a" },
+    { "type": "color", "id": "navy", "label": "Navy (titles)", "default": "#101a32" },
+    { "type": "color", "id": "cream", "label": "Cream (visuals, highlights)", "default": "#f8f5f1" },
+    { "type": "color", "id": "text_primary", "label": "Text primary", "default": "#1a1a1a" },
+    { "type": "color", "id": "text_secondary", "label": "Text secondary", "default": "#555555" },
+    { "type": "color", "id": "white", "label": "White", "default": "#ffffff" }
+  ],
+  "blocks": [
+    {
+      "type": "mechanism_step",
+      "name": "Innovation Step",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Visual image (optional — falls back to number + icon)" },
+        { "type": "text", "id": "step_number", "label": "Step number (shown if no image)", "default": "01" },
+        { "type": "text", "id": "icon", "label": "Icon / emoji", "default": "🌀" },
+        { "type": "text", "id": "kicker", "label": "Kicker (above title)", "default": "Innovation One" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Step title" },
+        { "type": "textarea", "id": "text_1", "label": "Paragraph 1", "default": "First paragraph explaining the mechanism." },
+        { "type": "textarea", "id": "text_2", "label": "Paragraph 2 (optional)", "default": "Second paragraph with the payoff." },
+        { "type": "textarea", "id": "highlight_text", "label": "Key-difference highlight (optional)", "default": "<strong>Key difference:</strong> The one-line takeaway." }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "How It Works",
+      "blocks": [
+        { "type": "mechanism_step", "settings": { "step_number": "01", "icon": "🌀", "kicker": "Innovation One", "title": "Turbo-Fan Forced Airflow", "text_1": "Unlike passive racks that rely on still air to slowly evaporate moisture, Nuracom uses up to 6 ultra-silent turbo fans to force a constant stream of air through your garments. This mimics nature's most effective drying method — a steady breeze — but indoors, on demand, regardless of what's happening outside.", "text_2": "The result is dramatically faster drying without the heat damage of a tumble dryer. Your delicates stay intact. Your colours stay true. And your clothes are dry in hours, not days.", "highlight_text": "<strong>Key difference:</strong> Forced airflow dries clothes up to 2x faster than passive air drying, while using a fraction of the energy of a tumble dryer." } },
+        { "type": "mechanism_step", "settings": { "step_number": "02", "icon": "▲", "kicker": "Innovation Two", "title": "Ceiling-Mount Heat Capture", "text_1": "Hot air rises. It's basic physics, and Nuracom uses it to your advantage. When your rack lifts to ceiling height with one touch, your clothes sit in the warmest zone of any room — where temperatures can be 3–5°C higher than floor level.", "text_2": "Combined with the turbo-fan airflow, this creates an optimal drying environment that works with your home's natural convection currents. No extra heating needed. No energy wasted. Just smart engineering.", "highlight_text": "<strong>Key difference:</strong> Ceiling mounting utilises wasted warm air that already exists in your home, eliminating the need for energy-hungry heating elements." } },
+        { "type": "mechanism_step", "settings": { "step_number": "03", "icon": "✨", "kicker": "Innovation Three", "title": "UV Disinfection & Hygiene Control", "text_1": "Drying clothes isn't just about removing moisture — it's about making them genuinely clean. Nuracom's UV disinfection system (Aero and Stratos models) eliminates bacteria and odour-causing microorganisms during the drying process. The Stratos goes even further with negative ion technology that actively removes dust mites.", "text_2": "This means your clothes come off the rack not just dry, but hygienically clean. No musty smell. No hidden bacteria. Just fresh, ready-to-wear clothing, every single time.", "highlight_text": "<strong>Key difference:</strong> UV disinfection and negative ion tech mean your clothes are cleaner coming off a Nuracom than out of most tumble dryers." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

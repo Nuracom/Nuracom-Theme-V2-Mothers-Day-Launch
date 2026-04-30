@@ -1,0 +1,410 @@
+{% comment %}
+  Nuracom Landing — Shipping & Installation Clarity
+  Two columns of clear info rows (block-based), with optional postcode check.
+  Install to: sections/landing-shipping-install.liquid
+{% endcomment %}
+
+<style>
+  #lp-ship-{{ section.id }} {
+    background: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+    padding: 90px 24px;
+  }
+
+  #lp-ship-{{ section.id }} .lp-ship__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  #lp-ship-{{ section.id }} .lp-ship__header {
+    text-align: center;
+    max-width: 720px;
+    margin: 0 auto 56px;
+  }
+
+  #lp-ship-{{ section.id }} .lp-ship__eyebrow {
+    font-size: 12px;
+    letter-spacing: 2.4px;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: {{ section.settings.accent_color }};
+    margin: 0 0 14px;
+  }
+
+  #lp-ship-{{ section.id }} .lp-ship__heading {
+    font-size: clamp(28px, 3.8vw, 44px);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.4px;
+    margin: 0 0 16px;
+  }
+
+  #lp-ship-{{ section.id }} .lp-ship__sub {
+    font-size: 17px;
+    line-height: 1.6;
+    opacity: 0.75;
+    margin: 0;
+  }
+
+  #lp-ship-{{ section.id }} .lp-ship__layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 44px;
+    align-items: start;
+  }
+
+  #lp-ship-{{ section.id }} .lp-ship__col h3 {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0 0 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid {{ section.settings.accent_color }};
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  #lp-ship-{{ section.id }} .lp-ship__list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 24px;
+  }
+
+  #lp-ship-{{ section.id }} .lp-ship__list li {
+    display: flex;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid {{ section.settings.border_color }};
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  #lp-ship-{{ section.id }} .lp-ship__list li:last-child {
+    border-bottom: none;
+  }
+
+  #lp-ship-{{ section.id }} .lp-ship__list-label {
+    flex-shrink: 0;
+    width: 130px;
+    font-weight: 600;
+    color: {{ section.settings.accent_color }};
+  }
+
+  #lp-ship-{{ section.id }} .lp-ship__list-val {
+    opacity: 0.85;
+  }
+
+  #lp-ship-{{ section.id }} .lp-ship__postcode-card {
+    background: {{ section.settings.card_bg }};
+    border: 1.5px solid {{ section.settings.card_border }};
+    border-radius: 14px;
+    padding: 28px;
+    margin-top: 24px;
+  }
+
+  #lp-ship-{{ section.id }} .lp-ship__postcode-title {
+    font-size: 17px;
+    font-weight: 700;
+    margin: 0 0 6px;
+  }
+
+  #lp-ship-{{ section.id }} .lp-ship__postcode-sub {
+    font-size: 14px;
+    opacity: 0.75;
+    margin: 0 0 16px;
+  }
+
+  #lp-ship-{{ section.id }} .lp-ship__postcode-form {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  #lp-ship-{{ section.id }} .lp-ship__postcode-input {
+    flex: 1 1 160px;
+    padding: 12px 14px;
+    border: 1.5px solid {{ section.settings.card_border }};
+    border-radius: 8px;
+    font-size: 15px;
+    font-family: inherit;
+    transition: border-color 0.2s;
+  }
+
+  #lp-ship-{{ section.id }} .lp-ship__postcode-input:focus {
+    outline: none;
+    border-color: {{ section.settings.accent_color }};
+  }
+
+  #lp-ship-{{ section.id }} .lp-ship__postcode-btn {
+    padding: 12px 22px;
+    background: {{ section.settings.accent_color }};
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    font-family: inherit;
+  }
+
+  #lp-ship-{{ section.id }} .lp-ship__postcode-btn:hover {
+    opacity: 0.9;
+  }
+
+  #lp-ship-{{ section.id }} .lp-ship__postcode-result {
+    margin-top: 14px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    display: none;
+  }
+
+  #lp-ship-{{ section.id }} .lp-ship__postcode-result.is-show {
+    display: block;
+  }
+
+  #lp-ship-{{ section.id }} .lp-ship__postcode-result.is-ok {
+    background: #e8f5ec;
+    color: #0f5132;
+  }
+
+  #lp-ship-{{ section.id }} .lp-ship__postcode-result.is-note {
+    background: #fff4e5;
+    color: #7a4a00;
+  }
+
+  @media (max-width: 900px) {
+    #lp-ship-{{ section.id }} .lp-ship__layout {
+      grid-template-columns: 1fr;
+      gap: 36px;
+    }
+  }
+
+  @media (max-width: 560px) {
+    #lp-ship-{{ section.id }} {
+      padding: 60px 18px;
+    }
+    #lp-ship-{{ section.id }} .lp-ship__list-label {
+      width: 110px;
+      font-size: 14px;
+    }
+  }
+</style>
+
+<section id="lp-ship-{{ section.id }}" data-lp-ship>
+  <div class="lp-ship__inner">
+    <div class="lp-ship__header">
+      {% if section.settings.eyebrow != blank %}
+        <p class="lp-ship__eyebrow">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+      <h2 class="lp-ship__heading">{{ section.settings.heading }}</h2>
+      {% if section.settings.sub != blank %}
+        <p class="lp-ship__sub">{{ section.settings.sub }}</p>
+      {% endif %}
+    </div>
+
+    <div class="lp-ship__layout">
+      <!-- Shipping column -->
+      <div class="lp-ship__col">
+        <h3>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+          </svg>
+          {{ section.settings.shipping_title }}
+        </h3>
+        <ul class="lp-ship__list">
+          {% for block in section.blocks %}
+            {% if block.type == 'shipping_row' %}
+              <li {{ block.shopify_attributes }}>
+                <span class="lp-ship__list-label">{{ block.settings.label }}</span>
+                <span class="lp-ship__list-val">{{ block.settings.value }}</span>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+
+        {% if section.settings.show_postcode_check %}
+          <div class="lp-ship__postcode-card">
+            <p class="lp-ship__postcode-title">{{ section.settings.postcode_title }}</p>
+            <p class="lp-ship__postcode-sub">{{ section.settings.postcode_sub }}</p>
+            <form class="lp-ship__postcode-form" data-lp-ship-form>
+              <input type="text"
+                     class="lp-ship__postcode-input"
+                     data-lp-ship-input
+                     placeholder="e.g. 4000"
+                     pattern="[0-9]{4}"
+                     maxlength="4"
+                     required>
+              <button type="submit" class="lp-ship__postcode-btn">Check</button>
+            </form>
+            <div class="lp-ship__postcode-result" data-lp-ship-result></div>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Installation column -->
+      <div class="lp-ship__col">
+        <h3>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+          </svg>
+          {{ section.settings.install_title }}
+        </h3>
+        <ul class="lp-ship__list">
+          {% for block in section.blocks %}
+            {% if block.type == 'install_row' %}
+              <li {{ block.shopify_attributes }}>
+                <span class="lp-ship__list-label">{{ block.settings.label }}</span>
+                <span class="lp-ship__list-val">{{ block.settings.value }}</span>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% if section.settings.show_postcode_check %}
+  <script>
+    (function() {
+      var root = document.getElementById('lp-ship-{{ section.id }}');
+      if (!root) return;
+      var form = root.querySelector('[data-lp-ship-form]');
+      var input = root.querySelector('[data-lp-ship-input]');
+      var result = root.querySelector('[data-lp-ship-result]');
+      if (!form || !input || !result) return;
+
+      /*
+        Australia Post zone approximations (inclusive numeric ranges).
+        These are indicative only — the exact rate and delivery window
+        are always confirmed at checkout by the carrier.
+      */
+      var majorMetro = [
+        [800, 832],     // Darwin
+        [2000, 2249],   // Sydney metro
+        [2600, 2618],   // Canberra central
+        [2760, 2786],   // Western Sydney
+        [2900, 2920],   // Canberra outer
+        [3000, 3207],   // Melbourne metro
+        [4000, 4179],   // Brisbane metro
+        [5000, 5199],   // Adelaide metro
+        [6000, 6199],   // Perth metro
+        [7000, 7019]    // Hobart
+      ];
+      var nearMetro = [
+        [870, 874],     // Alice Springs
+        [2250, 2310],   // Newcastle / Central Coast
+        [2500, 2530],   // Wollongong / Illawarra
+        [3214, 3220],   // Geelong
+        [4207, 4228],   // Gold Coast
+        [4550, 4575],   // Sunshine Coast
+        [7050, 7055],   // Kingston (outer Hobart)
+        [7250, 7291]    // Launceston
+      ];
+
+      function inRanges(n, ranges) {
+        for (var i = 0; i < ranges.length; i++) {
+          if (n >= ranges[i][0] && n <= ranges[i][1]) return true;
+        }
+        return false;
+      }
+
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        var pc = (input.value || '').trim();
+        if (!/^\d{4}$/.test(pc)) {
+          result.className = 'lp-ship__postcode-result is-note is-show';
+          result.textContent = 'Please enter a valid 4-digit Australian postcode.';
+          return;
+        }
+        var n = parseInt(pc, 10);
+        var tick = '\u2705';
+        var pkg  = '\uD83D\uDCE6';
+
+        if (inRanges(n, majorMetro)) {
+          result.className = 'lp-ship__postcode-result is-ok is-show';
+          result.innerHTML = tick + ' <strong>We deliver to ' + pc + '.</strong> '
+            + 'Estimated delivery <strong>2\u20134 business days</strong> after dispatch. '
+            + 'Exact rate confirmed at checkout.';
+        } else if (inRanges(n, nearMetro)) {
+          result.className = 'lp-ship__postcode-result is-ok is-show';
+          result.innerHTML = tick + ' <strong>We deliver to ' + pc + '.</strong> '
+            + 'Estimated delivery <strong>3\u20136 business days</strong> after dispatch. '
+            + 'Exact rate confirmed at checkout.';
+        } else {
+          result.className = 'lp-ship__postcode-result is-note is-show';
+          result.innerHTML = pkg + ' <strong>We deliver to ' + pc + '.</strong> '
+            + 'Estimated delivery <strong>5\u201310 business days</strong> after dispatch. '
+            + 'Exact rate and time confirmed at checkout.';
+        }
+      });
+    })();
+  </script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Landing — Ship & Install",
+  "tag": "section",
+  "class": "landing-shipping-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "No hidden surprises" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Shipping and installation made clear" },
+    { "type": "textarea", "id": "sub", "label": "Subheading", "default": "We tell you exactly what's involved — before you buy. No hunting through FAQs mid-checkout." },
+    { "type": "header", "content": "Column titles" },
+    { "type": "text", "id": "shipping_title", "label": "Shipping column title", "default": "Shipping" },
+    { "type": "text", "id": "install_title", "label": "Installation column title", "default": "Installation" },
+    { "type": "header", "content": "Postcode check" },
+    { "type": "checkbox", "id": "show_postcode_check", "label": "Show postcode check", "default": true },
+    { "type": "text", "id": "postcode_title", "label": "Widget title", "default": "Check shipping to your area" },
+    { "type": "text", "id": "postcode_sub", "label": "Widget subtitle", "default": "Enter your postcode for an indicative delivery window. Exact rate and time are confirmed at checkout." },
+    { "type": "header", "content": "Colours" },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#ffffff" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#101a32" },
+    { "type": "color", "id": "accent_color", "label": "Accent", "default": "#866653" },
+    { "type": "color", "id": "border_color", "label": "Row border", "default": "#eceae4" },
+    { "type": "color", "id": "card_bg", "label": "Postcode card background", "default": "#fafaf8" },
+    { "type": "color", "id": "card_border", "label": "Postcode card border", "default": "#e8e4dc" }
+  ],
+  "blocks": [
+    {
+      "type": "shipping_row",
+      "name": "Shipping row",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "Coverage" },
+        { "type": "text", "id": "value", "label": "Value", "default": "Australia-wide. Metro and regional." }
+      ]
+    },
+    {
+      "type": "install_row",
+      "name": "Installation row",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "Mount type" },
+        { "type": "text", "id": "value", "label": "Value", "default": "Ceiling-mounted. Replaces a standard light fixture." }
+      ]
+    }
+  ],
+  "max_blocks": 16,
+  "presets": [
+    {
+      "name": "Landing — Ship & Install",
+      "blocks": [
+        { "type": "shipping_row", "settings": { "label": "Coverage", "value": "Australia-wide. Metro and regional." } },
+        { "type": "shipping_row", "settings": { "label": "Metro dispatch", "value": "1–2 business days. Delivery 3–5 days." } },
+        { "type": "shipping_row", "settings": { "label": "Regional dispatch", "value": "1–2 business days. Delivery 5–10 days." } },
+        { "type": "shipping_row", "settings": { "label": "Freight", "value": "Calculated at checkout based on your postcode." } },
+        { "type": "shipping_row", "settings": { "label": "Packaging", "value": "Secure double-box packaging with full warranty cover." } },
+        { "type": "shipping_row", "settings": { "label": "Tracking", "value": "Provided on dispatch via email + SMS." } },
+        { "type": "install_row", "settings": { "label": "Mount type", "value": "Ceiling-mounted. Replaces a standard light fixture." } },
+        { "type": "install_row", "settings": { "label": "Ceiling clearance", "value": "Minimum 2.4m recommended for full drop range." } },
+        { "type": "install_row", "settings": { "label": "Electrician needed?", "value": "Yes — wired into mains power like a ceiling fan. Budget ~$150–$300." } },
+        { "type": "install_row", "settings": { "label": "Time to install", "value": "Typically 30–60 minutes for a licensed electrician." } },
+        { "type": "install_row", "settings": { "label": "What's included", "value": "Unit, mounting hardware, remote, installation guide." } },
+        { "type": "install_row", "settings": { "label": "Install support", "value": "Free install guide + video walkthrough. Direct email support." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

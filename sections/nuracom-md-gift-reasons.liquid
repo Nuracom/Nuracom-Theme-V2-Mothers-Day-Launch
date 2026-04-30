@@ -1,0 +1,161 @@
+{% comment %}
+  Nuracom Mother's Day — Why she'll love it
+  4 emotional gift-reason cards. The angle is acknowledgement of her labour
+  + a gift she'll genuinely use.
+{% endcomment %}
+
+<style>
+  #shopify-section-{{ section.id }} {
+    --brand-deep: {{ section.settings.brand_deep }};
+    --brand-accent: {{ section.settings.brand_accent }};
+    --navy: {{ section.settings.navy }};
+    --cream: {{ section.settings.cream }};
+    --blush: {{ section.settings.blush }};
+    --warm-gray: {{ section.settings.warm_gray }};
+    --white: {{ section.settings.white }};
+    --text: {{ section.settings.text_primary }};
+    --text-muted: {{ section.settings.text_muted }};
+    --max-width: 1180px;
+    --section-pad: clamp(48px, 6vw, 86px);
+  }
+  #shopify-section-{{ section.id }} * { box-sizing: border-box; }
+  #shopify-section-{{ section.id }} .nmdg { padding: var(--section-pad) 24px; background: {{ section.settings.bg_color }}; font-family: 'Inter', -apple-system, sans-serif; }
+  #shopify-section-{{ section.id }} .nmdg__inner { max-width: var(--max-width); margin: 0 auto; }
+
+  #shopify-section-{{ section.id }} .nmdg__header { text-align: center; max-width: 720px; margin: 0 auto 44px; }
+  #shopify-section-{{ section.id }} .nmdg__kicker { font-size: 0.72rem; letter-spacing: 3px; text-transform: uppercase; color: var(--brand-deep); font-weight: 700; margin-bottom: 12px; }
+  #shopify-section-{{ section.id }} .nmdg__headline { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; line-height: 1.18; color: var(--navy); margin: 0 0 18px; letter-spacing: -0.4px; }
+  #shopify-section-{{ section.id }} .nmdg__headline em { color: var(--brand-deep); font-style: italic; }
+  #shopify-section-{{ section.id }} .nmdg__sub { font-size: 1.05rem; line-height: 1.7; color: var(--text-muted); margin: 0; }
+
+  /* Cards grid */
+  #shopify-section-{{ section.id }} .nmdg__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+  #shopify-section-{{ section.id }} .nmdg__card { background: var(--white); border: 1px solid var(--warm-gray); border-radius: 16px; padding: 28px 24px; transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease; position: relative; overflow: hidden; }
+  #shopify-section-{{ section.id }} .nmdg__card:hover { transform: translateY(-4px); box-shadow: 0 16px 36px rgba(94,4,4,0.08); border-color: var(--brand-deep); }
+  #shopify-section-{{ section.id }} .nmdg__card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, var(--brand-deep), var(--brand-accent)); opacity: 0; transition: opacity 0.25s ease; }
+  #shopify-section-{{ section.id }} .nmdg__card:hover::before { opacity: 1; }
+
+  #shopify-section-{{ section.id }} .nmdg__icon { width: 52px; height: 52px; border-radius: 14px; background: var(--blush); display: inline-flex; align-items: center; justify-content: center; font-size: 1.6rem; margin-bottom: 18px; }
+  #shopify-section-{{ section.id }} .nmdg__title { font-size: 1.05rem; font-weight: 700; color: var(--navy); margin: 0 0 8px; line-height: 1.3; letter-spacing: -0.1px; }
+  #shopify-section-{{ section.id }} .nmdg__text { font-size: 0.92rem; line-height: 1.65; color: var(--text-muted); margin: 0; }
+  #shopify-section-{{ section.id }} .nmdg__text strong { color: var(--text); }
+
+  /* Footnote / closer */
+  #shopify-section-{{ section.id }} .nmdg__closer { text-align: center; margin-top: 44px; padding: 28px 32px; background: linear-gradient(135deg, var(--blush) 0%, var(--cream) 100%); border-radius: 18px; }
+  #shopify-section-{{ section.id }} .nmdg__closer-text { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.15rem, 1.8vw, 1.5rem); font-style: italic; line-height: 1.5; color: var(--navy); margin: 0; max-width: 700px; margin-left: auto; margin-right: auto; }
+  #shopify-section-{{ section.id }} .nmdg__closer-attr { font-size: 0.78rem; letter-spacing: 1px; text-transform: uppercase; color: var(--brand-deep); font-weight: 700; margin-top: 12px; }
+
+  /* Reveal */
+  #shopify-section-{{ section.id }} .nmdg__reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.8s ease, transform 0.8s ease; }
+  #shopify-section-{{ section.id }} .nmdg__reveal.is-visible { opacity: 1; transform: translateY(0); }
+  #shopify-section-{{ section.id }} .nmdg__reveal--d1 { transition-delay: 0.05s; }
+  #shopify-section-{{ section.id }} .nmdg__reveal--d2 { transition-delay: 0.15s; }
+  #shopify-section-{{ section.id }} .nmdg__reveal--d3 { transition-delay: 0.25s; }
+  #shopify-section-{{ section.id }} .nmdg__reveal--d4 { transition-delay: 0.35s; }
+
+  @media (max-width: 1000px) {
+    #shopify-section-{{ section.id }} .nmdg__grid { grid-template-columns: 1fr 1fr; gap: 16px; }
+  }
+  @media (max-width: 560px) {
+    #shopify-section-{{ section.id }} .nmdg__grid { grid-template-columns: 1fr; }
+    #shopify-section-{{ section.id }} .nmdg__closer { padding: 24px; }
+  }
+</style>
+
+<section class="nmdg" id="why-mum">
+  <div class="nmdg__inner">
+    <div class="nmdg__header nmdg__reveal">
+      {% if section.settings.kicker != blank %}
+        <div class="nmdg__kicker">{{ section.settings.kicker }}</div>
+      {% endif %}
+      <h2 class="nmdg__headline">{{ section.settings.headline }}</h2>
+      {% if section.settings.subheading != blank %}
+        <p class="nmdg__sub">{{ section.settings.subheading }}</p>
+      {% endif %}
+    </div>
+
+    <div class="nmdg__grid">
+      {% for block in section.blocks %}
+        <div class="nmdg__card nmdg__reveal nmdg__reveal--d{{ forloop.index }}" {{ block.shopify_attributes }}>
+          <div class="nmdg__icon">{{ block.settings.icon }}</div>
+          <h3 class="nmdg__title">{{ block.settings.title }}</h3>
+          <p class="nmdg__text">{{ block.settings.text }}</p>
+        </div>
+      {% endfor %}
+    </div>
+
+    {% if section.settings.closer_text != blank %}
+      <div class="nmdg__closer nmdg__reveal">
+        <p class="nmdg__closer-text">&ldquo;{{ section.settings.closer_text }}&rdquo;</p>
+        {% if section.settings.closer_attr != blank %}
+          <p class="nmdg__closer-attr">— {{ section.settings.closer_attr }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<script>
+  (function() {
+    var root = document.getElementById('shopify-section-{{ section.id }}');
+    if (!root) return;
+    var els = root.querySelectorAll('.nmdg__reveal');
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) { if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); } });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    els.forEach(function(el) { io.observe(el); });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "MD Gift Reasons",
+  "tag": "section",
+  "class": "nuracom-md-gift-reasons-section",
+  "settings": [
+    { "type": "header", "content": "Section header" },
+    { "type": "text", "id": "kicker", "label": "Kicker", "default": "Why this gift" },
+    { "type": "richtext", "id": "headline", "label": "Headline (use <em> for italic emphasis)", "default": "<p>Mum's been doing your washing for years. <em>Here's what she's actually owed.</em></p>" },
+    { "type": "textarea", "id": "subheading", "label": "Subheading", "default": "Most Mother's Day gifts are gone in a week. This one she'll thank you for every Sunday — for the next decade." },
+
+    { "type": "header", "content": "Closing quote (optional)" },
+    { "type": "textarea", "id": "closer_text", "label": "Quote", "default": "If you've ever watched mum lug a heavy basket out to a half-rainy clothesline, you already know why this is the gift." },
+    { "type": "text", "id": "closer_attr", "label": "Attribution", "default": "Pretty much everyone" },
+
+    { "type": "header", "content": "Colours" },
+    { "type": "color", "id": "bg_color", "label": "Section background", "default": "#ffffff" },
+    { "type": "color", "id": "brand_deep", "label": "Brand deep", "default": "#5E0404" },
+    { "type": "color", "id": "brand_accent", "label": "Brand accent", "default": "#a8321a" },
+    { "type": "color", "id": "navy", "label": "Navy (titles)", "default": "#101a32" },
+    { "type": "color", "id": "cream", "label": "Cream", "default": "#f8f5f1" },
+    { "type": "color", "id": "blush", "label": "Blush (icon backgrounds)", "default": "#fbe7e3" },
+    { "type": "color", "id": "warm_gray", "label": "Card border", "default": "#e8e3dd" },
+    { "type": "color", "id": "white", "label": "Card background", "default": "#ffffff" },
+    { "type": "color", "id": "text_primary", "label": "Text primary", "default": "#1a1a1a" },
+    { "type": "color", "id": "text_muted", "label": "Text muted", "default": "#666666" }
+  ],
+  "blocks": [
+    {
+      "type": "reason",
+      "name": "Reason card",
+      "settings": [
+        { "type": "text", "id": "icon", "label": "Icon (emoji)", "default": "💐" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Reason title" },
+        { "type": "textarea", "id": "text", "label": "Body", "default": "Short emotional reason — keep it under 35 words." }
+      ]
+    }
+  ],
+  "max_blocks": 8,
+  "presets": [
+    {
+      "name": "MD Gift Reasons",
+      "blocks": [
+        { "type": "reason", "settings": { "icon": "🏋", "title": "No more heavy baskets", "text": "If she's ever winced lifting wet washing to the line, she'll never have to again. Loads lift to the ceiling at the touch of a button." } },
+        { "type": "reason", "settings": { "icon": "⏰", "title": "Hours back, every week", "text": "She's been planning her week around the weather. This ends that. Wash in the morning, dry in 2 hours, no rain check, no rewashing." } },
+        { "type": "reason", "settings": { "icon": "🌹", "title": "She'll use it Sunday after Sunday", "text": "Flowers wilt in 5 days. Chocolates last 3. Nuracom is the gift she'll thank you for every laundry day for the next decade." } },
+        { "type": "reason", "settings": { "icon": "🛡", "title": "5-year warranty — guilt-free", "text": "It won't break in 6 months. 5 years on the motor, 2 years on every part, 1 year of full service. A gift that doesn't make you nervous." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

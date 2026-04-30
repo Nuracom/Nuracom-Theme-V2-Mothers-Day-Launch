@@ -1,0 +1,178 @@
+{% comment %}
+  Nuracom Cashback — Hero
+  Post-purchase exclusive. VIP reveal with "7% back / ~$100" offer.
+{% endcomment %}
+
+<style>
+  #shopify-section-{{ section.id }} {
+    --brand-deep: {{ section.settings.brand_deep }};
+    --brand-dark: {{ section.settings.brand_dark }};
+    --brand-accent: {{ section.settings.brand_accent }};
+    --navy: {{ section.settings.navy }};
+    --cream: {{ section.settings.cream }};
+    --gold: {{ section.settings.gold_color }};
+    --white: {{ section.settings.white }};
+    --positive: {{ section.settings.positive_color }};
+    --max-width: 1120px;
+    --section-pad: clamp(56px, 7vw, 96px);
+  }
+  #shopify-section-{{ section.id }} * { box-sizing: border-box; }
+  #shopify-section-{{ section.id }} .ncb-hero { padding: var(--section-pad) 24px; background: var(--navy); color: var(--white); position: relative; overflow: hidden; font-family: 'Inter', -apple-system, sans-serif; }
+  #shopify-section-{{ section.id }} .ncb-hero::before { content: ''; position: absolute; top: -180px; right: -180px; width: 520px; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, {{ section.settings.brand_deep }}55 0%, transparent 70%); pointer-events: none; }
+  #shopify-section-{{ section.id }} .ncb-hero::after { content: ''; position: absolute; bottom: -160px; left: -160px; width: 480px; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, {{ section.settings.gold_color }}33 0%, transparent 70%); pointer-events: none; }
+  #shopify-section-{{ section.id }} .ncb-hero__inner { max-width: var(--max-width); margin: 0 auto; position: relative; z-index: 2; text-align: center; }
+
+  #shopify-section-{{ section.id }} .ncb-hero__pill { display: inline-flex; align-items: center; gap: 10px; padding: 8px 18px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); backdrop-filter: blur(10px); border-radius: 100px; font-size: 0.72rem; letter-spacing: 2.8px; font-weight: 700; text-transform: uppercase; color: var(--gold); margin-bottom: 28px; }
+  #shopify-section-{{ section.id }} .ncb-hero__pill-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 12px var(--gold); animation: ncb-pulse 2s ease-in-out infinite; }
+  @keyframes ncb-pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.55; transform: scale(0.9); } }
+
+  #shopify-section-{{ section.id }} .ncb-hero__amount { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(4rem, 10vw, 7.5rem); font-weight: 700; line-height: 0.95; letter-spacing: -4px; color: var(--gold); margin: 0 0 10px; text-shadow: 0 0 40px {{ section.settings.gold_color }}33; }
+  #shopify-section-{{ section.id }} .ncb-hero__amount-label { font-size: 0.75rem; letter-spacing: 4px; text-transform: uppercase; font-weight: 700; color: rgba(255,255,255,0.55); margin-bottom: 18px; }
+
+  #shopify-section-{{ section.id }} .ncb-hero__headline { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(2.2rem, 4.4vw, 3.4rem); font-weight: 700; line-height: 1.1; letter-spacing: -0.4px; margin: 0 0 20px; color: var(--white); }
+  #shopify-section-{{ section.id }} .ncb-hero__headline em { color: var(--gold); font-style: italic; }
+  #shopify-section-{{ section.id }} .ncb-hero__headline p { margin: 0; }
+  #shopify-section-{{ section.id }} .ncb-hero__sub { font-size: 1.1rem; line-height: 1.7; max-width: 680px; margin: 0 auto 36px; color: rgba(255,255,255,0.78); }
+  #shopify-section-{{ section.id }} .ncb-hero__sub strong { color: var(--white); }
+
+  #shopify-section-{{ section.id }} .ncb-hero__ctas { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; margin-bottom: 44px; }
+  #shopify-section-{{ section.id }} .ncb-hero__btn { display: inline-flex; align-items: center; gap: 8px; padding: 16px 32px; font-size: 1rem; font-weight: 700; letter-spacing: 0.3px; border-radius: 8px; text-decoration: none; border: 2px solid transparent; transition: all 0.25s ease; white-space: nowrap; cursor: pointer; font-family: inherit; }
+  #shopify-section-{{ section.id }} .ncb-hero__btn--primary { background: var(--gold); color: var(--navy); }
+  #shopify-section-{{ section.id }} .ncb-hero__btn--primary:hover { transform: translateY(-2px); box-shadow: 0 10px 26px {{ section.settings.gold_color }}55; }
+  #shopify-section-{{ section.id }} .ncb-hero__btn--ghost { background: transparent; color: var(--white); border-color: rgba(255,255,255,0.25); }
+  #shopify-section-{{ section.id }} .ncb-hero__btn--ghost:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.5); }
+  #shopify-section-{{ section.id }} .ncb-hero__btn-arrow { transition: transform 0.25s ease; }
+  #shopify-section-{{ section.id }} .ncb-hero__btn:hover .ncb-hero__btn-arrow { transform: translateX(3px); }
+
+  #shopify-section-{{ section.id }} .ncb-hero__chips { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; max-width: 800px; margin: 0 auto; }
+  #shopify-section-{{ section.id }} .ncb-hero__chip { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 100px; font-size: 0.82rem; font-weight: 500; color: rgba(255,255,255,0.85); }
+  #shopify-section-{{ section.id }} .ncb-hero__chip-icon { color: var(--positive); font-weight: 700; }
+
+  #shopify-section-{{ section.id }} .ncb-reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.9s ease, transform 0.9s ease; }
+  #shopify-section-{{ section.id }} .ncb-reveal.is-visible { opacity: 1; transform: translateY(0); }
+  #shopify-section-{{ section.id }} .ncb-reveal--d1 { transition-delay: 0.05s; }
+  #shopify-section-{{ section.id }} .ncb-reveal--d2 { transition-delay: 0.18s; }
+  #shopify-section-{{ section.id }} .ncb-reveal--d3 { transition-delay: 0.3s; }
+  #shopify-section-{{ section.id }} .ncb-reveal--d4 { transition-delay: 0.42s; }
+
+  @media (max-width: 640px) {
+    #shopify-section-{{ section.id }} .ncb-hero__ctas { flex-direction: column; align-items: stretch; }
+    #shopify-section-{{ section.id }} .ncb-hero__btn { justify-content: center; }
+    #shopify-section-{{ section.id }} .ncb-hero__chip { font-size: 0.75rem; padding: 6px 12px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #shopify-section-{{ section.id }} .ncb-hero__pill-dot { animation: none; }
+  }
+</style>
+
+<section class="ncb-hero">
+  <div class="ncb-hero__inner">
+    {% if section.settings.pill_text != blank %}
+      <div class="ncb-hero__pill ncb-reveal">
+        <span class="ncb-hero__pill-dot"></span>
+        {{ section.settings.pill_text }}
+      </div>
+    {% endif %}
+
+    {% if section.settings.amount_label != blank %}
+      <p class="ncb-hero__amount-label ncb-reveal ncb-reveal--d1">{{ section.settings.amount_label }}</p>
+    {% endif %}
+    {% if section.settings.amount_text != blank %}
+      <p class="ncb-hero__amount ncb-reveal ncb-reveal--d2">{{ section.settings.amount_text }}</p>
+    {% endif %}
+
+    <h1 class="ncb-hero__headline ncb-reveal ncb-reveal--d3">{{ section.settings.headline }}</h1>
+
+    {% if section.settings.subheadline != blank %}
+      <p class="ncb-hero__sub ncb-reveal ncb-reveal--d3">{{ section.settings.subheadline }}</p>
+    {% endif %}
+
+    <div class="ncb-hero__ctas ncb-reveal ncb-reveal--d4">
+      {% if section.settings.primary_btn_text != blank %}
+        <a href="{{ section.settings.primary_btn_url | default: '#submit' }}" class="ncb-hero__btn ncb-hero__btn--primary">
+          {{ section.settings.primary_btn_text }}
+          <span class="ncb-hero__btn-arrow">&rarr;</span>
+        </a>
+      {% endif %}
+      {% if section.settings.secondary_btn_text != blank %}
+        <a href="{{ section.settings.secondary_btn_url | default: '#how-it-works' }}" class="ncb-hero__btn ncb-hero__btn--ghost">
+          {{ section.settings.secondary_btn_text }}
+        </a>
+      {% endif %}
+    </div>
+
+    {% if section.blocks.size > 0 %}
+      <div class="ncb-hero__chips ncb-reveal ncb-reveal--d4">
+        {% for block in section.blocks %}
+          <span class="ncb-hero__chip" {{ block.shopify_attributes }}>
+            <span class="ncb-hero__chip-icon">&check;</span>
+            {{ block.settings.text }}
+          </span>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<script>
+  (function() {
+    var root = document.getElementById('shopify-section-{{ section.id }}');
+    if (!root) return;
+    var els = root.querySelectorAll('.ncb-reveal');
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) { if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); } });
+    }, { threshold: 0.2, rootMargin: '0px 0px -40px 0px' });
+    els.forEach(function(el) { io.observe(el); });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Cashback Hero",
+  "tag": "section",
+  "class": "nuracom-cashback-hero-section",
+  "settings": [
+    { "type": "header", "content": "Content" },
+    { "type": "text", "id": "pill_text", "label": "Top pill text", "default": "Post-purchase exclusive" },
+    { "type": "text", "id": "amount_label", "label": "Amount label (above number)", "default": "Get up to" },
+    { "type": "text", "id": "amount_text", "label": "Big number", "default": "$100" },
+    { "type": "richtext", "id": "headline", "label": "Headline (use <em> for italic gold emphasis)", "default": "<p>That's <em>7% cashback</em> — for about 15 minutes of filming.</p>" },
+    { "type": "textarea", "id": "subheadline", "label": "Subheadline", "default": "Send us an honest review video plus a few clips of you using your Nuracom, and we'll refund 7% of your order — approximately $100 on an Aero. Real customers. Real footage. Fair reward." },
+    { "type": "header", "content": "Buttons" },
+    { "type": "text", "id": "primary_btn_text", "label": "Primary button text", "default": "Submit my videos" },
+    { "type": "url", "id": "primary_btn_url", "label": "Primary button URL (leave blank for #submit scroll)" },
+    { "type": "text", "id": "secondary_btn_text", "label": "Secondary button text", "default": "See what we need" },
+    { "type": "url", "id": "secondary_btn_url", "label": "Secondary button URL (leave blank for #how-it-works scroll)" },
+    { "type": "header", "content": "Colours" },
+    { "type": "color", "id": "navy", "label": "Background navy", "default": "#101a32" },
+    { "type": "color", "id": "brand_deep", "label": "Brand deep (glow)", "default": "#5E0404" },
+    { "type": "color", "id": "brand_dark", "label": "Brand dark", "default": "#801f0a" },
+    { "type": "color", "id": "brand_accent", "label": "Brand accent", "default": "#a8321a" },
+    { "type": "color", "id": "gold_color", "label": "Gold highlight (CTA + emphasis)", "default": "#c69a7b" },
+    { "type": "color", "id": "cream", "label": "Cream", "default": "#f8f5f1" },
+    { "type": "color", "id": "white", "label": "Text / white", "default": "#ffffff" },
+    { "type": "color", "id": "positive_color", "label": "Tick colour (chips)", "default": "#4ade80" }
+  ],
+  "blocks": [
+    {
+      "type": "chip",
+      "name": "Trust chip",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Chip text", "default": "Trust chip text" }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Cashback Hero",
+      "blocks": [
+        { "type": "chip", "settings": { "text": "~$100 back" } },
+        { "type": "chip", "settings": { "text": "15 min total" } },
+        { "type": "chip", "settings": { "text": "No editing needed" } },
+        { "type": "chip", "settings": { "text": "Honest reviews only" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,331 @@
+{% comment %}
+  Nuracom Landing — FAQ Accordion
+  Pre-handles the biggest pre-purchase objections. Pure CSS + tiny JS toggle.
+  Install to: sections/landing-faq.liquid
+{% endcomment %}
+
+<style>
+  #lp-faq-{{ section.id }} {
+    background: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+    padding: 90px 24px;
+  }
+
+  #lp-faq-{{ section.id }} .lp-faq__inner {
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  #lp-faq-{{ section.id }} .lp-faq__header {
+    text-align: center;
+    margin: 0 auto 50px;
+  }
+
+  #lp-faq-{{ section.id }} .lp-faq__eyebrow {
+    font-size: 12px;
+    letter-spacing: 2.4px;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: {{ section.settings.accent_color }};
+    margin: 0 0 14px;
+  }
+
+  #lp-faq-{{ section.id }} .lp-faq__heading {
+    font-size: clamp(28px, 3.8vw, 44px);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.4px;
+    margin: 0 0 16px;
+  }
+
+  #lp-faq-{{ section.id }} .lp-faq__sub {
+    font-size: 17px;
+    line-height: 1.6;
+    opacity: 0.75;
+    margin: 0;
+    max-width: 620px;
+    margin: 0 auto;
+  }
+
+  #lp-faq-{{ section.id }} .lp-faq__list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  #lp-faq-{{ section.id }} .lp-faq__item {
+    border: 1px solid {{ section.settings.border_color }};
+    border-radius: 14px;
+    background: {{ section.settings.card_bg }};
+    overflow: hidden;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+
+  #lp-faq-{{ section.id }} .lp-faq__item[open] {
+    box-shadow: 0 10px 28px rgba(16,26,50,0.08);
+    border-color: {{ section.settings.accent_color }}66;
+  }
+
+  #lp-faq-{{ section.id }} .lp-faq__q {
+    list-style: none;
+    cursor: pointer;
+    padding: 22px 26px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.4;
+    color: {{ section.settings.text_color }};
+  }
+
+  #lp-faq-{{ section.id }} .lp-faq__q::-webkit-details-marker {
+    display: none;
+  }
+
+  #lp-faq-{{ section.id }} .lp-faq__icon {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: {{ section.settings.accent_color }}1a;
+    color: {{ section.settings.accent_color }};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.25s ease, background 0.2s ease;
+  }
+
+  #lp-faq-{{ section.id }} .lp-faq__item[open] .lp-faq__icon {
+    transform: rotate(45deg);
+    background: {{ section.settings.accent_color }};
+    color: #fff;
+  }
+
+  #lp-faq-{{ section.id }} .lp-faq__a {
+    padding: 0 26px 24px;
+    font-size: 15.5px;
+    line-height: 1.65;
+    opacity: 0.82;
+  }
+
+  #lp-faq-{{ section.id }} .lp-faq__a p {
+    margin: 0 0 10px;
+  }
+
+  #lp-faq-{{ section.id }} .lp-faq__a p:last-child {
+    margin-bottom: 0;
+  }
+
+  #lp-faq-{{ section.id }} .lp-faq__cta {
+    text-align: center;
+    margin-top: 48px;
+    padding: 32px;
+    background: {{ section.settings.cta_bg }};
+    border-radius: 16px;
+  }
+
+  #lp-faq-{{ section.id }} .lp-faq__cta-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0 0 8px;
+  }
+
+  #lp-faq-{{ section.id }} .lp-faq__cta-sub {
+    font-size: 15px;
+    line-height: 1.5;
+    opacity: 0.78;
+    margin: 0 0 18px;
+  }
+
+  #lp-faq-{{ section.id }} .lp-faq__cta-btn {
+    display: inline-block;
+    background: {{ section.settings.accent_color }};
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 14px 28px;
+    border-radius: 999px;
+    text-decoration: none;
+    transition: transform 0.2s ease, filter 0.2s ease;
+  }
+
+  #lp-faq-{{ section.id }} .lp-faq__cta-btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.08);
+  }
+
+  @media (max-width: 560px) {
+    #lp-faq-{{ section.id }} {
+      padding: 60px 18px;
+    }
+    #lp-faq-{{ section.id }} .lp-faq__q {
+      padding: 18px 20px;
+      font-size: 15.5px;
+    }
+    #lp-faq-{{ section.id }} .lp-faq__a {
+      padding: 0 20px 20px;
+      font-size: 14.5px;
+    }
+  }
+</style>
+
+<section id="lp-faq-{{ section.id }}">
+  <div class="lp-faq__inner">
+    <div class="lp-faq__header">
+      {% if section.settings.eyebrow != blank %}
+        <p class="lp-faq__eyebrow">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+      <h2 class="lp-faq__heading">{{ section.settings.heading }}</h2>
+      {% if section.settings.sub != blank %}
+        <p class="lp-faq__sub">{{ section.settings.sub }}</p>
+      {% endif %}
+    </div>
+
+    <div class="lp-faq__list">
+      {% for block in section.blocks %}
+        <details class="lp-faq__item" {% if block.settings.open_by_default %}open{% endif %} {{ block.shopify_attributes }}>
+          <summary class="lp-faq__q">
+            <span>{{ block.settings.question }}</span>
+            <span class="lp-faq__icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+            </span>
+          </summary>
+          <div class="lp-faq__a">
+            {{ block.settings.answer }}
+          </div>
+        </details>
+      {% endfor %}
+    </div>
+
+    {% if section.settings.show_cta %}
+      <div class="lp-faq__cta">
+        <h3 class="lp-faq__cta-title">{{ section.settings.cta_title }}</h3>
+        <p class="lp-faq__cta-sub">{{ section.settings.cta_sub }}</p>
+        {% if section.settings.cta_link != blank %}
+          <a class="lp-faq__cta-btn" href="{{ section.settings.cta_link }}">{{ section.settings.cta_label }}</a>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Landing — FAQ",
+  "tag": "section",
+  "class": "landing-faq-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Everything you want to know" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Frequently asked questions" },
+    { "type": "textarea", "id": "sub", "label": "Subheading", "default": "Still deciding? The answers below cover the questions we hear most before people buy." },
+    { "type": "header", "content": "Still-unsure CTA block" },
+    { "type": "checkbox", "id": "show_cta", "label": "Show CTA at end", "default": true },
+    { "type": "text", "id": "cta_title", "label": "CTA title", "default": "Still not sure which model is right?" },
+    { "type": "textarea", "id": "cta_sub", "label": "CTA sub", "default": "Message our team with your ceiling height, laundry size, and typical washing load — we'll match you to the right Nuracom in under a business day." },
+    { "type": "text", "id": "cta_label", "label": "Button label", "default": "Talk to our team" },
+    { "type": "url", "id": "cta_link", "label": "Button link" },
+    { "type": "header", "content": "Colours" },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#f7f5f1" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#101a32" },
+    { "type": "color", "id": "accent_color", "label": "Accent", "default": "#866653" },
+    { "type": "color", "id": "card_bg", "label": "Card background", "default": "#ffffff" },
+    { "type": "color", "id": "cta_bg", "label": "CTA block background", "default": "#ffffff" },
+    { "type": "color", "id": "border_color", "label": "Border", "default": "#e8e4dc" }
+  ],
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "FAQ item",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question", "default": "How do I know which model is right for me?" },
+        { "type": "richtext", "id": "answer", "label": "Answer", "default": "<p>The three models differ in size, capacity, and feature set. Breeze is our entry, Aero is the most popular for everyday families, and Stratos is the top-spec option with heated drying and telescopic rails.</p><p>If you're unsure, message our team with your ceiling height and typical load size — we'll recommend the right fit.</p>" },
+        { "type": "checkbox", "id": "open_by_default", "label": "Open by default", "default": false }
+      ]
+    }
+  ],
+  "max_blocks": 15,
+  "presets": [
+    {
+      "name": "Landing — FAQ",
+      "blocks": [
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Which Nuracom model is right for me?",
+            "answer": "<p><strong>Breeze</strong> suits small households, studios, and single-person laundries.</p><p><strong>Aero</strong> is our most popular choice — ideal for families of three to four, and includes premium lighting plus heated drying.</p><p><strong>Stratos</strong> is built for larger households, premium renovations, and anyone wanting telescopic rails to handle bulky sheets, trousers, and big loads.</p>",
+            "open_by_default": true
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Does Nuracom replace a dryer?",
+            "answer": "<p>For most Australian households, yes. Aero and Stratos include heated drying, and combined with indoor airflow they handle everyday laundry without the power bill of a traditional dryer. Many customers keep a dryer for rare emergencies but stop using it for daily washing.</p><p>If you rely on a dryer several times a day through winter, we'd recommend Stratos specifically for its faster heated airflow.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Do I need an electrician to install it?",
+            "answer": "<p>Yes. Nuracom is ceiling-mounted and hard-wired, so installation must be done by a licensed electrician. Typical install takes 30–60 minutes and costs roughly <strong>$150–$300</strong> depending on your area.</p><p>In most cases, your sparky will replace an existing ceiling light fitting with the Nuracom unit — so you don't lose lighting, you upgrade it.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "How much ceiling clearance do I need?",
+            "answer": "<p>Nuracom sits flush against the ceiling when retracted, so it works with any standard ceiling height of <strong>2.4m or above</strong>. At full lower, the unit drops down approximately 1.2–1.4m depending on model, so standing under it is comfortable for most users.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Can I install it into a rental or apartment?",
+            "answer": "<p>Installation involves fixing to the ceiling and wiring into mains, so written landlord or strata consent is usually required. Many renters install it with landlord approval because it replaces a light fitting — we recommend confirming before you order.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "How long does shipping take?",
+            "answer": "<p>We ship from our Australian warehouse within one business day of ordering. Metro deliveries typically arrive in 2–4 business days, and regional deliveries in 4–7 business days. You can check your postcode in the Shipping section above.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "What's the warranty and return policy?",
+            "answer": "<p>Every Nuracom comes with a <strong>2-year Australian warranty</strong> covering the motor and electronics. If anything isn't right, you'll deal directly with a real Australian-based team — not an offshore contact form.</p><p>We also offer <strong>30-day returns</strong>. If it's not right for your home, send it back for a refund.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Is it noisy?",
+            "answer": "<p>The motor is intentionally quiet — noticeably quieter than a traditional tumble dryer and comparable to a standard range hood on its lowest setting. Heated drying is designed to operate overnight without disturbing sleep in adjacent rooms.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "What can I dry on it?",
+            "answer": "<p>Everyday clothing, sheets, towels, uniforms, activewear, baby clothes — anything you'd normally hang on a line. Telescopic rails (Stratos) extend to handle long items like trousers and king-size sheets without folding.</p><p>Each unit has a maximum rated capacity — see the model comparison above for exact limits.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "How much does it cost to run?",
+            "answer": "<p>Less than a dollar per full drying cycle — on every model. At Australia's current average residential electricity rate of $0.3557/kWh, a full 2-hour cycle costs:</p><ul><li><strong>Breeze</strong> — ~$0.57 (800W motor)</li><li><strong>Aero</strong> — ~$0.57 (800W motor)</li><li><strong>Stratos</strong> — ~$0.64 (900W motor)</li></ul><p>For comparison, the same load through a standard electric tumble dryer typically costs <strong>$1.70–$2.10</strong> — around 3× more. Over a year of regular washing, that difference adds up fast.</p><p>These are real numbers based on rated wattage, not marketing estimates.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

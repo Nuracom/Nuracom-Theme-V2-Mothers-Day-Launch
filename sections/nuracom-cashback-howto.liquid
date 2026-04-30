@@ -1,0 +1,210 @@
+{% comment %}
+  Nuracom Cashback — How It Works / What We Need
+  4-step filming guide + tips + what NOT to worry about.
+{% endcomment %}
+
+<style>
+  #shopify-section-{{ section.id }} {
+    --brand-deep: {{ section.settings.brand_deep }};
+    --brand-accent: {{ section.settings.brand_accent }};
+    --navy: {{ section.settings.navy }};
+    --cream: {{ section.settings.cream }};
+    --warm-gray: {{ section.settings.warm_gray }};
+    --gold: {{ section.settings.gold_color }};
+    --white: {{ section.settings.white }};
+    --text: {{ section.settings.text_primary }};
+    --text-muted: {{ section.settings.text_muted }};
+    --positive: {{ section.settings.positive_color }};
+    --max-width: 1120px;
+    --section-pad: clamp(44px, 6vw, 80px);
+  }
+  #shopify-section-{{ section.id }} * { box-sizing: border-box; }
+  #shopify-section-{{ section.id }} .ncb-how { padding: var(--section-pad) 24px; background: {{ section.settings.bg_color }}; font-family: 'Inter', -apple-system, sans-serif; }
+  #shopify-section-{{ section.id }} .ncb-how__inner { max-width: var(--max-width); margin: 0 auto; }
+
+  #shopify-section-{{ section.id }} .ncb-how__header { text-align: center; max-width: 720px; margin: 0 auto 48px; }
+  #shopify-section-{{ section.id }} .ncb-how__kicker { font-size: 0.75rem; letter-spacing: 3px; text-transform: uppercase; color: var(--brand-accent); font-weight: 700; margin-bottom: 12px; }
+  #shopify-section-{{ section.id }} .ncb-how__headline { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; line-height: 1.2; color: var(--navy); margin: 0 0 18px; letter-spacing: -0.3px; }
+  #shopify-section-{{ section.id }} .ncb-how__headline em { color: var(--brand-deep); font-style: italic; }
+  #shopify-section-{{ section.id }} .ncb-how__sub { font-size: 1.05rem; line-height: 1.7; color: var(--text-muted); margin: 0; }
+
+  /* Steps grid */
+  #shopify-section-{{ section.id }} .ncb-how__steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 48px; }
+  #shopify-section-{{ section.id }} .ncb-how__step { background: var(--white); border: 1px solid var(--warm-gray); border-radius: 14px; padding: 24px 22px; position: relative; transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease; }
+  #shopify-section-{{ section.id }} .ncb-how__step:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(16,26,50,0.08); border-color: var(--brand-deep); }
+  #shopify-section-{{ section.id }} .ncb-how__step-num { position: absolute; top: -14px; left: 22px; width: 32px; height: 32px; border-radius: 50%; background: var(--brand-deep); color: var(--white); display: inline-flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 800; letter-spacing: 0.5px; }
+  #shopify-section-{{ section.id }} .ncb-how__step-icon { font-size: 1.8rem; margin: 12px 0 14px; }
+  #shopify-section-{{ section.id }} .ncb-how__step-duration { display: inline-block; font-size: 0.68rem; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; color: var(--brand-accent); background: {{ section.settings.brand_accent }}12; padding: 3px 9px; border-radius: 100px; margin-bottom: 10px; }
+  #shopify-section-{{ section.id }} .ncb-how__step-title { font-size: 1.05rem; font-weight: 700; color: var(--navy); margin: 0 0 8px; line-height: 1.3; }
+  #shopify-section-{{ section.id }} .ncb-how__step-text { font-size: 0.88rem; line-height: 1.6; color: var(--text-muted); margin: 0; }
+
+  /* Tips card */
+  #shopify-section-{{ section.id }} .ncb-how__tips { background: var(--navy); color: var(--white); border-radius: 16px; padding: 32px 36px; margin-bottom: 28px; display: grid; grid-template-columns: auto 1fr; gap: 28px; align-items: start; }
+  #shopify-section-{{ section.id }} .ncb-how__tips-icon { width: 56px; height: 56px; border-radius: 14px; background: {{ section.settings.gold_color }}22; color: var(--gold); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; flex-shrink: 0; }
+  #shopify-section-{{ section.id }} .ncb-how__tips-title { font-family: 'Playfair Display', Georgia, serif; font-size: 1.4rem; font-weight: 700; margin: 0 0 14px; color: var(--gold); }
+  #shopify-section-{{ section.id }} .ncb-how__tips-list { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 24px; }
+  #shopify-section-{{ section.id }} .ncb-how__tips-list li { font-size: 0.92rem; line-height: 1.55; display: flex; gap: 10px; align-items: flex-start; color: rgba(255,255,255,0.85); }
+  #shopify-section-{{ section.id }} .ncb-how__tips-list li::before { content: '→'; color: var(--gold); font-weight: 700; flex-shrink: 0; }
+
+  /* What we DON'T need */
+  #shopify-section-{{ section.id }} .ncb-how__nopressure { background: var(--cream); border-radius: 14px; padding: 22px 26px; border-left: 4px solid var(--brand-deep); }
+  #shopify-section-{{ section.id }} .ncb-how__nopressure-title { font-size: 0.95rem; font-weight: 700; color: var(--navy); margin: 0 0 10px; display: flex; align-items: center; gap: 10px; }
+  #shopify-section-{{ section.id }} .ncb-how__nopressure-title::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--brand-deep); }
+  #shopify-section-{{ section.id }} .ncb-how__nopressure-text { font-size: 0.92rem; line-height: 1.65; color: var(--text); margin: 0; }
+  #shopify-section-{{ section.id }} .ncb-how__nopressure-text strong { color: var(--brand-deep); }
+
+  /* Reveal */
+  #shopify-section-{{ section.id }} .ncb-reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.8s ease, transform 0.8s ease; }
+  #shopify-section-{{ section.id }} .ncb-reveal.is-visible { opacity: 1; transform: translateY(0); }
+  #shopify-section-{{ section.id }} .ncb-reveal--d1 { transition-delay: 0.05s; }
+  #shopify-section-{{ section.id }} .ncb-reveal--d2 { transition-delay: 0.15s; }
+  #shopify-section-{{ section.id }} .ncb-reveal--d3 { transition-delay: 0.25s; }
+  #shopify-section-{{ section.id }} .ncb-reveal--d4 { transition-delay: 0.35s; }
+
+  @media (max-width: 900px) {
+    #shopify-section-{{ section.id }} .ncb-how__steps { grid-template-columns: 1fr 1fr; gap: 20px; }
+    #shopify-section-{{ section.id }} .ncb-how__tips { grid-template-columns: 1fr; gap: 18px; }
+    #shopify-section-{{ section.id }} .ncb-how__tips-list { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 560px) {
+    #shopify-section-{{ section.id }} .ncb-how__steps { grid-template-columns: 1fr; }
+    #shopify-section-{{ section.id }} .ncb-how__tips { padding: 24px; }
+  }
+</style>
+
+<section class="ncb-how" id="how-it-works">
+  <div class="ncb-how__inner">
+    <div class="ncb-how__header">
+      {% if section.settings.kicker != blank %}
+        <div class="ncb-how__kicker ncb-reveal">{{ section.settings.kicker }}</div>
+      {% endif %}
+      <h2 class="ncb-how__headline ncb-reveal">{{ section.settings.headline }}</h2>
+      {% if section.settings.subheadline != blank %}
+        <p class="ncb-how__sub ncb-reveal">{{ section.settings.subheadline }}</p>
+      {% endif %}
+    </div>
+
+    {% assign step_blocks = section.blocks | where: "type", "step" %}
+    {% if step_blocks.size > 0 %}
+      <div class="ncb-how__steps">
+        {% for block in step_blocks %}
+          <div class="ncb-how__step ncb-reveal ncb-reveal--d{{ forloop.index }}" {{ block.shopify_attributes }}>
+            <span class="ncb-how__step-num">{{ forloop.index }}</span>
+            <div class="ncb-how__step-icon">{{ block.settings.icon }}</div>
+            {% if block.settings.duration != blank %}
+              <span class="ncb-how__step-duration">{{ block.settings.duration }}</span>
+            {% endif %}
+            <h3 class="ncb-how__step-title">{{ block.settings.title }}</h3>
+            <p class="ncb-how__step-text">{{ block.settings.description }}</p>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% if section.settings.tips_title != blank %}
+      <div class="ncb-how__tips ncb-reveal">
+        <div class="ncb-how__tips-icon">{{ section.settings.tips_icon | default: '🎬' }}</div>
+        <div>
+          <h3 class="ncb-how__tips-title">{{ section.settings.tips_title }}</h3>
+          <ul class="ncb-how__tips-list">
+            {% assign tip_blocks = section.blocks | where: "type", "tip" %}
+            {% for block in tip_blocks %}
+              <li {{ block.shopify_attributes }}>{{ block.settings.text }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if section.settings.nopressure_text != blank %}
+      <div class="ncb-how__nopressure ncb-reveal">
+        <p class="ncb-how__nopressure-title">{{ section.settings.nopressure_title }}</p>
+        <p class="ncb-how__nopressure-text">{{ section.settings.nopressure_text }}</p>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<script>
+  (function() {
+    var root = document.getElementById('shopify-section-{{ section.id }}');
+    if (!root) return;
+    var els = root.querySelectorAll('.ncb-reveal');
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) { if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); } });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    els.forEach(function(el) { io.observe(el); });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Cashback How-To",
+  "tag": "section",
+  "class": "nuracom-cashback-howto-section",
+  "settings": [
+    { "type": "header", "content": "Section header" },
+    { "type": "text", "id": "kicker", "label": "Kicker", "default": "What we need" },
+    { "type": "richtext", "id": "headline", "label": "Headline (use <em> for italic emphasis)", "default": "<p>Four short clips. <em>About 15 minutes total.</em></p>" },
+    { "type": "textarea", "id": "subheadline", "label": "Subheadline", "default": "No fancy editing or scripts. Just you, your phone, and your honest experience with your Nuracom. The more natural, the better — that's the footage that actually helps us." },
+
+    { "type": "header", "content": "Filming tips card" },
+    { "type": "text", "id": "tips_title", "label": "Tips card title", "default": "Filming tips" },
+    { "type": "text", "id": "tips_icon", "label": "Tips icon (emoji)", "default": "🎬" },
+
+    { "type": "header", "content": "No-pressure callout" },
+    { "type": "text", "id": "nopressure_title", "label": "Callout title", "default": "We genuinely want honest feedback" },
+    { "type": "textarea", "id": "nopressure_text", "label": "Callout text", "default": "If something isn't working for you, tell us. If installation was harder than expected, tell us. Genuine reviews — good AND bad — are what we're paying cashback for. We can't improve if everyone only says nice things. <strong>Your real opinion is worth more than a polished one.</strong>" },
+
+    { "type": "header", "content": "Colours" },
+    { "type": "color", "id": "bg_color", "label": "Section background", "default": "#ffffff" },
+    { "type": "color", "id": "brand_deep", "label": "Brand deep (step number)", "default": "#5E0404" },
+    { "type": "color", "id": "brand_accent", "label": "Brand accent (kicker, duration pills)", "default": "#a8321a" },
+    { "type": "color", "id": "navy", "label": "Navy (headings, tips bg)", "default": "#101a32" },
+    { "type": "color", "id": "cream", "label": "No-pressure callout bg", "default": "#f8f5f1" },
+    { "type": "color", "id": "warm_gray", "label": "Step border", "default": "#e8e3dd" },
+    { "type": "color", "id": "gold_color", "label": "Gold (tips card accent)", "default": "#c69a7b" },
+    { "type": "color", "id": "white", "label": "White", "default": "#ffffff" },
+    { "type": "color", "id": "text_primary", "label": "Text primary", "default": "#1a1a1a" },
+    { "type": "color", "id": "text_muted", "label": "Text muted", "default": "#707070" },
+    { "type": "color", "id": "positive_color", "label": "Positive accent", "default": "#16a34a" }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Filming step",
+      "settings": [
+        { "type": "text", "id": "icon", "label": "Icon (emoji)", "default": "📦" },
+        { "type": "text", "id": "duration", "label": "Duration pill (e.g. \"30-60s\")", "default": "30–60s" },
+        { "type": "text", "id": "title", "label": "Step title", "default": "Step title" },
+        { "type": "textarea", "id": "description", "label": "Description", "default": "What to film in this step." }
+      ]
+    },
+    {
+      "type": "tip",
+      "name": "Filming tip",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Tip text", "default": "Tip text" }
+      ]
+    }
+  ],
+  "max_blocks": 16,
+  "presets": [
+    {
+      "name": "Cashback How-To",
+      "blocks": [
+        { "type": "step", "settings": { "icon": "📦", "duration": "30–60s", "title": "The unboxing", "description": "Film the moment you open the box — packaging, contents, first impressions. Keep it casual and honest." } },
+        { "type": "step", "settings": { "icon": "🔧", "duration": "2–3 min", "title": "Installation", "description": "Record a sped-up install or key moments (mounting brackets, clicking into place, first power-on). Show how easy or hard it really was for you." } },
+        { "type": "step", "settings": { "icon": "💫", "duration": "1–2 min", "title": "First use", "description": "Load it up, run your first cycle. Show us the rack in action, the app/remote, the lighting. Honest reactions only — this is the gold." } },
+        { "type": "step", "settings": { "icon": "🎤", "duration": "60–90s", "title": "Your review", "description": "Look into the camera and give us your real verdict. Good, bad, surprising. What do you wish you'd known? Would you recommend it?" } },
+        { "type": "tip", "settings": { "text": "Use natural daylight when possible — no ring lights needed" } },
+        { "type": "tip", "settings": { "text": "Phone camera is perfect — no need for anything fancier" } },
+        { "type": "tip", "settings": { "text": "Vertical (9:16) or horizontal (16:9) both work" } },
+        { "type": "tip", "settings": { "text": "Don't edit — raw clips are what we want" } },
+        { "type": "tip", "settings": { "text": "Keep sound on — audio matters more than looks" } },
+        { "type": "tip", "settings": { "text": "Be yourself — overly polished reviews don't convert" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
