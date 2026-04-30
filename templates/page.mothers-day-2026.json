@@ -1,66 +1,476 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "md_hero": {
       "type": "nuracom-md-hero",
       "blocks": {
-        "chip_1": { "type": "chip", "settings": { "text": "Free shipping included" } },
-        "chip_2": { "type": "chip", "settings": { "text": "5-yr Australian warranty" } },
-        "chip_3": { "type": "chip", "settings": { "text": "Order by 6 May for MD delivery" } },
-        "chip_4": { "type": "chip", "settings": { "text": "Gift-card option available" } }
+        "chip_1": {
+          "type": "chip",
+          "settings": {
+            "text": "Free shipping included"
+          }
+        },
+        "chip_2": {
+          "type": "chip",
+          "settings": {
+            "text": "5-yr Australian warranty"
+          }
+        },
+        "chip_3": {
+          "type": "chip",
+          "settings": {
+            "text": "Order by 6 May for MD delivery"
+          }
+        },
+        "chip_4": {
+          "type": "chip",
+          "settings": {
+            "text": "Gift-card option available"
+          }
+        }
       },
-      "block_order": ["chip_1", "chip_2", "chip_3", "chip_4"],
-      "settings": {}
+      "block_order": [
+        "chip_1",
+        "chip_2",
+        "chip_3",
+        "chip_4"
+      ],
+      "settings": {
+        "pill_emoji": "💐",
+        "pill_text": "Mother's Day · 10 May",
+        "headline": "<p>Give Mum a gift she'll <em>actually use</em> every Sunday.</p>",
+        "subheadline": "Flowers wilt. Chocolates disappear. Nuracom is the one Mother's Day gift she'll thank you for every time she does laundry — for the next decade.",
+        "show_promo": true,
+        "promo_icon": "🎁",
+        "promo_title": "10% OFF + FREE shipping",
+        "promo_sub": "Mother's Day exclusive — ends midnight 10 May",
+        "promo_code": "MUM10",
+        "primary_btn_text": "Shop the gift",
+        "primary_btn_url": "",
+        "secondary_btn_text": "Why mum will love it",
+        "secondary_btn_url": "",
+        "show_gift_card": true,
+        "gift_card_icon": "🎀",
+        "gift_card_label": "A gift she'll use",
+        "gift_card_value": "Every Sunday for years",
+        "show_price_card": true,
+        "price_card_strike": "$1,499",
+        "price_card_now": "$1,349",
+        "price_card_label": "Aero with MUM10 · save $150",
+        "brand_deep": "#5e0404",
+        "brand_dark": "#801f0a",
+        "blush": "#fbe7e3",
+        "cream": "#f8f5f1",
+        "navy": "#101a32",
+        "gold": "#c69a7b",
+        "white": "#ffffff",
+        "text_primary": "#1a1a1a",
+        "text_muted": "#666666"
+      }
     },
     "md_countdown": {
       "type": "nuracom-md-countdown",
-      "settings": {}
+      "settings": {
+        "label": "Mother's Day countdown",
+        "title": "<p>Time left to make Mum's day <em>unforgettable</em></p>",
+        "deadline_date": "2026-05-10",
+        "deadline_time": "23:59:59",
+        "timezone_offset": "+10:00",
+        "cutoff_text": "<p>Order by <strong>Wed 6 May</strong> for metro delivery before Mother's Day. <strong>Sat 2 May</strong> for regional. After cutoff — gift-card option available at checkout.</p>",
+        "cta_text": "Shop the gift",
+        "cta_url": "",
+        "expired_text": "<p>💐 Happy Mother's Day from all of us at Nuracom.</p>",
+        "use_dark_bg": true,
+        "bg_color": "#fbe7e3",
+        "brand_deep": "#5e0404",
+        "brand_dark": "#801f0a",
+        "navy": "#101a32",
+        "cream": "#f8f5f1",
+        "gold": "#c69a7b",
+        "white": "#ffffff",
+        "text_muted": "#666666"
+      }
     },
     "md_reasons": {
       "type": "nuracom-md-gift-reasons",
       "blocks": {
-        "r1": { "type": "reason", "settings": { "icon": "🏋", "title": "No more heavy baskets", "text": "If she's ever winced lifting wet washing to the line, she'll never have to again. Loads lift to the ceiling at the touch of a button." } },
-        "r2": { "type": "reason", "settings": { "icon": "⏰", "title": "Hours back, every week", "text": "She's been planning her week around the weather. This ends that. Wash in the morning, dry in 2 hours, no rain check, no rewashing." } },
-        "r3": { "type": "reason", "settings": { "icon": "🌹", "title": "She'll use it Sunday after Sunday", "text": "Flowers wilt in 5 days. Chocolates last 3. Nuracom is the gift she'll thank you for every laundry day for the next decade." } },
-        "r4": { "type": "reason", "settings": { "icon": "🛡", "title": "5-year warranty — guilt-free", "text": "It won't break in 6 months. 5 years on the motor, 2 years on every part, 1 year of full service. A gift that doesn't make you nervous." } }
+        "r1": {
+          "type": "reason",
+          "settings": {
+            "icon": "🏋",
+            "title": "No more heavy baskets",
+            "text": "If she's ever winced lifting wet washing to the line, she'll never have to again. Loads lift to the ceiling at the touch of a button."
+          }
+        },
+        "r2": {
+          "type": "reason",
+          "settings": {
+            "icon": "⏰",
+            "title": "Hours back, every week",
+            "text": "She's been planning her week around the weather. This ends that. Wash in the morning, dry in 2 hours, no rain check, no rewashing."
+          }
+        },
+        "r3": {
+          "type": "reason",
+          "settings": {
+            "icon": "🌹",
+            "title": "She'll use it Sunday after Sunday",
+            "text": "Flowers wilt in 5 days. Chocolates last 3. Nuracom is the gift she'll thank you for every laundry day for the next decade."
+          }
+        },
+        "r4": {
+          "type": "reason",
+          "settings": {
+            "icon": "🛡",
+            "title": "5-year warranty — guilt-free",
+            "text": "It won't break in 6 months. 5 years on the motor, 2 years on every part, 1 year of full service. A gift that doesn't make you nervous."
+          }
+        }
       },
-      "block_order": ["r1", "r2", "r3", "r4"],
-      "settings": {}
+      "block_order": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "settings": {
+        "kicker": "Why this gift",
+        "headline": "<p>Mum's been doing your washing for years. <em>Here's what she's actually owed.</em></p>",
+        "subheading": "Most Mother's Day gifts are gone in a week. This one she'll thank you for every Sunday — for the next decade.",
+        "closer_text": "If you've ever watched mum lug a heavy basket out to a half-rainy clothesline, you already know why this is the gift.",
+        "closer_attr": "Pretty much everyone",
+        "bg_color": "#ffffff",
+        "brand_deep": "#5e0404",
+        "brand_accent": "#a8321a",
+        "navy": "#101a32",
+        "cream": "#f8f5f1",
+        "blush": "#fbe7e3",
+        "warm_gray": "#e8e3dd",
+        "white": "#ffffff",
+        "text_primary": "#1a1a1a",
+        "text_muted": "#666666"
+      }
     },
-    "md_quickbuy": {
+    "nuracom_quick_buy_UBtmi8": {
       "type": "nuracom-quick-buy",
-      "settings": {}
+      "blocks": {
+        "model_card_Xn7F6r": {
+          "type": "model_card",
+          "settings": {
+            "product": "nuracom-breeze",
+            "image": "shopify://shop_images/Nuracom_Breeze_Black_Cropped.png",
+            "image_grey": "shopify://shop_images/Nuracom_Breeze_Cropped.png",
+            "variant_black_id": "46878679466115",
+            "variant_grey_id": "46878679498883",
+            "name_override": "Nuracom Breeze",
+            "compare_at_price": "$1,199",
+            "price_override": "$1,079",
+            "price_emphasized": true,
+            "fallback_icon": "🌬",
+            "tagline": "For singles & couples — small homes",
+            "cycle_cost": "$0.57",
+            "cycle_label": "per cycle (800W × 2hr)",
+            "savings_label": "5-year savings",
+            "savings_amount": "$1,300+",
+            "savings_note": "vs typical tumble dryer",
+            "benefit_1": "35kg capacity — handles 1–2 person laundry in a single weekly cycle",
+            "benefit_2": "Smart controls + integrated lighting | 2x Fans",
+            "benefit_3": "Free metro shipping",
+            "badge_text": "",
+            "badge_color": "#5e0404",
+            "badge_text_color": "#ffffff",
+            "featured": false,
+            "buy_now_text": "Buy Now",
+            "add_to_cart_text": "Add to Cart",
+            "buy_now_url": "",
+            "add_to_cart_url": ""
+          }
+        },
+        "model_card_633yCa": {
+          "type": "model_card",
+          "settings": {
+            "product": "nuracom-aero",
+            "image": "shopify://shop_images/Aero_Cropped.png",
+            "image_grey": "shopify://shop_images/aero_grey_cropped_1.png",
+            "variant_black_id": "",
+            "variant_grey_id": "",
+            "name_override": "Nuracom Aero",
+            "compare_at_price": "$1,499",
+            "price_override": "$1,349",
+            "price_emphasized": true,
+            "fallback_icon": "☁️",
+            "tagline": "For families — the most popular pick",
+            "cycle_cost": "$0.57",
+            "cycle_label": "per cycle (800W × 2hr)",
+            "savings_label": "5-year savings",
+            "savings_amount": "$1,900+",
+            "savings_note": "vs 6 dryer loads / week",
+            "benefit_1": "40kg + UV disinfection — kills bacteria as it dries",
+            "benefit_2": "Heated drying for faster cycles in winter",
+            "benefit_3": "App + voice + remote control | 4x Fans",
+            "badge_text": "Most Popular",
+            "badge_color": "#5e0404",
+            "badge_text_color": "#ffffff",
+            "featured": true,
+            "buy_now_text": "Buy Now",
+            "add_to_cart_text": "Add to Cart",
+            "buy_now_url": "",
+            "add_to_cart_url": ""
+          }
+        },
+        "model_card_MTx7Dj": {
+          "type": "model_card",
+          "settings": {
+            "product": "nuracom-stratos",
+            "image": "shopify://shop_images/Nuracom_Stratos_Cropped_18910dc4-f135-4082-9d69-46683fd579cc.png",
+            "image_grey": "shopify://shop_images/Stratos_Grey_1.png",
+            "variant_black_id": "",
+            "variant_grey_id": "",
+            "name_override": "Nuracom Stratos",
+            "compare_at_price": "$1,699",
+            "price_override": "$1,529",
+            "price_emphasized": true,
+            "fallback_icon": "🚀",
+            "tagline": "For large households — top of range",
+            "cycle_cost": "$0.64",
+            "cycle_label": "per cycle (900W × 2hr)",
+            "savings_label": "5-year savings",
+            "savings_amount": "$2,600+",
+            "savings_note": "biggest capacity = fewest cycles",
+            "benefit_1": "45kg + 2x faster drying with 6 turbo fans",
+            "benefit_2": "Negative ion + dust mite removal",
+            "benefit_3": "Premium digital display screen | 6x Fans | 2x Faster Drying",
+            "badge_text": "Top of Range",
+            "badge_color": "#c69a7b",
+            "badge_text_color": "#101a32",
+            "featured": true,
+            "buy_now_text": "Buy Now",
+            "add_to_cart_text": "Add to Cart",
+            "buy_now_url": "",
+            "add_to_cart_url": ""
+          }
+        }
+      },
+      "block_order": [
+        "model_card_Xn7F6r",
+        "model_card_633yCa",
+        "model_card_MTx7Dj"
+      ],
+      "name": "Quick Buy",
+      "settings": {
+        "kicker": "Pick yours",
+        "headline": "<p>Three models. <em>Save thousands. Code: MUM10</em></p>",
+        "subheading": "Real 5-year savings vs a tumble dryer for households of every size — based on actual cost-per-cycle and load capacity.",
+        "bg_color": "#ffffff",
+        "brand_deep": "#5e0404",
+        "brand_dark": "#801f0a",
+        "brand_accent": "#a8321a",
+        "navy": "#101a32",
+        "cream": "#f8f5f1",
+        "warm_gray": "#e8e3dd",
+        "gold_color": "#c69a7b",
+        "white": "#ffffff",
+        "text_primary": "#1a1a1a",
+        "text_muted": "#707070",
+        "positive_color": "#16a34a",
+        "positive_bg": "#dcfce7"
+      }
     },
     "md_savings": {
       "type": "nuracom-warranty-trust",
       "blocks": {
-        "tl_1": { "type": "timeline_point", "settings": { "year": "Day 1", "dot_style": "active", "label": "Mum unwraps it", "label_style": "green" } },
-        "tl_2": { "type": "timeline_point", "settings": { "year": "Year 1", "dot_style": "active", "label": "Full unit service covered", "label_style": "default" } },
-        "tl_3": { "type": "timeline_point", "settings": { "year": "Year 2", "dot_style": "payback", "label": "Has paid itself back", "label_style": "highlight" } },
-        "tl_4": { "type": "timeline_point", "settings": { "year": "Year 3", "dot_style": "default", "label": "All parts still covered", "label_style": "default" } },
-        "tl_5": { "type": "timeline_point", "settings": { "year": "Year 5", "dot_style": "default", "label": "Motor still under warranty", "label_style": "default" } },
-        "tl_6": { "type": "timeline_point", "settings": { "year": "Year 5+", "dot_style": "default", "label": "Pure savings ~$1,900+", "label_style": "green" } },
-        "tc_1": { "type": "trust_card", "settings": { "icon": "💰", "title": "The husband-approved maths", "text": "$443/year on the dryer vs $89/year on Nuracom. Show him the spreadsheet — he'll agree this is the smart Mother's Day gift." } },
-        "tc_2": { "type": "trust_card", "settings": { "icon": "🇦🇺", "title": "Real Australian support", "text": "Designed and supported in Australia. If anything ever isn't right, you'll talk to a real person — not an offshore contact form." } },
-        "tc_3": { "type": "trust_card", "settings": { "icon": "🛡", "title": "Covered well past payback", "text": "5 years on the motor. By the time the warranty ends, you've already saved ~$1,800. Everything after that is just bonus." } }
+        "tl_1": {
+          "type": "timeline_point",
+          "settings": {
+            "year": "Day 1",
+            "dot_style": "active",
+            "label": "Mum unwraps it",
+            "label_style": "green"
+          }
+        },
+        "tl_2": {
+          "type": "timeline_point",
+          "settings": {
+            "year": "Year 1",
+            "dot_style": "active",
+            "label": "Full unit service covered",
+            "label_style": "default"
+          }
+        },
+        "tl_3": {
+          "type": "timeline_point",
+          "settings": {
+            "year": "Year 2",
+            "dot_style": "payback",
+            "label": "Has paid itself back",
+            "label_style": "highlight"
+          }
+        },
+        "tl_4": {
+          "type": "timeline_point",
+          "settings": {
+            "year": "Year 3",
+            "dot_style": "default",
+            "label": "All parts still covered",
+            "label_style": "default"
+          }
+        },
+        "tl_5": {
+          "type": "timeline_point",
+          "settings": {
+            "year": "Year 5",
+            "dot_style": "default",
+            "label": "Motor still under warranty",
+            "label_style": "default"
+          }
+        },
+        "tl_6": {
+          "type": "timeline_point",
+          "settings": {
+            "year": "Year 5+",
+            "dot_style": "default",
+            "label": "Pure savings ~$1,900+",
+            "label_style": "green"
+          }
+        },
+        "tc_1": {
+          "type": "trust_card",
+          "settings": {
+            "icon": "💰",
+            "title": "The husband-approved maths",
+            "text": "$443/year on the dryer vs $89/year on Nuracom. Show him the spreadsheet — he'll agree this is the smart Mother's Day gift."
+          }
+        },
+        "tc_2": {
+          "type": "trust_card",
+          "settings": {
+            "icon": "🇦🇺",
+            "title": "Real Australian support",
+            "text": "Designed and supported in Australia. If anything ever isn't right, you'll talk to a real person — not an offshore contact form."
+          }
+        },
+        "tc_3": {
+          "type": "trust_card",
+          "settings": {
+            "icon": "🛡",
+            "title": "Covered well past payback",
+            "text": "5 years on the motor. By the time the warranty ends, you've already saved ~$1,800. Everything after that is just bonus."
+          }
+        }
       },
-      "block_order": ["tl_1", "tl_2", "tl_3", "tl_4", "tl_5", "tl_6", "tc_1", "tc_2", "tc_3"],
+      "block_order": [
+        "tl_1",
+        "tl_2",
+        "tl_3",
+        "tl_4",
+        "tl_5",
+        "tl_6",
+        "tc_1",
+        "tc_2",
+        "tc_3"
+      ],
       "settings": {
         "kicker": "The honest maths",
         "heading": "Why this is the gift that keeps thanking you",
         "subheading": "It feels like a splurge. It performs like an investment. Here's the 5-year picture every mum (and every husband watching the budget) deserves to see.",
+        "dryer_label": "Traditional",
+        "dryer_name": "Mid-Range Tumble Dryer",
+        "dryer_price": "$700–$1,200",
+        "dryer_sub": "Upfront purchase price",
+        "dryer_row_1_label": "+ Energy (5 years)",
+        "dryer_row_1_value": "+$2,215",
+        "dryer_row_2_label": "+ Maintenance/repairs",
+        "dryer_row_2_value": "+$200–$500",
+        "dryer_total_label": "5-Year True Cost",
+        "dryer_total_value": "$3,115–$3,915",
+        "dryer_warranty_title": "Typical Dryer Warranty",
+        "dryer_w1_years": "2 yr",
+        "dryer_w1_desc": "Parts & labour (most brands)",
+        "dryer_w2_years": "0",
+        "dryer_w2_desc": "No dedicated motor coverage",
+        "dryer_w3_years": "0",
+        "dryer_w3_desc": "No included servicing",
+        "nuracom_label": "Smart",
+        "nuracom_name": "Nuracom System",
+        "nuracom_price": "$1,199–$1,699",
+        "nuracom_sub": "Breeze · Aero · Stratos",
+        "nuracom_row_1_label": "+ Energy (5 years)",
+        "nuracom_row_1_value": "+$445",
+        "nuracom_row_2_label": "+ Maintenance/repairs",
+        "nuracom_row_2_value": "Covered",
+        "nuracom_total_label": "5-Year True Cost",
+        "nuracom_total_value": "$1,644–$2,144",
+        "nuracom_warranty_title": "Nuracom Warranty",
+        "nuracom_w1_years": "5 yr",
+        "nuracom_w1_desc": "Motor warranty — the heart of the system",
+        "nuracom_w2_years": "2 yr",
+        "nuracom_w2_desc": "All parts — electronics, rails, fans, lighting",
+        "nuracom_w3_years": "1 yr",
+        "nuracom_w3_desc": "Full unit service — included, on us",
         "payback_headline": "It pays for itself before the warranty's even halfway done",
-        "payback_sub": "$354+ in annual energy savings means the price difference between a tumble dryer and a Nuracom is recovered well within Year 2 — and the savings just keep stacking from there. The motor is still under warranty long after it's already paid for itself."
+        "payback_sub": "$354+ in annual energy savings means the price difference between a tumble dryer and a Nuracom is recovered well within Year 2 — and the savings just keep stacking from there. The motor is still under warranty long after it's already paid for itself.",
+        "payback_note": "5-year savings: $354/yr × 5 = $1,770 in reduced energy costs alone",
+        "brand_deep": "#5e0404",
+        "white": "#ffffff",
+        "kicker_color": "#f8a89a",
+        "positive_color": "#4ade80",
+        "negative_color": "#f87171",
+        "payback_color": "#fbbf24"
       }
     },
     "md_proof": {
       "type": "nuracom-social-proof",
       "blocks": {
-        "stat_1": { "type": "stat", "settings": { "number": "4.9", "label": "Average mum rating" } },
-        "stat_2": { "type": "stat", "settings": { "number": "500+", "label": "Aussie homes" } },
-        "stat_3": { "type": "stat", "settings": { "number": "4–6 hrs", "label": "Saved per week" } },
-        "stat_4": { "type": "stat", "settings": { "number": "$354/yr", "label": "Energy saved" } },
-        "stat_5": { "type": "stat", "settings": { "number": "5 yrs", "label": "Motor warranty" } },
-        "stat_6": { "type": "stat", "settings": { "number": "0kg", "label": "Of basket lifting" } },
+        "stat_1": {
+          "type": "stat",
+          "settings": {
+            "number": "4.9",
+            "label": "Average mum rating"
+          }
+        },
+        "stat_2": {
+          "type": "stat",
+          "settings": {
+            "number": "500+",
+            "label": "Aussie homes"
+          }
+        },
+        "stat_3": {
+          "type": "stat",
+          "settings": {
+            "number": "4–6 hrs",
+            "label": "Saved per week"
+          }
+        },
+        "stat_4": {
+          "type": "stat",
+          "settings": {
+            "number": "$354/yr",
+            "label": "Energy saved"
+          }
+        },
+        "stat_5": {
+          "type": "stat",
+          "settings": {
+            "number": "5 yrs",
+            "label": "Motor warranty"
+          }
+        },
+        "stat_6": {
+          "type": "stat",
+          "settings": {
+            "number": "0kg",
+            "label": "Of basket lifting"
+          }
+        },
         "test_1": {
           "type": "testimonial",
           "settings": {
@@ -122,10 +532,34 @@
           }
         }
       },
-      "block_order": ["stat_1", "stat_2", "stat_3", "stat_4", "stat_5", "stat_6", "test_1", "test_2", "test_3", "test_4", "test_5", "test_6"],
+      "block_order": [
+        "stat_1",
+        "stat_2",
+        "stat_3",
+        "stat_4",
+        "stat_5",
+        "stat_6",
+        "test_1",
+        "test_2",
+        "test_3",
+        "test_4",
+        "test_5",
+        "test_6"
+      ],
       "settings": {
         "kicker": "Real mums. Real Sundays back.",
-        "heading": "Six Australian mums on what changed for them"
+        "heading": "Six Australian mums on what changed for them",
+        "bg_color": "#ffffff",
+        "brand_deep": "#5e0404",
+        "brand_accent": "#a8321a",
+        "navy": "#101a32",
+        "cream": "#f8f5f1",
+        "warm_gray": "#e8e3dd",
+        "text_primary": "#1a1a1a",
+        "text_secondary": "#555555",
+        "text_muted": "#888888",
+        "white": "#ffffff",
+        "star_color": "#f59e0b"
       }
     },
     "md_faq": {
@@ -228,10 +662,30 @@
           }
         }
       },
-      "block_order": ["fq_1", "fq_2", "fq_3", "fq_4", "fq_5", "fq_6", "fq_7", "fq_8", "fq_9", "fq_10", "fq_11", "fq_12"],
+      "block_order": [
+        "fq_1",
+        "fq_2",
+        "fq_3",
+        "fq_4",
+        "fq_5",
+        "fq_6",
+        "fq_7",
+        "fq_8",
+        "fq_9",
+        "fq_10",
+        "fq_11",
+        "fq_12"
+      ],
       "settings": {
         "kicker": "Mum-specific questions",
-        "heading": "Everything you (or your husband, or your dad) might want to know"
+        "heading": "Everything you (or your husband, or your dad) might want to know",
+        "bg_color": "#f8f5f1",
+        "brand_deep": "#5e0404",
+        "brand_accent": "#a8321a",
+        "navy": "#101a32",
+        "cream": "#f8f5f1",
+        "text_secondary": "#555555",
+        "white": "#ffffff"
       }
     },
     "md_cta": {
@@ -240,11 +694,25 @@
         "headline": "<p>Make this Mother's Day the one she <em>actually remembers</em>.</p>",
         "subtext": "10% off + free shipping with code MUM10. Order by 6 May for delivery before Mother's Day. Gift-card option available if you're cutting it close.",
         "primary_btn_text": "Shop the gift",
+        "primary_btn_url": "",
         "secondary_btn_text": "Get a gift card",
+        "secondary_btn_url": "",
         "check_1": "Free Australian shipping",
         "check_2": "5-year motor warranty",
         "check_3": "10% off with MUM10",
-        "check_4": "Saves her ~$354/year"
+        "check_4": "Saves her ~$354/year",
+        "check_5": "",
+        "check_6": "",
+        "check_7": "",
+        "check_8": "",
+        "bg_color": "#ffffff",
+        "brand_deep": "#5e0404",
+        "brand_dark": "#801f0a",
+        "navy": "#101a32",
+        "text_secondary": "#555555",
+        "text_muted": "#888888",
+        "white": "#ffffff",
+        "check_color": "#16a34a"
       }
     }
   },
@@ -252,7 +720,7 @@
     "md_hero",
     "md_countdown",
     "md_reasons",
-    "md_quickbuy",
+    "nuracom_quick_buy_UBtmi8",
     "md_savings",
     "md_proof",
     "md_faq",
